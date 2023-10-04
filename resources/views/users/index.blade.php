@@ -1,5 +1,5 @@
 @extends('layouts.demo')
-
+@section('title', 'List User')
 @section('content')
 <div class="container">
     <div class="row">
@@ -84,32 +84,12 @@
 @stop
 @push('js')
 <form action="" id="delete-form" method="post">
-    @method('delete')
+    @method('DELETE')
     @csrf
 </form>
 <script>
 $('#example2').DataTable({
     "responsive": true,
 });
-
-
-function notificationBeforeDelete(event, el, dt) {
-    event.preventDefault();
-    Swal.fire({
-        title: 'Apa Kamu Yakin?',
-        text: "Untuk Menghapus Data Ini!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Jika pengguna mengonfirmasi penghapusan, lakukan penghapusan dengan mengirimkan form
-            $("#delete-form").attr('action', $(el).attr('href'));
-            $("#delete-form").submit();
-        }
-    });
-}
 </script>
 @endpush
