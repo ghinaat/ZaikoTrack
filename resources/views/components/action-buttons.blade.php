@@ -3,7 +3,7 @@
         data-id="{{$id}}">
         <i class="fa fa-edit"></i>
     </a>
-    <a href="{{ route($route . '.destroy', $id) }}" onclick="return notificationBeforeDelete(event, this, {{$key+1}})"
+    <a href="{{ route($route . '.destroy', $id) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})"
         class="btn btn-danger btn-xs mx-1">
         <i class="fa fa-trash"></i>
     </a>
