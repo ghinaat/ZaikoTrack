@@ -1,66 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Tentang Zaiko Track
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Zaiko Track adalah sebuah sistem manajemen informasi yang digunakan untuk mengelola data inventaris barang di Jurusan SIJA. Sistem ini memudahkan bagi para teknisi SIJA dalam melacak dan mengelola inventaris barang, termasuk barang-barang yang tersedia, perawatan yang diperlukan, dan catatan pemeliharaan. Zaiko Track dapat diakses melalui browser baik dari PC, Laptop, maupun perangkat mobile (smartphone).
 
-## About Laravel
+## Teknologi
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Produksi
+-   [php 8.x](https://www.php.net/)
+-   [MySQL](https://www.mysql.com/)
+-   [Laravel 10.x](https://laravel.com)
+-   [Excel](https://laravel-excel.com/)
+-   [simple-qrcode](https://github.com/SimpleSoftwareIO/simple-qrcode)
+-   [Bootstrap 4.x - 5,x](https://getbootstrap.com/)
+-   [sweetalert2](https://sweetalert2.github.io/)
+-   [jQuery](https://jquery.com/)
+-   [Datatables](https://datatables.net/)
+-   [Brezee](https://laravel.com/docs/10.x/starter-kits)
+-   Simple Mail Tranfer Protocol / SMTP Gmail
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Pengembangan
+-   [Git](https://git-scm.com/)
+-   [Github](https://github.com/)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Pengunaan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Berikut adalah tahap-tahap untuk mengunakan dan menjalankan aplikasi ini
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Fork repo ini
+2. Clone repo milikmu
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/[USERNAME]/ZaikoTrack.git
+```
 
-## Laravel Sponsors
+3. Install dependesi composer
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+composer install
+```
 
-### Premium Partners
+4. Install npm
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+npm install
+npm run build
+```
 
-## Contributing
+5. Siapkan environment variable
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+6. Migrasi dan Seed
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+7. Jalankan aplikasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan serve
+```
 
-## License
+## Kontribusi
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Berikut adalah tahap-tahap untuk mengembakan fitur terbaru dan berktrbusi dalam proyek ini.
+
+1. Fork repo ini
+2. Clone milikmu fork
+3. Lakukan beberapa pekerjaan
+4. Bersihkan pekerjaan kalian dengan lint
+
+```
+./vendor/bin/pint
+```
+
+5. Checkout branch baru
+
+```bash
+git branch YOUR-NEW-FEATURE
+git checkout YOUR-NEW-FEATURE
+```
+
+6. Commit
+
+```bash
+git init
+git add .
+git commit -m "[Your message] -yourname"
+```
+
+7. Push branch milikmu ke fork milikmu
+
+```bash
+git push -u origin --set-upstream YOUR-NEW-FEATURE
+```
+
+8. Pergi ke github UI dan buat a PR dari fork milikmu dan branch, dan merge dengan MAIN upstream kita

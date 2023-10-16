@@ -1,5 +1,8 @@
 @extends('layouts.demo')
 @section('title', 'List User')
+@section('css')
+
+@endsection
 @section('content')
 <div class="container">
     <div class="row">
@@ -13,7 +16,7 @@
                         <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModal">Tambah</button>
                     </div>
                     <div class="table-responsive p-0">
-                        <table class="table table-bordered table-striped align-items-center mb-0" id="example2 ">
+                        <table id="myTable" class="table table-bordered table-striped align-items-center mb-0" id="myTable ">
                             <thead>
                                 <tr>
                                     <th>No.</th>
@@ -29,7 +32,7 @@
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $user->id, 'key' => $key,
+                                        @include('components.action-buttons', ['id' => $user->id_users, 'key' => $key,
                                         'route' => 'user'])
                                     </td>
                                 </tr>
@@ -83,13 +86,15 @@
 
 @stop
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <form action="" id="delete-form" method="post">
-    @method('DELETE')
+    @method('delete')
     @csrf
 </form>
 <script>
-$('#example2').DataTable({
-    "responsive": true,
-});
+ $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+
 </script>
 @endpush
