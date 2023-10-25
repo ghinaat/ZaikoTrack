@@ -22,12 +22,14 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'password' => 'required',
+            'level' => 'required',
         ]);
 
         $array = $request->only([
             'name',
             'email',
             'password',
+            'level',
         ]);
 
         $array['_password_'] = $request->password;
@@ -39,9 +41,9 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy($id_users)
     {
-        $user = User::find($id);
+        $user = User::find($id_users);
         if ($user) {
             $user->delete();
         }
