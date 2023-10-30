@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+
+        Gate::define('isTeknisi', function (User $user) {
+            return $user->level === 'teknisi';
+        });
+
+        Gate::define('isKaprog', function (User $user) {
+            return $user->level === 'kaprog';
+        });
+
+        Gate::define('isKabeng', function (User $user) {
+            return $user->level === 'kabeng';
+        });
+
     }
 }

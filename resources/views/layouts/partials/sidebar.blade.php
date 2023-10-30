@@ -6,7 +6,7 @@
         <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
             target="_blank">
             <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ms-1 font-weight-bold">Argon Dashboard 2</span>
+            <span class="ms-1 font-weight-bold">Zaiko Track</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -22,21 +22,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} " href="{{route('user.index')}}">
+                <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
+                    href="{{route('user.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">User</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('jenisbarang.index') ? 'active' : '' }} " href="{{route('jenisbarang.index')}}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Jenis Barang</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -57,6 +49,30 @@
                     <span class="nav-link-text ms-1">Pembelian</span>
                 </a>
             </li>
+            @can('isTeknisi')
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('ruangan.index') ? 'active' : '' }} "
+                    href="{{route('ruangan.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-info text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Ruangan</span>
+                </a>
+            </li>
+             <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('jenisbarang.index') ? 'active' : '' }} " href="{{route('jenisbarang.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Jenis Barang</span>
+                </a>
+            </li>
+            @endcan
         </ul>
     </div>
 </aside>

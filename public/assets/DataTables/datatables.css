@@ -320,7 +320,7 @@ table.dataTable.table-hover > tbody > tr.selected:hover > * {
 
 div.dataTables_wrapper div.dataTables_length label {
   font-weight: normal;
-  text-align: left;
+   text-align: left;
   white-space: nowrap;
 }
 div.dataTables_wrapper div.dataTables_length select {
@@ -340,6 +340,27 @@ div.dataTables_wrapper div.dataTables_filter input {
   display: inline-block;
   width: auto;
 }
+
+@media (max-width: 768px) {
+  div.dataTables_wrapper div.dataTables_length,
+  div.dataTables_wrapper div.dataTables_filter {
+    text-align: left; /* Align text to the left */
+    margin-bottom: 1em; /* Add some space between the inputs */
+  }
+
+  div.dataTables_wrapper div.dataTables_length select,
+  div.dataTables_wrapper div.dataTables_filter input {
+    width: 100%;
+    display: inline-block;
+  }
+  
+  /* You may need additional styles for the table itself to make it responsive */
+  table.dataTable {
+    width: 100%;
+  }
+  
+}
+
 div.dataTables_wrapper div.dataTables_info {
   padding-top: 0.85em;
 }

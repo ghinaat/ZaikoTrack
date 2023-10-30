@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -22,9 +23,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('Home');
 Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
-Route::put('/user/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
-Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
+
+Route::put('/user/update/{id_users}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
+Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
+Route::post('/user/change-password', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
+
+Route::resource('/ruangan', App\Http\Controllers\RuanganController::class);
 
 Route::get('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'index'])->name('jenisbarang.index');
 Route::post('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'store'])->name('jenisbarang.store');
@@ -40,3 +46,5 @@ Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'inde
 Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'store'])->name('pembelian.store');
 Route::put('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'update'])->name('pembelian.update');
 Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'destroy'])->name('pembelian.destroy');
+
+

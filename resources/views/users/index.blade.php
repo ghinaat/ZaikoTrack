@@ -6,11 +6,11 @@
 Users
 @endsection
 @section('content')
-<div class="container">
+<div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
-            <div class="card mb-2">
-                <div class="card-header">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
                     <h4 class="m-0 text-dark">List User</h4>
                 </div>
                 <div class="card-body m-0">
@@ -45,9 +45,9 @@ Users
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
+                                                <button type="button" class="btn-close" data-dismiss="modal"
                                                     aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
+                                                    <i class="fa fa-close" style="color: black;"></i>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
@@ -121,11 +121,11 @@ Users
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class=" modal-body">
                 <form id="addForm" action="{{route('user.store')}}" method="post">
                     @csrf
                     <div class="form-group">
@@ -140,7 +140,8 @@ Users
                         <label for="exampleInputlevel">Level</label>
                         <select class="form-select @error('level') is-invalid @enderror" id="exampleInputlevel"
                             name="level">
-                            <option value="teknisi" @if( old('level')=='teknisi' )selected @endif>Teknisi</option>
+                            <option value="teknisi" @if( old('level')=='teknisi' )selected @endif>Teknisi
+                            </option>
                             <option value="kaprog" @if( old('level')=='kaprog' )selected @endif>Kepala Program
                             </option>
                             <option value="kabeng" @if( old('level')=='kabeng' )selected @endif>Kepala Bengkel
