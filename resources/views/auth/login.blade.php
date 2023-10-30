@@ -60,7 +60,8 @@
 
                         {{-- Password field --}}
                         <div class="input-group mb-1">
-                            <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" value="{{ old('password') }}">
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" 
+                            aria-label="Password" aria-describedby="basic-addon1" value="{{ old('password') }}" required autofocus>
 
                             @error('password')
                             <span class="invalid-feedback" role="alert">

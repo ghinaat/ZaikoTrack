@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\JenisBarang;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -43,5 +44,21 @@ class DatabaseSeeder extends Seeder
             'password' => '12345678',
             'level' => 'kabeng',
         ]);
+
+        JenisBarang::create([
+            'id_jenis_barang' => '1',
+            'nama_jenis_barang' => 'Perlengkapan Kelas',
+        ]);
+
+        JenisBarang::create([
+            'id_jenis_barang' => '2',
+            'nama_jenis_barang' => 'Alat Praktik',
+        ]);
+
+        JenisBarang::create([
+            'id_jenis_barang' => '3',
+            'nama_jenis_barang' => 'Bahan Praktik',
+        ]);
+
     }
 }
