@@ -25,3 +25,18 @@ Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name
 Route::put('/user/update/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+
+Route::get('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'index'])->name('jenisbarang.index');
+Route::post('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'store'])->name('jenisbarang.store');
+Route::put('/jenisbarang/{id_jenis_barang}', [App\Http\Controllers\JenisBarangController::class, 'update'])->name('jenisbarang.update');
+Route::delete('/jenisbarang/{id_jenis_barang}', [App\Http\Controllers\JenisBarangController::class, 'destroy'])->name('jenisbarang.destroy');
+
+Route::get('/barang', [App\Http\Controllers\BarangController::class, 'index'])->name('barang.index');
+Route::post('/barang', [App\Http\Controllers\BarangController::class, 'store'])->name('barang.store');
+Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'update'])->name('barang.update');
+Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
+
+Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
+Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'store'])->name('pembelian.store');
+Route::put('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'update'])->name('pembelian.update');
+Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'destroy'])->name('pembelian.destroy');
