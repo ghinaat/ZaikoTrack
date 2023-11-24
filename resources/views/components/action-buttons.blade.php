@@ -13,7 +13,7 @@
     </a>
     @endif
     @if(isset($showDetail))
-    <a href="{{ route($route . '.show', $id) }}" class="btn btn-info btn-xs mx-1">
+    <a href="{{ route($route . '.showDetail', $id) }}" class="btn btn-info btn-xs">
         <i class="fa fa-info"></i>
     </a>
     @endif

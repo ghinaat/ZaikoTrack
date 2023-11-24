@@ -54,4 +54,12 @@ class BarangController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',
     ]);
     }
+
+    public function destroy($id_barang){
+        $barang = Barang::find($id_barang);
+        if($barang){
+            $barang->delete();
+        }
+        return redirect()->back()->with(['success_message' => 'Data telah terhapus.',]);
+    }
 }

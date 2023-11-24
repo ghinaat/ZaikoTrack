@@ -19,4 +19,5 @@ class Pembelian extends Model
         'keterangan_anggaran',
         'nota_pembelian',
     ];
+    protected $date = ['tgl_pembelian'];
 }
