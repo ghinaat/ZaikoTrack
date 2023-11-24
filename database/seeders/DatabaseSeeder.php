@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Barang;
 use App\Models\JenisBarang;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -58,6 +59,38 @@ class DatabaseSeeder extends Seeder
         JenisBarang::create([
             'id_jenis_barang' => '3',
             'nama_jenis_barang' => 'Bahan Praktik',
+        ]);
+
+        Barang::create([
+            'id_barang' => '1',
+            'nama_barang' => 'Router',
+            'merek' => 'Mikrotik',
+            'stok_barang' => '5',
+            'id_jenis_barang' => '2',
+        ]);
+
+        Barang::create([
+            'id_barang' => '2',
+            'nama_barang' => 'Router',
+            'merek' => 'Mikrotik',
+            'stok_barang' => '20',
+            'id_jenis_barang' => '2',
+        ]);
+
+        Barang::create([
+            'id_barang' => '3',
+            'nama_barang' => 'Kabel UTP',
+            'merek' => 'Belden',
+            'stok_barang' => '7',
+            'id_jenis_barang' => '3',
+        ]);
+
+        Barang::create([
+            'id_barang' => '4',
+            'nama_barang' => 'Meja Siswa',
+            'merek' => 'Informa',
+            'stok_barang' => '60',
+            'id_jenis_barang' => '1',
         ]);
 
     }
