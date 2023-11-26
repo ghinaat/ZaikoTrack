@@ -56,8 +56,8 @@ Barang
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Tambah barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -79,7 +79,8 @@ Barang
                         <label for="jenis_barang">Jenis Barang</label>
                         <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
                             @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang') == $jb->id_jenis_barang)selected @endif>
+                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
+                                id_jenis_barang)selected @endif>
                                 {{$jb->nama_jenis_barang}}
                             </option>
                             @endforeach
@@ -96,39 +97,42 @@ Barang
 </div>
 
 @foreach($barang as $key => $br)
-<div class="modal fade" id="editModal{{$br->id_barang}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
+<div class="modal fade" id="editModal{{$br->id_barang}}" tabindex="-1" role="dialog"
+    aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST" enctype="multipart/form-data">
+                <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label for="nama_barang">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" 
-                        value="{{old('nama_barang', $br->nama_barang)}}">
+                        <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                            value="{{old('nama_barang', $br->nama_barang)}}">
                     </div>
                     <div class="form-group">
                         <label for="merek">Merek</label>
-                        <input type="text" name="merek" id="merek" class="form-control" 
+                        <input type="text" name="merek" id="merek" class="form-control"
                             value="{{old('merek', $br->merek)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control" 
+                        <input type="number" name="stok_barang" id="stok_barang" class="form-control"
                             value="{{old('stok_barang', $br->stok_barang)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="jenis_barang">Jenis Barang</label>
                         <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
                             @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang') == $jb->id_jenis_barang)selected @endif>
+                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
+                                id_jenis_barang)selected @endif>
                                 {{$jb->nama_jenis_barang}}
                             </option>
                             @endforeach

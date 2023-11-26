@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\JenisBarang;
+use App\Models\Ruangan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -59,6 +60,19 @@ class DatabaseSeeder extends Seeder
             'id_jenis_barang' => '3',
             'nama_jenis_barang' => 'Bahan Praktik',
         ]);
+
+        Ruangan::create([
+            'nama_ruangan' => 'Lab 1',
+        ]);
+
+        Ruangan::create([
+            'nama_ruangan' => 'Ruang Guru',
+        ]);
+
+        Ruangan::create([
+            'nama_ruangan' => 'Ruang Penyimpanan',
+        ]);
+
 
     }
 }

@@ -32,21 +32,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('barang.index') ? 'active' : '' }} " href="{{route('barang.index')}}">
+                <a class="nav-link {{ Request::routeIs('barang.index') ? 'active' : '' }} "
+                    href="{{route('barang.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-app text-info text-sm opacity-10" ></i>
+                        <i class="ni ni-app text-info text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1"> Barang</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('pembelian.index') ? 'active' : '' }} " href="{{route('pembelian.index')}}">
+                <a class="nav-link {{ Request::routeIs('pembelian.index') ? 'active' : '' }} "
+                    href="{{route('pembelian.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-cart text-warning text-sm opacity-10" ></i>
+                        <i class="ni ni-cart text-warning text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Pembelian</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('inventaris.index') ? 'active' : '' }} "
+                    href="{{route('inventaris.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-box-2 text-warning text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Inventaris</span>
                 </a>
             </li>
             @can('isTeknisi')
@@ -63,8 +75,9 @@
                     <span class="nav-link-text ms-1">Ruangan</span>
                 </a>
             </li>
-             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('jenisbarang.index') ? 'active' : '' }} " href="{{route('jenisbarang.index')}}">
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('jenisbarang.index') ? 'active' : '' }} "
+                    href="{{route('jenisbarang.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>

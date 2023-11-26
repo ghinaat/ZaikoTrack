@@ -15,7 +15,8 @@ return new class extends Migration
             $table->increments('id_detail_peminjaman');
             $table->unsignedInteger('id_barang');
             $table->unsignedInteger('id_peminjaman');
-            $table->date('tgl_pakai');
+            $table->unsignedInteger('id_inventaris');
+            $table->date('tgl_kembali');
             $table->integer('jumlah_barang');
             $table->enum('status', ['sudah_dikembalikan', 'belum_dikembalikan']);
             $table->enum('kondisi_barang_awal', ['lengkap', 'tidak_lengkap', 'rusak']);
