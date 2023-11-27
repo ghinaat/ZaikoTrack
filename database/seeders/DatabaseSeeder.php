@@ -65,6 +65,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
+
         Ruangan::create([
             'nama_ruangan' => 'Lab 1',
         ]);
@@ -108,6 +109,7 @@ class DatabaseSeeder extends Seeder
             'stok_barang' => '60',
             'id_jenis_barang' => '1',
         ]);
+
 
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();

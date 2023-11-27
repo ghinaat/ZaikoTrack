@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('id_inventaris');
             $table->date('tgl_kembali');
             $table->integer('jumlah_barang');
-            $table->enum('status', ['sudah_dikembalikan', 'belum_dikembalikan']);
+            $table->enum('status', ['sudah_dikembalikan', 'belum_dikembalikan']);   
             $table->enum('kondisi_barang_akhir', ['lengkap', 'tidak_lengkap', 'rusak']);
             $table->string('ket_tidak_lengkap_awal');
             $table->string('ket_tidak_lengkap_akhir');
