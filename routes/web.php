@@ -47,9 +47,14 @@ Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'sto
 Route::put('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'update'])->name('pembelian.update');
 Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianController::class, 'destroy'])->name('pembelian.destroy');
 
-
-
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
+Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
+Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
+
+Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
+Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
+Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
+Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');

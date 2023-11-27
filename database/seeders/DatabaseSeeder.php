@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\Pembelian;
+use App\Models\DetailPembelian;
 use App\Models\Ruangan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -61,6 +64,7 @@ class DatabaseSeeder extends Seeder
             'nama_jenis_barang' => 'Bahan Praktik',
         ]);
 
+
         Ruangan::create([
             'nama_ruangan' => 'Lab 1',
         ]);
@@ -73,6 +77,40 @@ class DatabaseSeeder extends Seeder
             'nama_ruangan' => 'Ruang Penyimpanan',
         ]);
 
+        Barang::create([
+            'id_barang' => '1',
+            'nama_barang' => 'Router',
+            'merek' => 'Mikrotik',
+            'stok_barang' => '5',
+            'id_jenis_barang' => '2',
+        ]);
+
+        Barang::create([
+            'id_barang' => '2',
+            'nama_barang' => 'Router',
+            'merek' => 'Mikrotik',
+            'stok_barang' => '20',
+            'id_jenis_barang' => '2',
+        ]);
+
+        Barang::create([
+            'id_barang' => '3',
+            'nama_barang' => 'Kabel UTP',
+            'merek' => 'Belden',
+            'stok_barang' => '7',
+            'id_jenis_barang' => '3',
+        ]);
+
+        Barang::create([
+            'id_barang' => '4',
+            'nama_barang' => 'Meja Siswa',
+            'merek' => 'Informa',
+            'stok_barang' => '60',
+            'id_jenis_barang' => '1',
+        ]);
+
+        \App\Models\Pembelian::factory(10)->create();
+        \App\Models\DetailPembelian::factory(20)->create();
 
     }
 }
