@@ -26,7 +26,7 @@
                     href="{{route('user.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">User</span>
                 </a>
@@ -56,19 +56,30 @@
                     href="{{route('inventaris.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-box-2 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-box-2            text-primary text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Inventaris</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
-                    href="{{route('pemakaian.index')}}">
+
+                <a class="nav-link {{ Request::routeIs('peminjaman.index') ? 'active' : '' }} "
+                    href="{{route('peminjaman.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-hands"></i>                    </div>
-                    <span class="nav-link-text ms-1">Pemakaian</span>
-                </a>
+                        <i class="fa-solid fa-people-carry-box text-warning text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Peminjaman</span>
+
+                    <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
+                        href="{{route('pemakaian.index')}}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-hands"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Pemakaian</span>
+
+                    </a>
             </li>
             @can('isTeknisi')
             <li class="nav-item mt-3">

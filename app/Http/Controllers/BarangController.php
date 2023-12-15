@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\Inventaris;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
@@ -11,9 +12,23 @@ class BarangController extends Controller
     public function index(){
 
         $barang = Barang::all();
+        $inventaris = Inventaris::all();
+        $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
+            return $group->sum('jumlah_barang');
+        });
+
+          // Create an associative array where keys are id_barang and values are updated stok_barang
+        $updatedStokBarang = $barang->mapWithKeys(function ($barangItem) use ($totals) {
+            $id_barang = $barangItem->id_barang;
+            $total = $totals->get($id_barang, 0); // Get the total or default to 0
+            return [$id_barang => $barangItem->stok_barang - $total];
+        }); 
+
         return view('barang.index',[
         'barang' => $barang,
         'jenisBarang' => JenisBarang::all(),
+        'updatedStokBarang' => $updatedStokBarang,
+        'totals' => $totals,
         ]);
     }
 

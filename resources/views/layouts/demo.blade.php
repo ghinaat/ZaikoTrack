@@ -31,7 +31,6 @@
     <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
     <link rel="stylesheet" href="../assets//DataTables/datatables.css" />
     <link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
-
     <!-- JavaScript Bootstrap Bundle -->
     <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
@@ -53,6 +52,12 @@
     <x-notification-component />
 
     <!--   Core JS Files   -->
+    <!-- Include the modal -->
+    <div id="modal-container"></div>
+    <script>
+    // Using JavaScript to include the modal
+    document.getElementById('modal-container').innerHTML = '<object type="text/html" data="modal.html" ></object>';
+    </script>
     <script src="../assets/js/core/popper.min.js"></script>
     <script src="../assets/js/core/bootstrap.min.js"></script>
 

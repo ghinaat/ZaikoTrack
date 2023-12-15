@@ -20,14 +20,11 @@ Inventaris
                     </div>
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
-                            <!-- <thead> -->
                             <thead>
                                 <tr>
                                     <th>No.</th>
                                     <th>Ruangan</th>
                                     <th>List Barang</th>
-                                    <!-- <th>Kondisi</th>
-                                    <th style="width:130px;">Keterangan</th> -->
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -43,16 +40,6 @@ Inventaris
                                         </a>
 
                                     </td>
-                                    <!-- <td>
-                                        @if($inventaris->kondisi_barang == 'rusak')
-                                        Rusak
-                                        @elseif($inventaris->kondisi_barang == 'tidak_lengkap')
-                                        Tidak Lengkap
-                                        @else
-                                        Lengkap
-                                        @endif
-                                    </td>
-                                    <td>{{$inventaris->ket_barang}}</td> -->
                                     <td>
                                         <a href="{{ route('inventaris.destroyRuangan', $inventaris->id_ruangan) }}"
                                             onclick="notificationBeforeDelete(event, this, {{$key+1}})"
@@ -63,123 +50,19 @@ Inventaris
 
                                     </td>
                                 </tr>
-                                <!-- Modal Edit Pegawai -->
-                                <div class="modal fade" id="editModal{{$inventaris->id_inventaris}}" tabindex="-1"
-                                    role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
-                                                <button type="button" class="btn-close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <i class="fa fa-close" style="color: black;"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form
-                                                    action="{{ route('inventaris.update', $inventaris->id_inventaris)}}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="form-group">
-                                                        <label for="id_barang">Nama Barang</label>
-                                                        <select class="form-select" name="id_barang" id="id_barang"
-                                                            required>
-                                                            @foreach($barang as $key => $b)
-                                                            <option value="{{$b->id_barang}}" @if(
-                                                                old('id_barang')==$b->
-                                                                id_barang)selected @endif>
-                                                                {{$b->nama_barang}}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('id_barang')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="id_ruangan">Ruangan</label>
-                                                        <select class="form-select" name="id_ruangan" id="id_ruangan"
-                                                            required>
-                                                            @foreach($ruangan as $key => $r)
-                                                            <option value="{{$r->id_ruangan}}" @if(
-                                                                old('id_ruangan')==$r->
-                                                                id_ruangan)selected @endif>
-                                                                {{$r->nama_ruangan}}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('id_ruangan')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="jumlah_barang">Stok Barang</label>
-                                                        <input type="number" name="jumlah_barang" id="jumlah_barang"
-                                                            class="form-control" required>
-                                                        @error('jumlah_barang')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="exampleInputkondisi_barang">Kondisi Barang</label>
-                                                        <select
-                                                            class="form-select @error('kondisi_barang') is-invalid @enderror"
-                                                            id="exampleInputkondisi_barang" name="kondisi_barang">
-                                                            <option value="lengkap" @if(
-                                                                old('kondisi_barang')=='lengkap' )selected @endif>
-                                                                lengkap
-                                                            </option>
-                                                            <option value="tidak_lengkap" @if(
-                                                                old('kondisi_barang')=='tidak_lengkap' )selected @endif>
-                                                                Tidak Lengkap
-                                                            </option>
-                                                            <option value="rusak" @if( old('kondisi_barang')=='rusak'
-                                                                )selected @endif>Rusak
-                                                            </option>
-                                                        </select>
-                                                        @error('kondisi_barang')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="ket_barang">Keterangan Barang</label>
-                                                        <input type="text" name="ket_barang" id="ket_barang"
-                                                            class="form-control" required>
-                                                        @error('ket_barang')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                                        <button type="button" class="btn btn-danger"
-                                                            data-dismiss="modal">Batal</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                            </tbody>
-                        </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
+    @endforeach
+    </tbody>
+    </table>
 </div>
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah Inventaris</h5>
@@ -250,7 +133,7 @@ Inventaris
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="ket_barang">ket_barang</label>
+                        <label for="ket_barang">Keterangan Barang</label>
                         <input type="text" name="ket_barang" id="ket_barang" class="form-control">
                         <small class="form-text text-muted">*wajib diisi ketika
                             barang tidak lengkap/rusak. </small>

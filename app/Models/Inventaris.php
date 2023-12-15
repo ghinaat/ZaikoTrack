@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventaris extends Model
 {
+    use HasFactory;
     protected $table = 'inventaris';
 
     protected $primaryKey = 'id_inventaris';
@@ -24,6 +25,9 @@ class Inventaris extends Model
     {
         return $this->hasMany(Pemakaian::class, 'id_ruangan', 'id_ruangan');
     }
+
+  
+
 
     protected $guarded = ['id_inventaris'];
 }

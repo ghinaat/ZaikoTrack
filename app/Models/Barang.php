@@ -25,4 +25,8 @@ class Barang extends Model
     public function detailPembelian(){
         return $this->hasMany(DetailPembelian::class, 'id_detail_pembelian', 'id_detail_pembelian' );
     }
+
+    public function inventaris(){
+        return $this->hasMany(Inventaris::class, 'id_inventaris', 'id_inventaris' );
+    }
 }

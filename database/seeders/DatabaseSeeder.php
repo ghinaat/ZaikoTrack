@@ -7,6 +7,7 @@ use App\Models\Barang;
 use App\Models\JenisBarang;
 use App\Models\Pembelian;
 use App\Models\DetailPembelian;
+use App\Models\Inventaris;
 use App\Models\Ruangan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -113,6 +114,8 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
+        \App\Models\Inventaris::factory(10)->create();
+          
 
     }
 }

@@ -32,7 +32,8 @@ Jenis Barang
                                     <td>{{$key+1}}</td>
                                     <td>{{$jb->nama_jenis_barang}}</td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $jb->id_jenis_barang, 'key' => $key,
+                                        @include('components.action-buttons', ['id' => $jb->id_jenis_barang, 'key' =>
+                                        $key,
                                         'route' => 'jenisbarang'])
                                     </td>
                                 </tr>
@@ -46,7 +47,7 @@ Jenis Barang
     </div>
 </div>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Tambah Jenis barang</h5>
@@ -59,7 +60,8 @@ Jenis Barang
                     @csrf
                     <div class="form-group">
                         <label for="name">Jenis Barang</label>
-                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control" required>
+                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control"
+                            required>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -72,9 +74,10 @@ Jenis Barang
 </div>
 
 @foreach($jenisBarang as $key => $jb)
-    
-<div class="modal fade" id="editModal{{$jb->id_jenis_barang}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$jb->id_jenis_barang}}" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+
+<div class="modal fade" id="editModal{{$jb->id_jenis_barang}}" tabindex="-1" role="dialog"
+    aria-labelledby="editModalLabel{{$jb->id_jenis_barang}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Jenis barang</h5>
@@ -83,13 +86,14 @@ Jenis Barang
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addForm" action="{{route('jenisbarang.update', $jb->id_jenis_barang)}}" method="POST" enctype="multipart/form-data">
+                <form id="addForm" action="{{route('jenisbarang.update', $jb->id_jenis_barang)}}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label for="name">Jenis Barang</label>
-                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" 
-                        class="form-control" value="{{ old('nama_jenis_barang', $jb->nama_jenis_barang) }}" required>
+                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control"
+                            value="{{ old('nama_jenis_barang', $jb->nama_jenis_barang) }}" required>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>

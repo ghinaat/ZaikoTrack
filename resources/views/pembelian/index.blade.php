@@ -3,7 +3,7 @@
 @section('css')
 @endsection
 @section('breadcrumb-name')
-Pembelian 
+Pembelian
 @endsection
 @section('content')
 <div class="container">
@@ -41,18 +41,20 @@ Pembelian
                                     <td>Rp. {{number_format($pb->total_pembelian, 0, ',', '.')}}</td>
                                     <td>{{$pb->stok_barang}}</td>
                                     <td>{{$pb->keterangan_anggaran}}</td>
-                                    <td  style="text-align: center; ">
-                                    @if($pb->nota_pembelian)
-                                        <a href="{{ asset('storage/nota_pembelian/' . $pb->nota_pembelian) }}" target="_blank" class="btn btn-info btn-xs mx-1">
-                                            <i class="ni ni-folder-17" style="display: inline-block; line-height: normal; vertical-align: middle;"></i>
+                                    <td style="text-align: center; ">
+                                        @if($pb->nota_pembelian)
+                                        <a href="{{ asset('storage/nota_pembelian/' . $pb->nota_pembelian) }}"
+                                            target="_blank" class="btn btn-info btn-xs mx-1">
+                                            <i class="ni ni-folder-17"
+                                                style="display: inline-block; line-height: normal; vertical-align: middle;"></i>
                                         </a>
-                                    @else
-                                        <p>-</p>                                        
-                                    @endif
+                                        @else
+                                        <p>-</p>
+                                        @endif
                                     </td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $pb->id_pembelian, 'key' => $key, 
-                                        'route' => 'pembelian']) 
+                                        @include('components.action-buttons', ['id' => $pb->id_pembelian, 'key' => $key,
+                                        'route' => 'pembelian'])
                                     </td>
                                 </tr>
                                 @endforeach
@@ -65,7 +67,7 @@ Pembelian
     </div>
 </div>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Tambah Pembelian</h5>
@@ -94,16 +96,18 @@ Pembelian
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
-                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran" class="form-control" required></textarea>
+                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran"
+                            class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="nota_pembelian" class="form-label">Nota Pembelian</label>
                         <img class="img-preview img-fluid mb-1 col-sm-3 d-block">
-                        <input class="form-control @error('nota_pembelian') is-invalid @enderror" type="file" id="nota_pembelian"
-                        name="nota_pembelian" onchange="previewImageTambah()" accept="image/jpeg, image/jpg, image/png">
+                        <input class="form-control @error('nota_pembelian') is-invalid @enderror" type="file"
+                            id="nota_pembelian" name="nota_pembelian" onchange="previewImageTambah()"
+                            accept="image/jpeg, image/jpg, image/png">
                         <small class="form-text text-muted">Allow file extensions : .jpeg .jpg .png</small>
                         @error('nota_pembelian') <span class="textdanger">{{$message}}</span> @enderror
-                    </div>                   
+                    </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
@@ -115,9 +119,10 @@ Pembelian
 </div>
 
 @foreach($pembelian as $key => $pb)
-    
-<div class="modal fade" id="editModal{{$pb->id_pembelian}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$pb->id_pembelian}}" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+
+<div class="modal fade" id="editModal{{$pb->id_pembelian}}" tabindex="-1" role="dialog"
+    aria-labelledby="editModalLabel{{$pb->id_pembelian}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Pembelian</h5>
@@ -126,43 +131,47 @@ Pembelian
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addForm" action="{{route('pembelian.update', $pb->id_pembelian)}}" method="POST" enctype="multipart/form-data">
+                <form id="addForm" action="{{route('pembelian.update', $pb->id_pembelian)}}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label for="tgl_pembelian">Tanggal Pembelian</label>
-                        <input type="date" name="tgl_pembelian" id="tgl_pembelian" class="form-control" 
+                        <input type="date" name="tgl_pembelian" id="tgl_pembelian" class="form-control"
                             value="{{old('tgl_pembelian', $pb->tgl_pembelian)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="nama_toko">Nama Toko</label>
-                        <input type="text" name="nama_toko" id="nama_toko" class="form-control" 
+                        <input type="text" name="nama_toko" id="nama_toko" class="form-control"
                             value="{{old('nama_toko', $pb->nama_toko)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="total_pembelian">Total Pembelian</label>
-                        <input type="text" name="total_pembelian" id="total_pembelian_edit" class="form-control" 
+                        <input type="text" name="total_pembelian" id="total_pembelian_edit" class="form-control"
                             value="{{old('total_pembelian', $pb->total_pembelian)}}" data-format="rupiah" required>
                     </div>
                     <div class="form-group">
                         <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control" 
-                        value="{{old('stok_barang', $pb->stok_barang)}}" required>
+                        <input type="number" name="stok_barang" id="stok_barang" class="form-control"
+                            value="{{old('stok_barang', $pb->stok_barang)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
-                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran" 
-                            class="form-control" required>{{old('keterangan_anggaran', $pb->keterangan_anggaran)}}</textarea>
+                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran"
+                            class="form-control"
+                            required>{{old('keterangan_anggaran', $pb->keterangan_anggaran)}}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="nota_pembelian">Nota Pembelian</label>
                         @if($pb->nota_pembelian)
                         <a href="{{asset('storage/nota_pembelian/' . $pb->nota_pembelian)}}" target="_blank">
-                            <img class="img-preview-edit img-fluid mb-2 col-sm-2 d-block" src="{{asset('storage/nota_pembelian/' . $pb->nota_pembelian)}}">
+                            <img class="img-preview-edit img-fluid mb-2 col-sm-2 d-block"
+                                src="{{asset('storage/nota_pembelian/' . $pb->nota_pembelian)}}">
                         </a>
                         @endif
-                        <input class="form-control @error('nota_pembelian') is-invalid @enderror" type="file" id="nota_pembelian_edit"
-                        name="nota_pembelian" onchange="previewImageEdit()" accept="image/jpeg, image/jpg, image/png">
+                        <input class="form-control @error('nota_pembelian') is-invalid @enderror" type="file"
+                            id="nota_pembelian_edit" name="nota_pembelian" onchange="previewImageEdit()"
+                            accept="image/jpeg, image/jpg, image/png">
                         <small class="form-text text-muted">Allow file extensions : .jpeg .jpg .png</small>
                     </div>
                     <div class="modal-footer">
@@ -197,83 +206,82 @@ $(document).ready(function() {
 
 
 function previewImageTambah() {
-        const foto = document.querySelector('#nota_pembelian');
-        const imgPreview = document.querySelector('.img-preview');
+    const foto = document.querySelector('#nota_pembelian');
+    const imgPreview = document.querySelector('.img-preview');
 
-        imgPreview.style.display = 'block';
+    imgPreview.style.display = 'block';
 
-        const ofReader = new FileReader();
-        ofReader.readAsDataURL(foto.files[0]);
+    const ofReader = new FileReader();
+    ofReader.readAsDataURL(foto.files[0]);
 
-        ofReader.onload = function(oFREvent) {
-            imgPreview.src = oFREvent.target.result;
-        }
+    ofReader.onload = function(oFREvent) {
+        imgPreview.src = oFREvent.target.result;
+    }
+}
+
+function previewImageEdit() {
+    const foto2 = document.querySelector('#nota_pembelian_edit');
+    const imgPreview2 = document.querySelector('.img-preview-edit');
+
+    imgPreview2.style.display = 'block';
+
+    const ofReader2 = new FileReader();
+    ofReader2.readAsDataURL(foto2.files[0]);
+
+    ofReader2.onload = function(oFREvent) {
+        imgPreview2.src = oFREvent.target.result;
+    }
+}
+
+var rupiah = document.getElementById('total_pembelian');
+rupiah.addEventListener('keyup', function(e) {
+    rupiah.value = formatRupiah(this.value, 'Rp. ');
+});
+
+function formatRupiah(angka, prefix) {
+    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    // tambahkan titik jika yang di input sudah menjadi angka ribuan
+    if (ribuan) {
+        separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
     }
 
-    function previewImageEdit() {
-        const foto2 = document.querySelector('#nota_pembelian_edit');
-        const imgPreview2 = document.querySelector('.img-preview-edit');
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+}
 
-        imgPreview2.style.display = 'block';
+var subtotal_pembelian_inputs = document.querySelectorAll('[data-format="rupiah"]');
 
-        const ofReader2 = new FileReader();
-        ofReader2.readAsDataURL(foto2.files[0]);
+subtotal_pembelian_inputs.forEach(function(total_pembelian_edit) {
+    // Inisialisasi nilai pada saat halaman dimuat
+    total_pembelian_edit.value = formatRupiah(total_pembelian_edit.value, 'Rp. ');
 
-        ofReader2.onload = function(oFREvent) {
-            imgPreview2.src = oFREvent.target.result;
-        }
-    }
-
-    var rupiah = document.getElementById('total_pembelian');
-    rupiah.addEventListener('keyup', function(e)
-    {
-        rupiah.value = formatRupiah(this.value, 'Rp. ');
+    // Tambahkan event listener untuk mengubah format saat ada perubahan nilai
+    total_pembelian_edit.addEventListener('keyup', function(e) {
+        this.value = formatRupiah(this.value, 'Rp. ');
     });
 
-    function formatRupiah(angka, prefix){
-			var number_string = angka.replace(/[^,\d]/g, '').toString(),
-			split   		= number_string.split(','),
-			sisa     		= split[0].length % 3,
-			rupiah     		= split[0].substr(0, sisa),
-			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
- 
-			// tambahkan titik jika yang di input sudah menjadi angka ribuan
-			if(ribuan){
-				separator = sisa ? '.' : '';
-				rupiah += separator + ribuan.join('.');
-			}
- 
-			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-			return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-		}
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-        var subtotal_pembelian_inputs = document.querySelectorAll('[data-format="rupiah"]');
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
 
-        subtotal_pembelian_inputs.forEach(function (total_pembelian_edit) {
-        // Inisialisasi nilai pada saat halaman dimuat
-        total_pembelian_edit.value = formatRupiah(total_pembelian_edit.value, 'Rp. ');
-
-        // Tambahkan event listener untuk mengubah format saat ada perubahan nilai
-        total_pembelian_edit.addEventListener('keyup', function (e) {
-            this.value = formatRupiah(this.value, 'Rp. ');
-        });
-
-        function formatRupiah(angka, prefix){
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split   		= number_string.split(','),
-                sisa     		= split[0].length % 3,
-                rupiah     		= split[0].substr(0, sisa),
-                ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-    
-                // tambahkan titik jika yang di input sudah menjadi angka ribuan
-                if(ribuan){
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-    
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
 });
 </script>
 

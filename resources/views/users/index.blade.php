@@ -41,7 +41,7 @@ Users
                                 <!-- Modal Edit Pegawai -->
                                 <div class="modal fade" id="editModal{{$user->id_users}}" tabindex="-1" role="dialog"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
@@ -117,7 +117,7 @@ Users
     </div>
 </div>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah User</h5>

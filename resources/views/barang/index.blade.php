@@ -1,6 +1,7 @@
 @extends('layouts.demo')
 @section('title', 'List Barang')
 @section('css')
+<link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
 @endsection
 @section('breadcrumb-name')
 Barang
@@ -24,7 +25,12 @@ Barang
                                     <th>No.</th>
                                     <th>Nama Barang</th>
                                     <th>Merek</th>
-                                    <th>Stok Barang</th>
+                                    <th style="text-align: center;">Total Stok<br>Barang</th>
+                                    <th>Jumlah Barang</th>
+                                    <th style="text-align: center;">
+                                        Jumlah Barang<br>Terinventarisasi
+                                        <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
+                                    </th>
                                     <th>Jenis Barang</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
@@ -36,9 +42,12 @@ Barang
                                     <td>{{$br->nama_barang}}</td>
                                     <td>{{$br->merek}}</td>
                                     <td>{{$br->stok_barang}}</td>
+                                    <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
+                                    <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
                                     <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $br->id_barang, 'key' => $key,
+                                        @include('components.action-buttons', ['id' => $br->id_barang, 'key' =>
+                                        $key,
                                         'route' => 'barang'])
                                     </td>
                                 </tr>
@@ -52,7 +61,7 @@ Barang
     </div>
 </div>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Tambah barang</h5>
@@ -99,7 +108,7 @@ Barang
 @foreach($barang as $key => $br)
 <div class="modal fade" id="editModal{{$br->id_barang}}" tabindex="-1" role="dialog"
     aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>

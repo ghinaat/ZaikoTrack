@@ -38,12 +38,26 @@ class InventarisController extends Controller
             'ket_barang' => 'nullable'
         ]);
 
+        $existingInventaris = Inventaris::where('id_ruangan', $request->id_ruangan)
+        ->where('id_barang', $request->id_barang)
+        ->where('kondisi_barang', 'lengkap')
+        ->first();
+
+    if ($existingInventaris) {
+        // Update the existing record
+        $existingInventaris->jumlah_barang = $existingInventaris->jumlah_barang + $request->jumlah_barang;        $existingInventaris->ket_barang = $request->ket_barang;
+        $existingInventaris->save();
+
+        return redirect()->back()->with(['success_message' => 'Data telah diperbarui.']);
+    }
+    
         $inventaris = new Inventaris();
         $inventaris->id_barang = $request->id_barang;
         $inventaris->id_ruangan = $request->id_ruangan;
         $inventaris->jumlah_barang = $request->jumlah_barang;
         $inventaris->kondisi_barang = $request->kondisi_barang;
         $inventaris->ket_barang = $request->ket_barang;
+        
         $inventaris->save();
 
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',

@@ -40,7 +40,7 @@ Ruangan
                                 <!-- Modal Edit Pegawai -->
                                 <div class="modal fade" id="editModal{{$ruangan->id_ruangan}}" tabindex="-1"
                                     role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="editModalLabel">Edit Ruangan</h5>
@@ -80,7 +80,7 @@ Ruangan
     </div>
 </div>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah Ruangan</h5>
