@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('kondisi_barang_akhir', ['lengkap', 'tidak_lengkap', 'rusak']);
             $table->string('ket_tidak_lengkap_awal');
             $table->string('ket_tidak_lengkap_akhir');
-            $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');
+            $table->foreign('id_inventaris')->references('id_inventaris')->on('inventaris')->onDelete('cascade');
             $table->foreign('id_peminjaman')->references('id_peminjaman')->on('peminjaman')->onDelete('cascade');
             $table->timestamps();
         });

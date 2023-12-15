@@ -10,7 +10,7 @@ Pembelian
     <div class="row">
         <div class="col-12">
             <div class="card mb-2">
-                <div class="card-header">
+                <div class="card-header pb-0">
                     <h4 class="m-0 text-dark">List Pembelian</h4>
                 </div>
                 <div class="card-body m-0">
@@ -41,10 +41,10 @@ Pembelian
                                     <td>Rp. {{number_format($pb->total_pembelian, 0, ',', '.')}}</td>
                                     <td>{{$pb->stok_barang}}</td>
                                     <td>{{$pb->keterangan_anggaran}}</td>
-                                    <td  style="text-align: center; vertical-align: middle;">
+                                    <td  style="text-align: center; ">
                                     @if($pb->nota_pembelian)
-                                        <a href="{{ asset('storage/nota_pembelian/' . $pb->nota_pembelian) }}" target="_blank">
-                                            <i class="ni ni-folder-17 text-lg" style="display: inline-block; line-height: normal; vertical-align: middle;"></i>
+                                        <a href="{{ asset('storage/nota_pembelian/' . $pb->nota_pembelian) }}" target="_blank" class="btn btn-info btn-xs mx-1">
+                                            <i class="ni ni-folder-17" style="display: inline-block; line-height: normal; vertical-align: middle;"></i>
                                         </a>
                                     @else
                                         <p>-</p>                                        
