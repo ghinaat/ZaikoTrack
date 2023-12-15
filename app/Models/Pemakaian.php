@@ -26,4 +26,5 @@ class Pemakaian extends Model
             $model->tgl_pakai = now();
         });
     }
+
 }

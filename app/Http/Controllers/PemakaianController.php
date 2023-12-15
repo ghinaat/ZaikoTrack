@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PemakaianController extends Controller
 {
+
     public function index(){
         $pemakaian = Pemakaian::with(['inventaris.barang'])->get();
         $barang = Inventaris::with(['barang'])->get();
@@ -55,4 +56,5 @@ class PemakaianController extends Controller
         $pemakaian->save();
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
     }
+
 }
