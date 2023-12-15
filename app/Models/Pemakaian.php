@@ -11,5 +11,19 @@ class Pemakaian extends Model
     protected $primaryKey = 'id_pemakaian';
     protected $table = 'pemakaian';
     protected $guarded = ['id_pemakaian'];
-    protected $date = ['tgl_pakai'];
+    protected $dates = ['tgl_pakai']; // Perhatikan penggunaan 'dates' bukan 'date'
+
+    public function inventaris()
+    {
+        return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->tgl_pakai = now();
+        });
+    }
 }

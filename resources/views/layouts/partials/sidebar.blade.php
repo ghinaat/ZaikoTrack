@@ -61,6 +61,15 @@
                     <span class="nav-link-text ms-1">Inventaris</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
+                    href="{{route('pemakaian.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-hands"></i>                    </div>
+                    <span class="nav-link-text ms-1">Pemakaian</span>
+                </a>
+            </li>
             @can('isTeknisi')
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>

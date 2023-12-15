@@ -20,6 +20,10 @@ class Inventaris extends Model
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan', 'id_ruangan');
     }
+    public function pemakaian()
+    {
+        return $this->hasMany(Pemakaian::class, 'id_ruangan', 'id_ruangan');
+    }
 
     protected $guarded = ['id_inventaris'];
 }

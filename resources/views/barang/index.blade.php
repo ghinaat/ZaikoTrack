@@ -10,7 +10,7 @@ Barang
     <div class="row">
         <div class="col-12">
             <div class="card mb-2">
-                <div class="card-header">
+                <div class="card-header pb-0">
                     <h4 class="m-0 text-dark">List Barang</h4>
                 </div>
                 <div class="card-body m-0">
