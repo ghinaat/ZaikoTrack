@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,10 +12,10 @@ use Illuminate\Support\Str;
 class PembelianController extends Controller
 {
     public function index(){
-         $pembelian = Pembelian::all();
-         return view("pembelian.index",[
+        $pembelian = Pembelian::all();
+        return view("pembelian.index",[
             'pembelian' => $pembelian
-         ]);
+        ]);
     }
 
     public function store(Request $request){
@@ -25,7 +26,7 @@ class PembelianController extends Controller
             'total_pembelian' => 'required',
             'stok_barang' => 'required',
             'keterangan_anggaran' => 'required',
-            'nota_pembelian' => 'required|mimes:jpg,jpng,png',
+            'nota_pembelian' => 'mimes:jpg,jpng,png',
         ]);
 
         $pembelian = new Pembelian;
@@ -35,7 +36,8 @@ class PembelianController extends Controller
         $pembelian->keterangan_anggaran = $request->keterangan_anggaran;
         
         $total_pembelian = $request->total_pembelian;
-        $totalPembelians = str_replace(".", "", $total_pembelian);
+        $totalPembelian = str_replace(".", "",  $total_pembelian);
+        $totalPembelians = str_replace("Rp", "", $totalPembelian);
         $pembelian->total_pembelian = $totalPembelians;
 
 
@@ -90,5 +92,13 @@ class PembelianController extends Controller
 
         $pembelian->save();
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
+    }
+
+    public function destroy($id_pembelian){
+        $pembelian = Pembelian::find($id_pembelian);
+        if ($pembelian){
+            $pembelian -> delete();
+        }
+        return redirect()->back()->with(['success_message' => 'Data telah terhapus.']);
     }
 }

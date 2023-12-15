@@ -43,13 +43,13 @@ $(document).ready(function() {
 function notificationBeforeDelete(event, el, dt) {
     event.preventDefault();
     Swal.fire({
-        title: 'Apa Kamu Yakin?',
-        text: "Untuk Menghapus Data Ini!",
+        title: 'Apa kamu yakin?',
+        text: "Data akan dihapus!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Ya, hapus!'
     }).then((result) => {
         if (result.isConfirmed) {
             // Jika pengguna mengonfirmasi penghapusan, lakukan penghapusan dengan mengirimkan form

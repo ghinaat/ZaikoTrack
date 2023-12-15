@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('detail_peminjaman', function (Blueprint $table) {
             $table->increments('id_detail_peminjaman');
-            $table->unsignedInteger('id_barang');
             $table->unsignedInteger('id_peminjaman');
             $table->unsignedInteger('id_inventaris');
             $table->date('tgl_kembali');
             $table->integer('jumlah_barang');
             $table->enum('status', ['sudah_dikembalikan', 'belum_dikembalikan']);
-            $table->enum('kondisi_barang_awal', ['lengkap', 'tidak_lengkap', 'rusak']);
             $table->enum('kondisi_barang_akhir', ['lengkap', 'tidak_lengkap', 'rusak']);
             $table->string('ket_tidak_lengkap_awal');
             $table->string('ket_tidak_lengkap_akhir');
