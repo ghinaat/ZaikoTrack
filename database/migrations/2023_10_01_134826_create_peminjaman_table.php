@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('jurusan', 50)->nullable();
             $table->string('keterangan_pemakaian')->nullable();
             $table->date('tgl_pinjam');
+            $table->date('tgl_kembali');
             $table->timestamps();
         });
     }

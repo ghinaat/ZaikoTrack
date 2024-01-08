@@ -8,7 +8,11 @@ const DOMstrings = {
   stepFormPanelClass: 'multisteps-form__panel',
   stepFormPanels: document.querySelectorAll('.multisteps-form__panel'),
   stepPrevBtnClass: 'js-btn-prev',
-  stepNextBtnClass: 'js-btn-next'
+  stepNextBtnClass: 'js-btn-next',
+  btnAdd: document.querySelector('.js-btn-add'),
+  btnBack: document.querySelector('.js-btn-back'),
+  additionalFormContainer: document.getElementById('additionalFormContainer'),  
+  
 };
 
 
@@ -112,6 +116,8 @@ const setFormHeight = () => {
   formHeight(activePanel);
 }
 
+
+
 //STEPS BAR CLICK FUNCTION
 // Event listener untuk klik pada langkah-langkah (stepsBar)
 DOMstrings.stepsBar.addEventListener('click', e => {
@@ -147,6 +153,45 @@ DOMstrings.stepsForm.addEventListener('click', e => {
   setActivePanel(activePanelNum);
 });
 
+ 
+DOMstrings.btnAdd.addEventListener('click', () => {
+  // Nonaktifkan semua tombol progres kecuali "Barang Dipinjam"
+  const progressButtons = document.querySelectorAll('.multisteps-form__progress-btn');
+  progressButtons.forEach(button => {
+    button.disabled = true;
+  });
+
+  DOMstrings.stepsForm.style.display = 'none';
+
+  // Tampilkan form tambahan di dalam card
+ 
+  DOMstrings.additionalFormContainer.style.display = 'block';
+
+ 
+});
+
+DOMstrings.btnBack.addEventListener('click', () => {
+  // Nonaktifkan semua tombol progres kecuali "Barang Dipinjam"
+  const progressButtons = document.querySelectorAll('.multisteps-form__progress-btn');
+  progressButtons.forEach(button => {
+    button.disabled = false;
+  });
+
+  DOMstrings.stepsForm.style.display = 'block';
+
+  // Tampilkan form tambahan di dalam card
+ 
+  DOMstrings.additionalFormContainer.style.display = 'none';
+
+ 
+});
+
+
+
+
+
+
+
 //SETTING PROPER FORM HEIGHT ONLOAD
 window.addEventListener('load', setFormHeight, false);
 
@@ -161,6 +206,7 @@ const setAnimationType = (newType) => {
   })
 };
 
+
 //selector onchange - changing animation
 const animationSelect = document.querySelector('.pick-animation__select');
 
@@ -169,3 +215,5 @@ animationSelect.addEventListener('change', () => {
   
   setAnimationType(newAnimationType);
 });
+
+
