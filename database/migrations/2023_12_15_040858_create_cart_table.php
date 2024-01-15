@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_cart');
             $table->unsignedInteger('id_inventaris');
             $table->integer('jumlah_barang');
-            $table->string('keterangan_pemakaian')->nullable();
+            $table->string('ket_barang')->nullable();
             $table->foreign('id_inventaris')->references('id_inventaris')->on('inventaris')->onDelete('cascade');
             $table->timestamps();
 

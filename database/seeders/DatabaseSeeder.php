@@ -89,8 +89,8 @@ class DatabaseSeeder extends Seeder
 
         Barang::create([
             'id_barang' => '2',
-            'nama_barang' => 'Router',
-            'merek' => 'Mikrotik',
+            'nama_barang' => 'Switch',
+            'merek' => 'Cisco',
             'stok_barang' => '20',
             'id_jenis_barang' => '2',
         ]);

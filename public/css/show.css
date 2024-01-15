@@ -1,0 +1,30 @@
+.table-container {
+    width: 100%;
+
+}
+
+.center-th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    margin-bottom: 8px;
+  }
+  
+  .form-input-group {
+    display: flex;
+  }
+  
+  .form-input-text1{
+    width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+    margin-right: 16px;
+  }
+  .form-input-text{
+    width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+  }

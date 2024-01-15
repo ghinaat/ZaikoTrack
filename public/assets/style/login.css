@@ -54,11 +54,16 @@ input[type="password"]{
 
      }
      .left-box{
-        height: 100px;
-        overflow: hidden;
+        display: none;
      }
      .right-box{
         padding: 20px;
      }
 
+}
+
+@media (max-width: 767px) {
+    .featured-image {
+        display: none;
+    }
 }

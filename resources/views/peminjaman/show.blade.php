@@ -2,6 +2,7 @@
 @section('title', 'List Barang')
 @section('css')
 <link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
+<link rel="stylesheet" href="{{asset('css\show.css')}}">
 <style>
 
 </style>
@@ -11,14 +12,46 @@ List Barang
 @endsection
 @section('content')
 <div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-10">
+    <div class="row ">
+        <div class="col-4">
             <div class="card mb-4">
-                <div class="card-header pb-0">
-                    <h4 class="m-0 text-dark">
-                        <i class="fa-solid fa-door-open"></i> &nbsp;{{$ruangan->nama_ruangan}}
-                    </h4>
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <h5 class="mb-3 text-dark">Peminjaman</h5>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Nama</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->nama_lengkap}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Kelas</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->kelas}} {{$peminjaman->jurusan}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Tanggal Peminjaman</label>
+                                <div class="form-input">
+                                    :
+                                    {{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d M Y') ?? old('tgl_pinjam')}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Keterangan Pemakaian</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->ket_pemakaian}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card mb-4">
+
                 <div class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">
@@ -29,33 +62,36 @@ List Barang
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th>Nama Barang</th>
-                                        <th>Stok</th>
-                                        <th>Kondisi</th>
-                                        <th style="width:130px;">Keterangan</th>
-                                        <th>Opsi</th>
+                                        <th class="center-th">No.</th>
+                                        <th class="center-th">Nama<br>Barang</th>
+                                        <th class="center-th">Stok</th>
+                                        <th class="center-th">Kondisi<br>Awal</th>
+                                        <th class="center-th">Kondisi<br>Akhir</th>
+                                        <th class="center-th">Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if($inventaris)
-                                    @foreach($inventaris as $key => $barang)
+                                    @foreach($detailPeminjamans as $key => $barang)
                                     <tr>
                                         <td>{{$key+1}}</td>
-                                        <td>{{$barang->barang->nama_barang}}</td>
+                                        <td>{{$barang->inventaris->barang->nama_barang}}</td>
                                         <td>{{$barang->jumlah_barang}}</td>
                                         <td>
-                                            @if($barang->kondisi_barang == 'rusak')
+                                            @if($barang->inventaris->kondisi_barang == 'rusak')
                                             <span class="badge bg-gradient-danger">Rusak</span>
-                                            @elseif($barang->kondisi_barang == 'tidak_lengkap')
+                                            @elseif($barang->inventaris->kondisi_barang == 'tidak_lengkap')
                                             <span class="badge bg-gradient-secondary">Tidak Lengkap</span>
                                             @else
                                             <span class="badge bg-gradient-success">Lengkap</span>
                                             @endif
                                         </td>
                                         <td>
-                                            @if($barang->ket_barang)
-                                            {{$barang->ket_barang}}
+                                            @if($barang->kondisi_barang_akhir == 'rusak')
+                                            <span class="badge bg-gradient-danger">Rusak</span>
+                                            @elseif($barang->kondisi_barang_akhir == 'tidak_lengkap')
+                                            <span class="badge bg-gradient-secondary">Tidak Lengkap</span>
+                                            @elseif($barang->kondisi_barang_akhir == 'lengkap')
+                                            <span class="badge bg-gradient-success">Lengkap</span>
                                             @else
                                             <div style='display: flex; justify-content: center;'>
                                                 <span>-</span>
@@ -63,19 +99,32 @@ List Barang
                                             @endif
                                         </td>
                                         <td>
-                                            @include('components.action-buttons', ['id' => $barang->id_inventaris,
-                                            'key'
-                                            =>
-                                            $key, 'route' => 'inventaris'])
+                                            @if($barang->status == "dipinjam")
+                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
+                                                data-target="#editModal{{$barang->id_detail_peminjaman}}"
+                                                data-id="{{$barang->id_detail_peminjaman}}">
+                                                <i class="fa fa-undo"></i>
+                                            </a>
+                                            <a href="{{ route('detailPeminjaman.destroy', $barang->id_detail_peminjaman) }}"
+                                                onclick="notificationBeforeDelete(event, this, {{$key+1}})"
+                                                class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                            @else
+                                            <div style='display: flex; justify-content: center;'>
+                                                <span> <i class="fas fa-check-circle  fa-2x"
+                                                        style="color: #42e619; align-items: center;"></i></span>
+                                            </div>
+                                            @endif
                                         </td>
                                     </tr>
                                     <!-- Modal Edit Pegawai -->
-                                    <div class="modal fade" id="editModal{{$barang->id_inventaris}}" tabindex="-1"
-                                        role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal fade" id="editModal{{$barang->id_detail_peminjaman}}"
+                                        tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
+                                                    <h5 class="modal-title" id="editModalLabel">Pengembalian Barang</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <i class="fa fa-close" style="color: black;"></i>
@@ -83,89 +132,118 @@ List Barang
                                                 </div>
                                                 <div class="modal-body">
                                                     <form
-                                                        action="{{ route('inventaris.update', $barang->id_inventaris)}}"
+                                                        action="{{ route('detailPeminjaman.update', $barang->id_detail_peminjaman)}}"
                                                         method="post">
                                                         @csrf
                                                         @method('PUT')
-                                                        <input type="hidden" name="id_ruangan" id="id_ruangan"
-                                                            class="form-control" value="{{ $ruangan->id_ruangan }}">
                                                         <div class="form-group">
-                                                            <label for="id_barang">Nama Barang</label>
-                                                            <select class="form-select" name="id_barang" id="id_barang"
-                                                                required>
-                                                                @foreach($barangEdit->all() as $id_barang =>
-                                                                $nama_barang)
-                                                                <option value="{{ $id_barang }}" @if($barang->
-                                                                    id_barang
-                                                                    == $id_barang) selected @endif>
-                                                                    {{ $nama_barang }}</option>
-                                                                @endforeach
+                                                            <div class="form-input-group">
+                                                                <div class="form-input-text1">
+                                                                    <label for="id_barang">Barang</label>
+                                                                    <input type="text" name="id_barang" id="id_barang"
+                                                                        class="form-control"
+                                                                        value="{{$barang->inventaris->barang->nama_barang ?? old('id_barang')}}"
+                                                                        readonly>
+                                                                    @error('id_barang')
+                                                                    <div class="invalid-feedback">
+                                                                        {{ $message }}
+                                                                    </div>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-input-text1">
+                                                                    <label for="id_ruangan">Ruangan</label>
+                                                                    <select class="form-select" name="id_ruangan"
+                                                                        id="id_ruangan" required>
+                                                                        @foreach($ruangans as $key => $r)
+                                                                        <option value="{{$r->id_ruangan}}" @if(
+                                                                            old('id_ruangan')==$r->
+                                                                            id_ruangan)selected @endif>
+                                                                            {{$r->nama_ruangan}}
+                                                                        </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('id_ruangan')
+                                                                    <div class="invalid-feedback">
+                                                                        {{ $message }}
+                                                                    </div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="status">Status</label>
+                                                            <select
+                                                                class="form-select @error('status') is-invalid @enderror"
+                                                                id="status" name="status">
+                                                                <option value="dipinjam" @if($barang->status ==
+                                                                    'dipinjam'
+                                                                    ||
+                                                                    old('status')=='dipinjam' )selected
+                                                                    @endif>Dipinjam
+                                                                </option>
+                                                                <option value="sudah_dikembalikan" @if($barang->
+                                                                    status
+                                                                    ==
+                                                                    'sudah_dikembalikan' ||
+                                                                    old('status')=='sudah_dikembalikan'
+                                                                    )selected
+                                                                    @endif>Dikembalikan
+                                                                </option>
                                                             </select>
-                                                            @error('id_barang')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="jumlah_barang">Stok Barang</label>
-                                                            <input type="number" name="jumlah_barang" id="jumlah_barang"
-                                                                class="form-control"
-                                                                value="{{old('jumlah_barang', $barang->jumlah_barang)}}"
-                                                                required>
-                                                            @error('jumlah_barang')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="exampleInputkondisi_barang">Kondisi
+                                                            <label for="exampleInputkondisi_barang_akhir">Kondisi
                                                                 Barang</label>
                                                             <select
-                                                                class="form-select @error('kondisi_barang') is-invalid @enderror"
-                                                                id="exampleInputkondisi_barang" name="kondisi_barang">
-                                                                <option value="lengkap" @if($barang->kondisi_barang
+                                                                class="form-select @error('kondisi_barang_akhir') is-invalid @enderror"
+                                                                id="exampleInputkondisi_barang_akhir"
+                                                                name="kondisi_barang_akhir">
+                                                                <option value="lengkap" @if($barang->
+                                                                    kondisi_barang_akhir
                                                                     ==
                                                                     'lengkap' ||
-                                                                    old('kondisi_barang')=='lengkap'
+                                                                    old('kondisi_barang_akhir')=='lengkap'
                                                                     )selected @endif>
                                                                     Lengkap
                                                                 </option>
                                                                 <option value="tidak_lengkap" @if($barang->
-                                                                    kondisi_barang
+                                                                    kondisi_barang_akhir
                                                                     ==
                                                                     'tidak_lengkap' ||
-                                                                    old('kondisi_barang')=='tidak_lengkap'
+                                                                    old('kondisi_barang_akhir')=='tidak_lengkap'
                                                                     )selected @endif>
                                                                     Tidak Lengkap
                                                                 </option>
-                                                                <option value="rusak" @if($barang->kondisi_barang
+                                                                <option value="rusak" @if($barang->
+                                                                    kondisi_barang_akhir
                                                                     ==
                                                                     'rusak' ||
-                                                                    old('kondisi_barang')=='rusak'
+                                                                    old('kondisi_barang_akhir')=='rusak'
                                                                     )selected @endif>
                                                                     Rusak
                                                                 </option>
                                                             </select>
-                                                            @error('kondisi_barang')
+                                                            @error('kondisi_barang_akhir')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                             @enderror
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="ket_barang">Ketarangan Barang</label>
-                                                            <input type="text" name="ket_barang" id="ket_barang"
-                                                                class="form-control"
-                                                                value="{{old('ket_barang', $barang->ket_barang)}}">
-                                                            <small class="form-text text-muted">*wajib diisi ketika
+                                                        <div class="form-group mt-2">
+                                                            <label for="ket_tidak_lengkap_akhir">Keterangan
+                                                                Barang</label>
+                                                            <input type="text" name="ket_tidak_lengkap_akhir"
+                                                                id="ket_tidak_lengkap_akhir" class="form-control"
+                                                                value="{{old('ket_tidak_lengkap_akhir')}}">
+                                                            <small class="form-text text-muted">*wajib diisi
+                                                                ketika
                                                                 barang tidak lengkap/rusak. </small>
-                                                            @error('ket_barang')
+                                                            @error('ket_tidak_lengkap_akhir')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                             @enderror
+
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="submit"
@@ -178,88 +256,95 @@ List Barang
                                             </div>
                                         </div>
                                         @endforeach
-                                        @endif
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="modal-footer mt-3">
-                        <a href="{{route('inventaris.index')}}" class="btn btn-primary ">
-                            Kembali
-                        </a>
+                        <div class="modal-footer mt-3">
+                            <a href="{{ route('peminjaman.index') }}" class="btn btn-primary ml-3">
+                                Kembali
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Tambah Inventaris</h5>
+                <h5 class="modal-title" id="addModalLabel">Tambah Barang Peminjaman</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class=" modal-body">
-                <form id="addForm" action="{{ route('inventaris.store') }}" method="post">
+                <form class="addForm" action="{{ route('detailPeminjaman.store') }}" method="post">
                     @csrf
-                    <input type="hidden" name="id_ruangan" id="id_ruangan" class="form-control"
-                        value="{{ $ruangan->id_ruangan }}">
-                    <div class="form-group">
-                        <label for="id_barang">Nama Barang</label>
-                        <select class="form-select" name="id_barang" id="id_barang" required>
-                            @foreach($barangs as $key => $br)
-                            <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected @endif>
-                                {{$br->nama_barang}}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('id_barang')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                    <div class="form-row mt-3">
+                        <input type="hidden" name="id_peminjaman" value="{{ $peminjaman->id_peminjaman }}">
+                        <div class="form-group">
+                            <label for="id_barang">Barang</label>
+                            <select class="form-select" name="id_barang" id="id_barang" required>
+                                @foreach($id_barang_options as $key => $b)
+                                <option value="{{ $b->barang->id_barang }}">
+                                    {{ $b->barang->nama_barang }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('id_barang')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="jumlah_barang">Stok Barang</label>
-                        <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" required>
-                        @error('jumlah_barang')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <div class="form-group">
+                            <div class="form-input-group">
+                                <div class="form-input-text1">
+                                    <label for="id_ruangan">Ruangan</label>
+                                    <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+
+                                    </select>
+                                </div>
+                                @error('id_ruangan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                                <div class="form-input-text">
+                                    <label for="jumlah_barang">Jumlah Barang</label>
+                                    <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
+                                        required>
+                                </div>
+                            </div>
                         </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputkondisi_barang">Kondisi Barang</label>
-                        <select class="form-select @error('kondisi_barang') is-invalid @enderror"
-                            id="exampleInputkondisi_barang" name="kondisi_barang">
-                            <option value="lengkap" @if( old('kondisi_barang')=='lengkap' )selected @endif>Lengkap
-                            </option>
-                            <option value="tidak_lengkap" @if( old('kondisi_barang')=='tidak_lengkap' )selected @endif>
-                                Tidak Lengkap
-                            </option>
-                            <option value="rusak" @if( old('kondisi_barang')=='rusak' )selected @endif>Rusak
-                            </option>
-                        </select>
-                        @error('kondisi_barang')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <div class="form-group">
+                            <label for="kondisi_barang">Kondisi Barang</label>
+                            <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
+
+                            </select>
+                            @error('kondisi_barang')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="ket_barang">Keterangan Barang</label>
-                        <input type="text" name="ket_barang" id="ket_barang" class="form-control">
-                        <small class="form-text text-muted">*wajib diisi ketika
-                            barang tidak lengkap/rusak. </small>
-                        @error('ket_barang')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <div class="form-group mt-2">
+                            <label for="ket_tidak_lengkap_awal">Keterangan Barang</label>
+                            <input type="text" name="ket_tidak_lengkap_awal" id="ket_tidak_lengkap_awal"
+                                class="form-control">
+                            <small class="form-text text-muted">*wajib diisi ketika
+                                barang tidak lengkap/rusak. </small>
+                            @error('ket_tidak_lengkap_awal')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+
                         </div>
-                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -270,6 +355,10 @@ List Barang
         </div>
     </div>
 </div>
+
+
+
+
 
 
 
@@ -292,6 +381,78 @@ $(document).ready(function() {
         }
     });
 });
+
+
+
+document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
+    function() {
+        if (this.closest('#addModal')) {
+            const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
+                'select[name=id_ruangan]');
+            const selectedIdRuangan = this.value;
+
+            // Fetch id_barang options for the selected id_ruangan
+            fetch(`/fetch-id-barang/${selectedIdRuangan}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    id_barangSelect.innerHTML = '';
+
+                    // Populate options based on the received data
+                    data.forEach(option => {
+                        const newOption = document.createElement('option');
+                        newOption.value = option.ruangan.id_ruangan;
+                        newOption.text =
+                            option.ruangan.nama_ruangan;
+                        id_barangSelect.add(newOption);
+                    });
+
+                    // Show or hide the id_barang select based on whether options are available
+                    id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
+                    id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+                    const event = new Event('change');
+                    id_barangSelect.dispatchEvent(event);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }));
+document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').forEach(select => select
+    .addEventListener(
+        'change',
+        function() {
+            const id_ruanganSelect = document.querySelector('select[name=id_ruangan]');
+            const id_barangSelect = document.querySelector('select[name=id_barang]');
+
+            const selectedIdRuangan = id_ruanganSelect.value;
+            const selectedIdBarang = id_barangSelect.value;
+            const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector(
+                'select[name=kondisi_barang]');
+
+            // Fetch kondisi barang for the selected id_ruangan and id_barang
+            fetch(`/fetch-kondisi-barang/${selectedIdRuangan}/${selectedIdBarang}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    kondisiSelect.innerHTML = '';
+
+                    // Populate options based on the received data
+                    data.forEach(option => {
+                        const newOption = document.createElement('option');
+                        newOption.value = option.kondisi_barang;
+                        newOption.text = option.kondisi_barang + (option.ket_barang ? ' - ' + option
+                            .ket_barang : '');
+                        kondisiSelect.add(newOption);
+                    });
+
+                    // Show or hide the kondisi_barang select based on whether options are available
+                    kondisiSelect.style.display = data.length > 0 ? 'block' : 'none';
+                    kondisiSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+
+                })
+                .catch(error => console.error('Error:', error));
+        }));
 </script>
 
 @endpush

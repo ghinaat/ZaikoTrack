@@ -77,11 +77,11 @@
                                         <div class="my-auto">
                                             <i class="ni ni-settings me-3 "> </i>
                                         </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                <span class="font-weight-bold">Change Password</span>
-                                            </h6>
-                                        </div>
+                                        <!-- <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-bold-black mb-1"> -->
+                                        Change Password
+                                        <!-- </h6>
+                                        </div> -->
                                     </div>
                                 </a>
                             </li>
