@@ -31,6 +31,12 @@ class DetailPeminjamanController extends Controller
         ]);
         }
 
+        $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
+
+        if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
+            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
+        }
+
         $detailPeminjaman = new DetailPeminjaman([
             'id_peminjaman' => $request->id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
@@ -58,14 +64,15 @@ class DetailPeminjamanController extends Controller
         ]);
 
         $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
-
+        // dd($detailPeminjaman);
         $inventaris = Inventaris::where('id_ruangan', $request->input('id_ruangan'))
-        ->where('id_barang', $request->input('id_barang')) ->where('kondisi_barang', $request->input('kondisi_barang_akhir'))
+        ->where('id_barang', $detailPeminjaman->inventaris->id_barang) ->where('kondisi_barang', $request->input('kondisi_barang_akhir'))
         ->first();
 
+        
         if (!$inventaris) {
             $inventaris = new Inventaris([
-                'id_barang' => $detailPeminjaman->id_barang,
+                'id_barang' => $detailPeminjaman->inventaris->id_barang,
                 'id_ruangan' => $request->id_ruangan,
                 'kondisi_barang' => $request->kondisi_barang_akhir,
                 'jumlah_barang' => $detailPeminjaman->jumlah_barang,

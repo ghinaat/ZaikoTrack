@@ -1,7 +1,7 @@
 @extends('layouts.demo')
 @section('title', 'List Peminjaan')
 @section('css')
-<link rel="stylesheet" href="{{asset('css\style.css')}}">
+
 @endsection
 @section('breadcrumb-name')
 Peminjaman
@@ -46,9 +46,16 @@ Peminjaman
                                         </a>
                                     </td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $peminjaman->id_peminjaman,
-                                        'key' => $key,
-                                        'route' => 'peminjaman'])
+                                        @if($peminjaman->detailPeminjaman->where('status', '!=',
+                                        'sudah_dikembalikan')->isEmpty())
+                                        <div style='display: flex; justify-content: center;'>
+                                            <span> <i class="fas fa-check-circle fa-2x"
+                                                    style="color: #42e619; align-items: center;"></i></span>
+                                        </div>
+                                        @else
+                                        @include('components.action-buttons', ['id' => $peminjaman->id_peminjaman, 'key'
+                                        => $key, 'route' => 'peminjaman'])
+                                        @endif
                                     </td>
                                     <!-- Modal Edit Pegawai -->
                                     <div class="modal fade" id="editModal{{$peminjaman->id_peminjaman}}" tabindex="-1"

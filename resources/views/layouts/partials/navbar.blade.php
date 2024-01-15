@@ -36,17 +36,38 @@
                             <i class="fa fa-user me-sm-1"></i>
                             <span class="d-sm-inline d-none">{{ Auth::user()->name }}</span>
                         </a>
-                        <div class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
+                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                             aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item border-radius-md" href="{{ route('logout') }}" onclick="event.preventDefault();
+                            <!-- <div class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
+                                aria-labelledby="dropdownMenuButton"> -->
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md {{ Request::routeIs('user.changePassword') ? 'active' : '' }} "
+                                    href="{{route('user.changePassword')}}">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <i class="ni ni-settings me-3 "> </i>
+                                        </div>
+                                        <!-- <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-bold-black mb-1"> -->
+                                        Ubah Password
+                                        <!-- </h6>
+                                        </div> -->
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
+                                    <i class="fas fa-sign-out-alt me-3 "></i>{{ __('Logout') }}
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
                     </li>
+
                     @endguest
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
@@ -62,30 +83,37 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-bell cursor-pointer"></i>
                         </a>
-                    </li>
-                    <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-2 me-sm-n4"
+                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                             aria-labelledby="dropdownMenuButton">
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md {{ Request::routeIs('user.changePassword') ? 'active' : '' }} "
-                                    href="{{route('user.changePassword')}}">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
                                     <div class="d-flex py-1">
                                         <div class="my-auto">
-                                            <i class="ni ni-settings me-3 "> </i>
+                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
                                         </div>
-                                        <!-- <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-bold-black mb-1"> -->
-                                        Change Password
-                                        <!-- </h6>
-                                        </div> -->
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New message</span> from Laur
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                13 minutes ago
+                                            </p>
+                                        </div>
                                     </div>
                                 </a>
                             </li>
+                            <!-- "See All" Link -->
+                            <li class="mb-0">
+                                <a class="dropdown-item border-radius-md " href="#">See
+                                    All Notifications</a>
+                            </li>
                         </ul>
+                    </li>
+                    <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-white p-0">
+                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
