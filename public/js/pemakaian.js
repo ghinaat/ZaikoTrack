@@ -10,7 +10,33 @@ const DOMstrings = {
   stepPrevBtnClass: 'js-btn-prev',
   stepNextBtnClass: 'js-btn-next',
   stepPlusBtnClass: 'js-btn-plus',
+  stepChooseBtnClass: 'js-btn-choose',
+  stepCancelBtnClass: 'js-btn-cancel',
+
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+  const firstStepBtn = document.querySelector('.multisteps-form__progress-btn.first');
+
+  if (!firstStepBtn) {
+    return;
+  }
+
+  firstStepBtn.classList.add('js-active');
+
+  const firstPanel = document.querySelector('.multisteps-form__panel.first');
+
+  if (!firstPanel) {
+    return;
+  }
+
+  const firstStepIndex = Array.from(DOMstrings.stepsBar.children).indexOf(firstStepBtn);
+  console.log("First Step Index:", firstStepIndex);
+
+  setActiveStep(firstStepIndex);
+  setActivePanel(firstStepIndex);
+  setFormHeight();
+});
 
 // Remove class from a set of items
 const removeClasses = (elemSet, className) => {
@@ -65,11 +91,13 @@ const setActivePanel = activePanelNum => {
   });
 };
 
-// Set form height equal to current panel height
 const formHeight = activePanel => {
-  const activePanelHeight = activePanel.offsetHeight;
-  DOMstrings.stepsForm.style.height = `${activePanelHeight}px`;
+  if (activePanel && activePanel.offsetHeight !== undefined) {
+    const activePanelHeight = activePanel.offsetHeight;
+    DOMstrings.stepsForm.style.height = `${activePanelHeight}px`;
+  }
 };
+
 
 const setFormHeight = () => {
   const activePanel = getActivePanel();
@@ -91,17 +119,40 @@ DOMstrings.stepsBar.addEventListener('click', e => {
 DOMstrings.stepsForm.addEventListener('click', e => {
   const eventTarget = e.target;
   if (!(eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`) || 
-  eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`))) {
+  eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepChooseBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepCancelBtnClass}`))) {
     return;
   }
+
+  e.preventDefault();
+
   if (eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`)) {
     const panelTambah = document.getElementById('panel_tambah');
     let panelTambahIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelTambah);
 
-    setActiveStep(panelTambahIndex);
     setActivePanel(panelTambahIndex);
     return;
   }
+  if (eventTarget.classList.contains(`${DOMstrings.stepChooseBtnClass}`)) {
+          // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
+          const panelOrderList = document.getElementById('panel_order_list');
+          let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
+      
+          setActiveStep(panelOrderListIndex);
+          setActivePanel(panelOrderListIndex);
+          return;
+    }
+
+  if (eventTarget.classList.contains(`${DOMstrings.stepCancelBtnClass}`)) {
+          // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
+          const panelOrderList = document.getElementById('panel_order_list');
+          let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
+      
+          setActiveStep(panelOrderListIndex);
+          setActivePanel(panelOrderListIndex);
+          return;
+    }
+  
+
   
   const activePanel = findParent(eventTarget, `${DOMstrings.stepFormPanelClass}`);
   let activePanelNum = Array.from(DOMstrings.stepFormPanels).indexOf(activePanel);
@@ -127,31 +178,33 @@ const setAnimationType = newType => {
   });
 };
 
-// Selector onchange - changing animation
 const animationSelect = document.querySelector('.pick-animation__select');
 
-animationSelect.addEventListener('change', () => {
-  const newAnimationType = animationSelect.value;
-  setAnimationType(newAnimationType);
-});
+// Pastikan elemen ditemukan sebelum menambahkan event listener
+if (animationSelect) {
+    animationSelect.addEventListener('change', () => {
+        const newAnimationType = animationSelect.value;
+        setAnimationType(newAnimationType);
+    });
+}
 
 
 
-DOMstrings.stepsForm.addEventListener('click', e => {
-  const eventTarget = e.target;
+// DOMstrings.stepsForm.addEventListener('click', e => {
+//   const eventTarget = e.target;
 
-   if (!(eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`) )) {
-    return;
-  }
-  const panelTambah = document.getElementById('panel_tambah');
-  let panelTambahIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelTambah);
+//    if (!(eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`) )) {
+//     return;
+//   }
+//   const panelTambah = document.getElementById('panel_tambah');
+//   let panelTambahIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelTambah);
 
-  if (eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`)) {
+//   if (eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`)) {
 
-    setActiveStep(panelTambahIndex);
-    setActivePanel(panelTambahIndex);
+//     setActiveStep(panelTambahIndex);
+//     setActivePanel(panelTambahIndex);
 
     
-  }
-});
+//   }
+// });
 

@@ -14,6 +14,14 @@ body a {
   text-decoration: none;
 }
 
+.card{
+  width: 70%;
+  margin: 0 auto 50px;
+  box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2),
+  0px 10px 15px 0px rgba(0, 0, 0, 0.15);
+
+}
+
 .header__btn {
   transition-property: all;
   transition-duration: 0.2s;
@@ -48,13 +56,14 @@ body a {
 }
 
 .content {
-  width: 95%;
+  width: 100%;
   margin: 0 auto 50px;
+  border-radius: 1rem;
 }
 
 .content__title {
   margin-bottom: 40px;
-  font-size: 20px;
+  font-size: 25px;
   text-align: center;
 }
 
@@ -94,9 +103,12 @@ body a {
   width: 13px;
   height: 13px;
   content: "";
-  transform: translateX(-50%);
-  transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
-  border: 2px solid currentColor;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+    transition: all 0.15s linear 0s, -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+    transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+    transition: all 0.15s linear 0s, transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s, -webkit-transform 0.15s cubic-bezier(0.05, 1.09, 0.16, 1.4) 0s;
+   border: 2px solid currentColor;
   border-radius: 50%;
   background-color: #fff;
   box-sizing: border-box;
@@ -128,6 +140,11 @@ body a {
   background-color: currentColor;
 }
 
+.multisteps-form__subtitle {
+  margin-bottom: 15px;
+  font-size: 23px;
+}
+
 .multisteps-form__form {
   position: relative;
 }
@@ -145,6 +162,7 @@ body a {
   height: auto;
   opacity: 1;
   visibility: visible;
+  transition: height 0.3s ease-in-out;
 }
 .multisteps-form__panel[data-animation=scaleOut] {
   transform: scale(1.1);
