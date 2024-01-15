@@ -70,15 +70,15 @@
                         <i class="fa-solid fa-people-carry-box text-warning text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Peminjaman</span>
-
+                </a>
+            </li>
+            <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
                         href="{{route('pemakaian.index')}}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-hands"></i>
-                        </div>
+                            <i class="fa-solid fa-hand-holding-hand text-sm opacity-10" style="color: #3bc989;"></i>                        </div>
                         <span class="nav-link-text ms-1">Pemakaian</span>
-
                     </a>
             </li>
             @can('isTeknisi')
