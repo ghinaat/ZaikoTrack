@@ -1,6 +1,18 @@
 @extends('layouts.demo')
 @section('title', 'List Detail Pembelian')
 @section('css')
+<style>
+  @media (max-width:512px) {
+  h6 {
+    font-size: 15px;
+    }
+
+  .tanggal{
+    font-size: 15px;
+  }
+}
+</style>
+
 @endsection
 @section('breadcrumb-name')
 Detail Pembelian 
@@ -17,7 +29,7 @@ Detail Pembelian
                   <h6 class="mb-0">Detail Pembelian</h6>
                 </div>
                 <div class="col-6 text-end">
-                  <button class="btn bg-gradient-primary mb-0" data-toggle="modal" data-target="#addModal"><i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah</button>
+                  <button class="btn bg-primary mb-0" data-toggle="modal" data-target="#addModal">Tambah</button>
                 </div>
               </div>
             </div>
@@ -157,7 +169,7 @@ Detail Pembelian
                 <div class="col-md-6">
                     <h6 class="mb-0">Transaksi Pembelian</h6>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end align-items-center">
+                <div class="tanggal col-md-6 d-flex justify-content-end align-items-center">
                     <i class="far fa-calendar-alt me-2"></i>
                     <small>{{\Carbon\Carbon::parse($pembelian->tgl_pembelian)->format('d F Y') ?? old('tgl_pembelian')}}</small>
                 </div>

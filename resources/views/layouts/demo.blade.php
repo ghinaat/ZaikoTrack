@@ -34,6 +34,8 @@
     <!-- JavaScript Bootstrap Bundle -->
     <link id="pagestyle" href="../assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @yield('css')
 </head>
 
@@ -152,9 +154,7 @@
     <script src="../assets/js/core/bootstrap.min.js"></script>
 
 
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.js"
-        integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
-    <script src="../assets/DataTables/datatables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    <script src="../assets/DataTables/datatables.js"></script>
 
     <!-- Add Bootstrap JavaScript and jQuery (if not already included) -->
 

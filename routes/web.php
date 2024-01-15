@@ -86,6 +86,21 @@ Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjam
 Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'update'])->name('detailPeminjaman.update');
 
 
+Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
+Route::get('/pemakaian/create', [App\Http\Controllers\PemakaianController::class, 'create'])->name('pemakaian.create');
+Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');
+Route::put('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'update'])->name('pemakaian.update');
+Route::delete('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroy'])->name('pemakaian.destroy');
+Route::get('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'showDetail'])->name('pemakaian.showDetail');
+Route::post('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'storeDetail'])->name('pemakaian.storeDetail');
+Route::delete('/pemakaian/delete/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
+Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
+
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+Route::post('/cart', [App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
+Route::delete('/cart/{id_cart}', [App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
+Route::delete('/cart', [App\Http\Controllers\CartController::class, 'ButtonBatal'])->name('cart.batal');
+
 
 //Clear route cache:
 Route::get('/route-cache', function() {
@@ -98,14 +113,9 @@ Route::get('/config-cache', function() {
  	Artisan::call('config:cache');
  	return 'Config cache has been cleared';
 }); 
-
+    
 // Clear view cache:
 Route::get('/view-clear', function() {
     Artisan::call('view:clear');
     return 'View cache has been cleared';
 });
-
-Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
-Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');
-Route::put('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'update'])->name('pemakaian.update');
-Route::delete('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroy'])->name('pemakaian.destroy');

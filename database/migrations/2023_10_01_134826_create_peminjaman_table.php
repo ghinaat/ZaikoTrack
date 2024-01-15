@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_lengkap', 100);
             $table->string('kelas', 50)->nullable();
             $table->string('jurusan', 50)->nullable();
-            $table->string('keterangan_pemakaian')->nullable();
+            $table->string('keterangan_peminjaman')->nullable();
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
             $table->timestamps();

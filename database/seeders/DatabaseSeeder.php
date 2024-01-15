@@ -111,7 +111,39 @@ class DatabaseSeeder extends Seeder
             'id_jenis_barang' => '1',
         ]);
 
+        Barang::create([
+            'id_barang' => '5',
+            'nama_barang' => 'Connector rj45',
+            'merek' => 'Belden',
+            'stok_barang' => '15',
+            'id_jenis_barang' => '3',
+        ]);
 
+        Barang::create([
+            'id_barang' => '6',
+            'nama_barang' => 'Connector Fiber Optik',
+            'merek' => 'Netlink',
+            'stok_barang' => '10',
+            'id_jenis_barang' => '3',
+        ]);
+
+        Inventaris::create([
+            'id_inventaris' => '11',
+            'id_barang' => '5',
+            'id_ruangan' => '1',
+            'jumlah_barang' => '10',
+            'kondisi_barang' => 'lengkap',
+            'ket_barang' => ''
+        ]);
+
+        Inventaris::create([
+            'id_inventaris' => '12',
+            'id_barang' => '6',
+            'id_ruangan' => '3',
+            'jumlah_barang' => '10',
+            'kondisi_barang' => 'lengkap',
+            'ket_barang' => ''
+        ]);
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();

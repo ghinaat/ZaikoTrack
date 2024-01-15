@@ -17,6 +17,13 @@ class Pemakaian extends Model
     {
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
     }
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class, 'id_inventaris', 'id_inventaris');
+    }
+
+
+    
 
     protected static function boot()
     {
