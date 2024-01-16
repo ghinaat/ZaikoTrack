@@ -103,24 +103,16 @@ class PemakaianController extends Controller
             'keterangan_pemakaian'
 
         ]);
-        $cart = Cart::all();
-
-        foreach($cart as $cr){
             $pemakaian = new Pemakaian();
-            $pemakaian->id_inventaris = $cr->id_inventaris;
             $pemakaian->nama_lengkap = $request->nama_lengkap;
             $pemakaian->kelas = $request->kelas;
             $pemakaian->jurusan = $request->jurusan;
-            $pemakaian->jumlah_barang = $cr->jumlah_barang;
             if($request->keterangan_pemakaian){
                 $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
             }else{
                 $pemakaian->keterangan_pemakaian = null;
             }
             $pemakaian->save();
-        }
-        Cart::truncate();
-        return redirect('pemakaian')->with(['success_message' => 'Data telah tersimpan.',]);
     }
     
 

@@ -13,56 +13,43 @@ List Barang
 @section('content')
 <div class="container-fluid py-4">
     <div class="row ">
-        <div class="col-12 col-sm-4 mb-4">
-            <!-- <div class="col-4"> -->
+        <div class="col-4">
             <div class="card mb-4">
                 <div class="card-body p-3">
                     <div class="row">
-                        <div class="col-12">
-                            <h5 class="mb-3 text-dark">
-                                <i class="fa-solid fa-boxes-stacked"></i> &nbsp;Peminjaman
-                            </h5>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Nama</label>
+                        <div class="col-8">
+                            <h5 class="mb-3 text-dark">Peminjaman</h5>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Nama</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->nama_lengkap}}
+                                </div>
                             </div>
-                            <div class="show-input">
-                                {{$peminjaman->nama_lengkap}} :
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Kelas</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->kelas}} {{$peminjaman->jurusan}}
+                                </div>
                             </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Kelas</label>
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Tanggal Peminjaman</label>
+                                <div class="form-input">
+                                    :
+                                    {{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d M Y') ?? old('tgl_pinjam')}}
+                                </div>
                             </div>
-                            <div class="show-input">
-                                {{$peminjaman->kelas}} {{$peminjaman->jurusan}} :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Tanggal
-                                    Peminjaman</label>
-                            </div>
-                            <div class="show-input">
-                                {{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d M Y') ?? old('tgl_pinjam')}}
-                                :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Tanggal
-                                    Pengembalian</label>
-                            </div>
-                            <div class="show-input">
-                                {{ \Carbon\Carbon::parse($peminjaman->tgl_selesai)->format('d M Y') ?? old('tgl_selesai')}}
-                                :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Keterangan
-                                    Pemakaian</label>
-                            </div>
-                            <div class="show-input">
-                                {{$peminjaman->keterangan_pemakaian}} :
+                            <div class="form-group">
+                                <label for="nama_lengkap" class="form-label">Keterangan Pemakaian</label>
+                                <div class="form-input">
+                                    : {{$peminjaman->ket_pemakaian}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-8">
+        <div class="col-8">
             <div class="card mb-4">
 
                 <div class="card-body m-0">
@@ -163,7 +150,7 @@ List Barang
                                                                     </div>
                                                                     @enderror
                                                                 </div>
-                                                                <div class="form-input-text">
+                                                                <div class="form-input-text1">
                                                                     <label for="id_ruangan">Ruangan</label>
                                                                     <select class="form-select" name="id_ruangan"
                                                                         id="id_ruangan" required>
@@ -206,7 +193,7 @@ List Barang
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="exampleInputkondisi_barang_akhir">Kondisi
-                                                                Barang Akhir</label>
+                                                                Barang</label>
                                                             <select
                                                                 class="form-select @error('kondisi_barang_akhir') is-invalid @enderror"
                                                                 id="exampleInputkondisi_barang_akhir"

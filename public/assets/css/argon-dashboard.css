@@ -23335,7 +23335,7 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.bg-white .navbar-nav>.nav-item .nav-link.active {
-  background-color: var(--bs-primary);
+  background-color: #f6f9fc;
   box-shadow: none;
 }
 
@@ -23343,16 +23343,11 @@ hr.horizontal.gray-light {
   font-weight: 600;
   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
   border-radius: 0.5rem;
-  color: #fff !important;
 }
 
 .navbar-vertical .navbar-nav>.nav-item .nav-link.active {
-  color: #fff;
-  background-image: linear-gradient(310deg, #5e72e4 0%, #5e72e4 100%);
-}
-
-.navbar-vertical .navbar-nav>.nav-item>.nav-link.active .icon i{
-  color: #fff !important;
+  color: #344767;
+  background-color: rgba(255, 255, 255, 0.13);
 }
 
 .navbar-main {

@@ -10,13 +10,9 @@ class SiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-    
-        $siswa = Siswa::all()->except(1);
-    
-        return view('siswa.index',[
-            'siswa' => $siswa,
-        ]);
+    public function index()
+    {
+        //
     }
 
     /**
@@ -32,19 +28,7 @@ class SiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_siswa' => 'required',
-            'nis' => 'required',
-        ]);
-        $array = $request->only([
-            'nama_siswa',
-            'nis',
-        ]);
-        $siswa = Siswa::create($array);
-
-        return redirect()->back()
-            ->with('success_message', 'Data telah tersimpan');
-
+        //
     }
 
     /**
@@ -66,32 +50,16 @@ class SiswaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id_siswa)
+    public function update(Request $request, Siswa $siswa)
     {
-
-        $request->validate([
-            'nama_siswa' => 'required',
-            'nis' => 'required',
-        ]);
-
-        $siswa = Siswa::find($id_siswa);
-        $siswa->nama_siswa = $request->nama_siswa;
-        $siswa->nis = $request->nis;
-        $siswa->save();
-
-        return redirect()->back()->with('success_message', 'Data telah tersimpan');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id_siswa)
+    public function destroy(Siswa $siswa)
     {
-        $siswa = Siswa::find($id_siswa);
-        if ($siswa) {
-            $siswa->delete();
-        }
-
-        return redirect()->back()->with('success_message', 'Data telah terhapus.');
+        //
     }
 }
