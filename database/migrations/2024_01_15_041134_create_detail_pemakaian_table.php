@@ -13,15 +13,7 @@ return new class extends Migration
     {
         Schema::create('detail_pemakaian', function (Blueprint $table) {
             $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
-            $table->increments('id_detail_pemakaian');
+          
             $table->timestamps();
         });
     }
