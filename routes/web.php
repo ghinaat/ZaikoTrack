@@ -23,17 +23,21 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(['middleware' => ['auth']], function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('Home');
 Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
+});
 
+Route::group(['middleware' => ['auth']], function () {
 Route::put('/user/update/{id_users}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
 Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
 Route::post('/user/change-password', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
+});
 
+Route::group(['middleware' => ['auth']], function () {
 Route::resource('/ruangan', App\Http\Controllers\RuanganController::class);
-
 Route::get('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'index'])->name('jenisbarang.index');
 Route::post('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'store'])->name('jenisbarang.store');
 Route::put('/jenisbarang/{id_jenis_barang}', [App\Http\Controllers\JenisBarangController::class, 'update'])->name('jenisbarang.update');
@@ -101,6 +105,11 @@ Route::post('/cart', [App\Http\Controllers\CartController::class, 'store'])->nam
 Route::delete('/cart/{id_cart}', [App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
 Route::delete('/cart', [App\Http\Controllers\CartController::class, 'ButtonBatal'])->name('cart.batal');
 
+
+Route::resource('/siswa', App\Http\Controllers\SiswaController::class);
+Route::resource('/guru', App\Http\Controllers\GuruController::class);
+Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
+});
 
 //Clear route cache:
 Route::get('/route-cache', function() {

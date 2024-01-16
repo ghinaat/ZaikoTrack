@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 
-
+*{
+  font-family: 'Poppins', sans-serif;
+}
 
 
 .container{
@@ -9,7 +11,7 @@
   display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
-  margin: 10px 10px 15px 15px;
+  /* margin: 0px 0px 5px 0px; */
   -webkit-box-align: start;
   -ms-flex-align: start;
   -ms-flex-wrap: wrap;
@@ -18,15 +20,14 @@
 }
 
 .container .card{
-  margin-right: 10px;
+  /* margin-right: 10px; */
   position: relative;
   width: 470px;
-  height: 230px;
+  height: 200px;
   background: #ffffff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2),
-  0px 10px 15px 0px rgba(0, 0, 0, 0.15);
+ 
 }
 
 .container .card:before{
@@ -36,7 +37,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: #5953d3;
+  background: #4e4a9f;
   clip-path: circle(150px at 80% 20%);
   transition: 0.5s ease-in-out;
 }
@@ -75,10 +76,11 @@
 .container .card .imgBx img{
   position: absolute;
   /* top: ; */
-  left: 50%;
+  left: 45%;
+  
   transform: translate(-50%, -50%);
-  width: 180px;
-  height: 110px;
+  width: 140px;
+  height: 90px;
 }
 
 .container .card .contentBx{
@@ -87,6 +89,7 @@
   width: 100%;
   height: 100px;
   text-align: center;
+  /* margin-right: 30px; */
   transition: 1s;
   z-index: 10;
 }
@@ -97,14 +100,12 @@
 
 .container .card .contentBx h2{
   position: relative;
-  
-  font-size:300;
+  margin-right: 50px;
+  font-weight: 300;
   letter-spacing: 1px;
   color: rgb(0, 0, 0);
-  margin: 0;
-  padding-top: 25px;
+  margin-top: 30px;
 }
-
 .container .card .contentBx .size, .container .card .contentBx .color {
   display: flex;
   justify-content: center;

@@ -73,13 +73,14 @@
                 </a>
             </li>
             <li class="nav-item">
-                    <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
-                        href="{{route('pemakaian.index')}}">
-                        <div
-                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-hand-holding-hand text-sm opacity-10" style="color: #3bc989;"></i>                        </div>
-                        <span class="nav-link-text ms-1">Pemakaian</span>
-                    </a>
+                <a class="nav-link {{ Request::routeIs('pemakaian.index') ? 'active' : '' }} "
+                    href="{{route('pemakaian.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-hand-holding-hand text-sm opacity-10" style="color: #3bc989;"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Pemakaian</span>
+                </a>
             </li>
             @can('isTeknisi')
             <li class="nav-item mt-3">
@@ -103,6 +104,36 @@
                         <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Jenis Barang</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('siswa.index') ? 'active' : '' }} "
+                    href="{{route('siswa.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Siswa</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('guru.index') ? 'active' : '' }} "
+                    href="{{route('guru.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Guru</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('karyawan.index') ? 'active' : '' }} "
+                    href="{{route('karyawan.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Karyawan</span>
                 </a>
             </li>
             @endcan

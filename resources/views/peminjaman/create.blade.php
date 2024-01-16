@@ -91,9 +91,11 @@ Tambah Peminjaman
                                             </div>
 
                                             <div class="button-row d-flex justify-content-end mt-4">
-
-                                                <a href="{{ route('peminjaman.index') }}" id="cancelButton"
-                                                    class="btn btn-danger">Batal</a>
+                                                <a href="#"
+                                                    onclick="event.preventDefault(); document.getElementById('clear-cart-form').submit();"
+                                                    class="btn btn-danger">
+                                                    Batal
+                                                </a>
                                                 <button class=" btn btn-primary ml-auto js-btn-next" type="button"
                                                     title="Next">Next
                                                 </button>
@@ -271,6 +273,10 @@ Tambah Peminjaman
     @method('delete')
     @csrf
 </form>
+
+<form id="clear-cart-form" action="{{ route('peminjaman.clearCart') }}" method="POST" style="display: none;">
+    @csrf
+</form>
 <script src="../js/script.js"></script>
 <script>
 $(document).ready(function() {
@@ -284,27 +290,52 @@ $(document).ready(function() {
         }
     });
 });
+// $(document).ready(function() {
+//     // Handle click untuk form "Pilih Barang"
+//     // Gunakan event delegation dengan .on()
+//     $("#multisteps-form__form").on('click', '.js-btn-batal', function(e) {
+//         e.preventDefault();
+//         var form = $(this).closest('form'); // Gunakan closest('form') untuk mencari formulir terdekat
+//         var url = form.attr('action');
+//         var method = form.attr('method');
+//         var data = form.serialize();
+//         $.ajax({
+//                 type: method,
+//                 url: url,
+//                 data: data,
+//             })
+//             .done(function(response) {
+//                 // Penanganan jika sukses
+//                 console.log('Form submitted!');
+//                 form[0].reset();
+//             })
+//             .fail(function(xhr) {
+//                 // Penanganan jika gagal
+//                 console.error('Error sending data:', xhr.responseText);
+//             });
+//     });
+// });
 
-$(document).ready(function() {
-    $('#cancelButton').on('click', function(e) {
-        e.preventDefault(); // Prevent the default behavior of the anchor tag
+// $(document).ready(function() {
+//     $('#cancelButton').on('click', function(e) {
+//         e.preventDefault(); // Prevent the default behavior of the anchor tag
 
-        // Make an AJAX request to destroy the cart data
-        $.ajax({
-            url: "{{ route('peminjaman.clearCart') }}",
-            type: "POST",
-            dataType: "json",
-            success: function(response) {
-                // Handle the success response, e.g., redirect to another page
-                window.location.href = "{{ route('peminjaman.index') }}";
-            },
-            error: function(error) {
-                // Handle the error response
-                console.error('Error:', error);
-            }
-        });
-    });
-});
+//         // Make an AJAX request to destroy the cart data
+//         $.ajax({
+//             url: "{{ route('peminjaman.clearCart') }}",
+//             type: "POST",
+//             dataType: "json",
+//             success: function(response) {
+//                 // Handle the success response, e.g., redirect to another page
+//                 window.location.href = "{{ route('peminjaman.index') }}";
+//             },
+//             error: function(error) {
+//                 // Handle the error response
+//                 console.error('Error:', error);
+//             }
+//         });
+//     });
+// });
 
 
 
