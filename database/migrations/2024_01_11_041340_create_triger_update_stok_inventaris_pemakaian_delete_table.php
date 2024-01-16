@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
-            CREATE TRIGGER Pemakaian_Delete AFTER DELETE on PEMAKAIAN FOR EACH ROW
+            CREATE TRIGGER Pemakaian_Delete AFTER DELETE on DETAIL_PEMAKAIAN FOR EACH ROW
                 BEGIN
                     UPDATE inventaris SET jumlah_barang = jumlah_barang + old.jumlah_barang 
                     WHERE id_inventaris = old.id_inventaris;
