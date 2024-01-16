@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
-            CREATE TRIGGER Pemakaian_Delete AFTER DELETE on PEMAKAIAN FOR EACH ROW
-                BEGIN
-                    UPDATE inventaris SET jumlah_barang = jumlah_barang + old.jumlah_barang 
-                    WHERE id_inventaris = old.id_inventaris;
-                END
+        CREATE TRIGGER Pemakaian_Store AFTER INSERT on DETAIL_PEMAKAIAN FOR EACH ROW
+            BEGIN
+                UPDATE inventaris SET jumlah_barang = jumlah_barang - NEW.jumlah_barang
+                WHERE id_inventaris = new.id_inventaris;
+            END
         ');
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('triger_update_stok_inventaris_pemakaian_delete');
+        Schema::dropIfExists('triger_update_stok_inventaris_pemakaian');
     }
 };

@@ -44,18 +44,13 @@ class InventarisController extends Controller
         ->first();
 
     if ($existingInventaris) {
+        // Update the existing record
         $existingInventaris->jumlah_barang = $existingInventaris->jumlah_barang + $request->jumlah_barang;        $existingInventaris->ket_barang = $request->ket_barang;
         $existingInventaris->save();
 
         return redirect()->back()->with(['success_message' => 'Data telah diperbarui.']);
     }
-
-    $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
-
-    if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang) {
-        return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
-    }
- 
+    
         $inventaris = new Inventaris();
         $inventaris->id_barang = $request->id_barang;
         $inventaris->id_ruangan = $request->id_ruangan;
@@ -81,12 +76,6 @@ class InventarisController extends Controller
         ]);
 
         $inventaris = Inventaris::find($id_inventaris);
-
-        $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
-
-        if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang) {
-            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
-        }
        
         $inventaris->id_barang = $request->id_barang;
         $inventaris->id_ruangan = $request->id_ruangan;
@@ -144,7 +133,7 @@ class InventarisController extends Controller
         if ($deletedRows > 0) {
             return redirect()->back()->with(['success_message' => 'Data telah terhapus.']);
         } else {
-            return redirect()->back()->with(['error' => 'Data tidak ditemukan.']);
+            return redirect()->back()->with(['error_message' => 'Data tidak ditemukan.']);
         }
     }
     

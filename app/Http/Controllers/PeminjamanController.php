@@ -21,8 +21,6 @@ class PeminjamanController extends Controller
             ->groupBy('id_ruangan')
             ->with(['ruangan'])
             ->get();
-            
-       
         
         $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
             ->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
@@ -33,10 +31,8 @@ class PeminjamanController extends Controller
         $barang = Barang::all();
         $cart = Cart::all();
         
-      
         return view('peminjaman.index', [
             'peminjaman' => $peminjaman,
-          
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'barang' => $barang,
@@ -136,15 +132,11 @@ class PeminjamanController extends Controller
 
         // Pastikan Inventaris ditemukan sebelum melanjutkan
         if (!$inventaris) {
-            return redirect()->back()->with(['error' => 'Data tidak tersimpan.',
+         
+            return redirect()->back()->with(['error_message' => 'Data tidak tersimpan.',
         ]);
         }
 
-        $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
-
-        if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
-            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
-        }
         
 
         $cart = new Cart([
@@ -170,8 +162,8 @@ class PeminjamanController extends Controller
             'jurusan' => 'required',
             'kelas' => 'required',
             'keterangan_pemakaian' => 'nullable',
-            'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date|after_or_equal:tgl_peminjaman',
+            'tgl_pinjam' => 'required',
+            'tgl_kembali' => 'required',
             'ket_tidak_lengkap_awal' => 'nullable',
         ]);
 
@@ -217,8 +209,8 @@ class PeminjamanController extends Controller
             'jurusan' => 'required',
             'kelas' => 'required',
             'keterangan_pemakaian' => 'nullable',
-            'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date|after_or_equal:tgl_peminjaman',
+            'tgl_pinjam' => 'required',
+            'tgl_kembali' => 'required',
         ]);
 
         $peminjaman = Peminjaman::find($id_peminjaman);
@@ -252,7 +244,7 @@ class PeminjamanController extends Controller
     Public function clearCart()
     {
         Cart::truncate();
-        return redirect()->route("peminjaman.index");
+        return redirect()->back()->with('success_message', 'Data telah terhapus.');
     }
 
     Public function destroy($id_peminjaman)

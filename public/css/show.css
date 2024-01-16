@@ -8,43 +8,18 @@
     vertical-align: middle;
 }
 
-
-
-
-.show-group {
-  display: flex;
-  align-items: flex-start; /* Mengubah align-items menjadi flex-start */
-  margin-bottom: 0px;
-}
-
-.show-label {
-  flex: 1;
-  margin-right: 4px;
-  font-size: 13px;
-}
-
-.show-input {
-  position: relative;
-  font-size: 14px;
-  overflow: auto;
-  text-align: right; /* Atur direction menjadi right-to-left */
-}
-
-
 .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-label {
-  margin-bottom: 8px;
-}
-
-.form-input-group {
-  display: flex;
-}
-
-
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-label {
+    margin-bottom: 8px;
+  }
+  
+  .form-input-group {
+    display: flex;
+  }
   
   .form-input-text1{
     width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */

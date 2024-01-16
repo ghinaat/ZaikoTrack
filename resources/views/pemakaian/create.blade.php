@@ -32,47 +32,6 @@ Tambah Pemakaian
                                             <!--single form panel-->
 
                                                 {{-- </form> --}}
-                                                <div class="multisteps-form__panel" data-animation="scaleIn" id="panel_order_list">
-                                                    <h1 class="multisteps-form__subtitle">Alat dan Bahan</h1>
-                                                    <div class="multisteps-form__content">
-                                                        <div class="form-row mt-2">
-                                                            <button class="btn btn-primary js-btn-plus" >Tambah</button>
-                                                            <div class="table-responsive mt-2">
-                                                                <table id="cartTable" class="table table-bordered table-striped align-items-center mb-0">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>No.</th>
-                                                                            <th>Nama Barang</th>
-                                                                            {{-- <th>Ruangan</th> --}}
-                                                                            <th>Jumlah Barang</th>
-                                                                            <th style="width:189px;">Opsi</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach($cart as $key => $cr)
-                                                                        <tr>
-                                                                            <td>{{$key+1}}</td>
-                                                                            <td>{{$cr->inventaris->barang->nama_barang}}</td>
-                                                                            {{-- <td>{{$cr->inventaris->ruangan->nama_ruangan}}</td> --}}
-                                                                            <td>{{$cr->jumlah_barang}}</td>
-                                                                            <td>
-                                                                                <a href="{{ route('cart.destroy', $cr->id_cart) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})"
-                                                                                class="btn btn-danger btn-xs mx-1">
-                                                                                <i class="fa fa-trash"></i>
-                                                                                </a>
-                                                                            </td>    
-                                                                        </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group mt-4" style="text-align: right;">
-                                                            <a href="{{ route('cart.batal') }}" onclick="deleteCart(event, this)" class="btn btn-danger" type="button" title="cancel">Batal</a>
-                                                            <button class="btn btn-primary js-btn-next " type="button" title="Next">Selanjutnya</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <form id="addForm" action="{{route('pemakaian.store')}}" method="post">
                                                         @csrf
                                                     <div class="multisteps-form__panel  js-active first" data-animation="scaleIn">
@@ -87,13 +46,13 @@ Tambah Pemakaian
                                                                     <div class="col-md-6 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label for="kelas" class="mb-0">Kelas</label>
-                                                                            <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas" required>
+                                                                            <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label for="jurusan" class="mb-0">Jurusan</label>
-                                                                            <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan" required>
+                                                                            <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -103,8 +62,8 @@ Tambah Pemakaian
                                                                 </div>
                                                             </div>
                                                             <div class="form-group mt-2" style="text-align: right;">
-                                                            <button class="btn btn-secondary js-btn-prev" type="button" title="Prev">Kembali</button>
-                                                            <button class="btn btn-primary" type="submit" title="Next">Simpan</button>
+                                                            {{-- <button class="btn btn-secondary js-btn-prev" type="button" title="Prev">Kembali</button> --}}
+                                                            <button class="btn btn-primary" type="submit" title="Next">Selanjutnya</button>
                                                             </div>
                                                         </div>
                                                     </div>

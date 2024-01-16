@@ -9,9 +9,6 @@ use App\Models\Pembelian;
 use App\Models\DetailPembelian;
 use App\Models\Inventaris;
 use App\Models\Ruangan;
-use App\Models\Siswa;
-use App\Models\Guru;
-use App\Models\Karyawan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
@@ -147,23 +144,6 @@ class DatabaseSeeder extends Seeder
             'kondisi_barang' => 'lengkap',
             'ket_barang' => ''
         ]);
-
-        Siswa::create([
-            'id_siswa' => '1',
-            'nama_siswa' => '-',
-            'nis' => '0'
-        ]);
-
-        Guru::create([
-            'id_guru' => '1',
-            'nama_guru' => '-',
-        ]);
-
-        Karyawan::create([
-            'id_karyawan' => '1',
-            'nama_karyawan' => '-',
-        ]);
-        
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();

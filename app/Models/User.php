@@ -45,9 +45,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function notifikasi()
-    {
-        return $this->hasMany(Notifikasi::class, 'id_users', 'id_users');
-    }
 }
