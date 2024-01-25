@@ -24,164 +24,209 @@ Tambah Peminjaman
                             <div class="row justify-content-center">
                                 <div class="col-12 col-lg-8 ml-auto mr-auto mb-2">
                                     <div class="multisteps-form__progress">
-                                        <button class="multisteps-form__progress-btn js-active" type="button"
+                                        <button class="multisteps-form__progress-btn js-active" type=" button"
+                                            title="Address">Data
+                                            Peminjam</button>
+                                        <button class="multisteps-form__progress-btn " type="button"
                                             title="User Info">Alat & Bahan
                                         </button>
-                                        <button class="multisteps-form__progress-btn" type="button"
-                                            title="Address">Peminjam</button>
-                                        <button class="multisteps-form__progress-btn" type="button" title="Order Info"
-                                            id="order-info">Detail
-                                            Peminjaman</button>
+
                                     </div>
                                 </div>
                             </div>
                             <!--form panels-->
                             <div class="row">
+                                <div class="multisteps-form__form">
+                                    <form id='formPeminjaman' action="{{ route('peminjaman.store') }}" method="post">
+                                        @csrf
+                                        <div class="multisteps-form__panel js-active" data-animation="scaleIn">
 
-                                <form class="multisteps-form__form" action="{{ route('peminjaman.store') }}"
-                                    method="post">
-                                    @csrf
-                                    <div class="multisteps-form__panel  rounded bg-white js-active"
-                                        data-animation="scaleIn">
-                                        <h4 class="multisteps-form__title">Alat & Bahan</h4>
-                                        <div class="multisteps-form__content">
-                                            <div class="form-row mt-3">
-                                                <div id="cart-container">
-                                                    <div class="table-container">
-                                                        <div class="table-responsive">
-                                                            <div class="mb-2">
-                                                                <button class="btn btn-primary ml-auto js-btn-add"
-                                                                    type="button" title="Next"
-                                                                    id="tambahButton">Tambah</button>
+                                            <h4 class="multisteps-form__title">Data Diri</h4>
+                                            <div class="multisteps-form__content">
+                                                <div class="form-row mt-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputstatus">Status</label>
+                                                        <select
+                                                            class="form-select @error('status') is-invalid @enderror selectpicker"
+                                                            data-live-search="true" id="exampleInputstatus"
+                                                            name="status">
+                                                            <option value="siswa" @if( old('status')=='siswa' )selected
+                                                                @endif>Siswa
+                                                            </option>
+                                                            <option value="guru" @if( old('status')=='guru' )selected
+                                                                @endif>
+                                                                Guru
+                                                            </option>
+                                                            <option value="karyawan" @if( old('status')=='karyawan'
+                                                                )selected @endif>Karyawan
+                                                            </option>
+                                                        </select>
+                                                        @error('status')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="form-group" id="namaForm" style="display: block;">
+                                                        <label for="id_siswa">Nama Lengkap</label>
+                                                        <select class="form-select">
+
+                                                        </select>
+                                                        @error('id_siswa')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="form-group" id="siswaForm" style="display: none;">
+                                                        <label for="id_siswa">Nama Siswa</label>
+                                                        <select class="form-select" name="id_siswa" id="id_siswa">
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($siswa as $key => $s)
+                                                            <option value="{{ $s->id_siswa }}">{{ $s->nama_siswa }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('id_siswa')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+
+                                                    <div class="form-group" id="guruForm" style="display: none;">
+                                                        <label for="id_guru">Nama Guru</label>
+                                                        <select class="form-select" name="id_guru" id="id_guru">
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($guru as $key => $g)
+                                                            <option value="{{ $g->id_guru }}">
+                                                                {{ $g->nama_guru }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('id_guru')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+
+                                                    <div class="form-group" id="karyawanForm" style="display: none;">
+                                                        <label for="id_karyawan">Nama Karyawan</label>
+                                                        <select class="form-select" name="id_karyawan" id="id_karyawan">
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($karyawan as $key => $k)
+                                                            <option value="{{ $k->id_karyawan }}">
+                                                                {{ $k->nama_karyawan }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('id_karyawan')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="form-input-group">
+                                                            <div class="form-input-text1">
+                                                                <label for="kelas" class="form-label">Kelas</label>
+                                                                <input type="text" name="kelas" id="kelas"
+                                                                    class="form-control" required>
                                                             </div>
-                                                            <table id="myTable2"
-                                                                class="table table-bordered table-striped align-items-center mb-0">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>No.</th>
-                                                                        <th>Nama Barang</th>
-                                                                        <th>Jumlah</th>
-                                                                        <th>Keterangan</th>
-                                                                        <th>Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($cart as $key => $cart)
-                                                                    <tr>
-                                                                        <td>{{$key+1}}</td>
-                                                                        <td>{{$cart->inventaris->barang->nama_barang}}
-                                                                        </td>
-                                                                        <td>{{$cart->jumlah_barang}}</td>
-                                                                        <td>{{$cart->ket_barang}}</td>
-                                                                        <td>
-                                                                            <a href="{{ route('peminjaman.destroyCart', $cart->id_cart) }}"
-                                                                                onclick="notificationBeforeDelete(event, this, {{$key+1}})"
-                                                                                class="btn btn-danger btn-xs mx-1">
-                                                                                <i class="fa fa-trash"></i>
-                                                                            </a>
-
-                                                                        </td>
-                                                                    </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
+                                                            <div class="form-input-text">
+                                                                <label for="jurusan" class="form-label">Jurusan</label>
+                                                                <input type="text" name="jurusan" id="jurusan"
+                                                                    class="form-control" required>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="button-row d-flex justify-content-end mt-4">
-                                                <a href="#"
-                                                    onclick="event.preventDefault(); document.getElementById('clear-cart-form').submit();"
-                                                    class="btn btn-danger">
-                                                    Batal
-                                                </a>
-                                                <button class=" btn btn-primary ml-auto js-btn-next" type="button"
-                                                    title="Next">Next
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="multisteps-form__panel  rounded bg-white " data-animation="scaleIn">
-
-                                        <h4 class="multisteps-form__title">Data Diri</h4>
-                                        <div class="multisteps-form__content">
-                                            <div class="form-row mt-3">
-                                                <div class="form-group">
-                                                    <label for="nama_lengkap">Nama</label>
-                                                    <input type="text" name="nama_lengkap" id="nama_lengkap"
-                                                        class="form-control" required>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="form-input-group">
-                                                        <div class="form-input-text1">
-                                                            <label for="kelas" class="form-label">Kelas</label>
-                                                            <input type="text" name="kelas" id="kelas"
-                                                                class="form-control" required>
-                                                        </div>
-                                                        <div class="form-input-text">
-                                                            <label for="jurusan" class="form-label">Jurusan</label>
-                                                            <input type="text" name="jurusan" id="jurusan"
-                                                                class="form-control" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="button-row d-flex  justify-content-end mt-4">
-                                                <button class="btn btn-secondary js-btn-prev" type="button"
-                                                    title="Prev">Kembali</button>
-                                                <button class="btn btn-primary ml-auto js-btn-next" type="button"
-                                                    title="Next">Next</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--single form panel-->
-                                    <div class="multisteps-form__panel  rounded bg-white" data-animation="scaleIn">
-                                        <h4 class="multisteps-form__title">Detail
-                                            Peminjaman</h4>
-                                        <div class="multisteps-form__content">
-                                            <div class="form-row mt-3">
-                                                <div class="form-group">
-                                                    <div class="form-input-group">
-                                                        <div class="form-input-text1">
-                                                            <label for="tgl_pinjam" class="form-label">Tanggal
-                                                                Pinjam</label>
-                                                            <input type="date" name="tgl_pinjam" id="tgl_pinjam"
-                                                                class="form-control" required>
-                                                        </div>
-                                                        <div class="form-input-text">
-                                                            <label for="tgl_kembali" class="form-label">Tanggal
-                                                                Kembali</label>
-                                                            <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                                class="form-control" required>
-                                                        </div>
-
-                                                    </div>
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_pemakaian">Keterangan
                                                             Pemakaian</label>
                                                         <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <div class="form-input-group">
+                                                            <div class="form-input-text1">
+                                                                <label for="tgl_pinjam" class="form-label">Tanggal
+                                                                    Pinjam</label>
+                                                                <input type="date" name="tgl_pinjam" id="tgl_pinjam"
+                                                                    class="form-control" required>
+                                                            </div>
+                                                            <div class="form-input-text">
+                                                                <label for="tgl_kembali" class="form-label">Tanggal
+                                                                    Kembali</label>
+                                                                <input type="date" name="tgl_kembali" id="tgl_kembali"
+                                                                    class="form-control" required>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
                                                 </div>
 
-                                            </div>
-                                            <div class="button-row d-flex justify-content-end mt-4">
-                                                <button class="btn btn-secondary js-btn-prev" type="button"
-                                                    title="Prev">Kembali</button>
-                                                <button type="submit"
-                                                    class="btn btn-primary js-btn-save">Simpan</button>
-                                                </button>
-                                            </div>
-                                </form>
+
+                                                <div class="button-row d-flex justify-content-end mt-4">
+                                                    <a href="{{route('peminjaman.index')}}"
+                                                        class="btn btn-danger mybtn">
+                                                        Batal
+                                                    </a>
+                                                    <button class="btn btn-primary ml-auto js-btn-next mybtn"
+                                                        title="Next">Next</button>
+                                                </div>
+                                    </form>
+                                </div>
                             </div>
+                            <div class="multisteps-form__panel  rounded bg-white " data-animation="scaleIn"
+                                id="table_id">
+                                <h4 class="multisteps-form__title">Alat & Bahan</h4>
+                                <div class="multisteps-form__content">
+                                    <div class="form-row mt-3">
+                                        <div id="cart-container">
+                                            <div class="table-container">
+                                                <div class="table-responsive">
+                                                    <div class="mb-2">
+                                                        <button class="btn btn-primary ml-auto js-btn-add" type="button"
+                                                            title="Next" id="tambahButton">Tambah</button>
+                                                    </div>
+                                                    <table id="myTable2"
+                                                        class="table table-bordered table-striped align-items-center mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>Nama Barang</th>
+                                                                <th>Ruangan</th>
+                                                                <th>Jumlah</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id='button-new' class="d-flex justify-content-end mt-4 button-row">
+                                        <button class="btn btn-secondary js-btn-prev mybtn" type="button"
+                                            title="Prev">Kembali</button>
+                                        <a href="{{route('peminjaman.index')}}" class="btn btn-primary">
+                                            Simpan
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--single form panel-->
+
                         </div>
                         <!-- tambah barang -->
                         <div id="additionalFormContainer" style="display: none;">
-                            <form class="addForm" action="{{ route('peminjaman.cart') }}" method="post">
+                            <form class="addForm" action="{{ route('detailPeminjaman.store') }}" method="post">
                                 @csrf
 
                                 <div class="form-row mt-3">
@@ -246,9 +291,10 @@ Tambah Peminjaman
                                 </div>
 
                                 <div class="button-row d-flex justify-content-end mt-4 ">
-                                    <button class="btn btn-secondary js-btn-back" type="button"
+                                    <button class="btn btn-secondary js-btn-simpan mybtn" type="button"
                                         title="Prev">Kembali</button>
-                                    <button type="submit" class="btn btn-primary js-btn-save">Simpan</button>
+                                    <button class="btn btn-primary js-btn-back mybtn" type="button"
+                                        title="Prev">Simpan</button>
                                 </div>
                             </form>
                         </div>
@@ -268,12 +314,11 @@ Tambah Peminjaman
 @stop
 
 @push('js')
-<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+
 <form action="" id="delete-form" method="post">
     @method('delete')
     @csrf
 </form>
-
 <form id="clear-cart-form" action="{{ route('peminjaman.clearCart') }}" method="POST" style="display: none;">
     @csrf
 </form>
@@ -290,54 +335,235 @@ $(document).ready(function() {
         }
     });
 });
-// $(document).ready(function() {
-//     // Handle click untuk form "Pilih Barang"
-//     // Gunakan event delegation dengan .on()
-//     $("#multisteps-form__form").on('click', '.js-btn-batal', function(e) {
-//         e.preventDefault();
-//         var form = $(this).closest('form'); // Gunakan closest('form') untuk mencari formulir terdekat
-//         var url = form.attr('action');
-//         var method = form.attr('method');
-//         var data = form.serialize();
-//         $.ajax({
-//                 type: method,
-//                 url: url,
-//                 data: data,
-//             })
-//             .done(function(response) {
-//                 // Penanganan jika sukses
-//                 console.log('Form submitted!');
-//                 form[0].reset();
-//             })
-//             .fail(function(xhr) {
-//                 // Penanganan jika gagal
-//                 console.error('Error sending data:', xhr.responseText);
-//             });
-//     });
-// });
+$(document).ready(function() {
+    $('#myTable2 tbody').on('click', '.removeBtn', function(e) {
+        e.preventDefault();
 
-// $(document).ready(function() {
-//     $('#cancelButton').on('click', function(e) {
-//         e.preventDefault(); // Prevent the default behavior of the anchor tag
+        let id_detail_peminjaman = $(this).data('id_detail_peminjaman');
 
-//         // Make an AJAX request to destroy the cart data
-//         $.ajax({
-//             url: "{{ route('peminjaman.clearCart') }}",
-//             type: "POST",
-//             dataType: "json",
-//             success: function(response) {
-//                 // Handle the success response, e.g., redirect to another page
-//                 window.location.href = "{{ route('peminjaman.index') }}";
-//             },
-//             error: function(error) {
-//                 // Handle the error response
-//                 console.error('Error:', error);
-//             }
-//         });
-//     });
-// });
+        // Ambil token CSRF dari tag meta
+        let token = $('meta[name="csrf-token"]').attr('content');
+        $(this).prop('disabled', true);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/peminjaman/detailPeminjaman/${id_detail_peminjaman}`,
+                    type: "DELETE",
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            console.log(response.message);
+                            // Find the container element that wraps your forms
+                            var formContainer = $(
+                                '#myTable2'
+                            ); // Replace 'yourContainerId' with the actual ID or class of your container
+
+                            // Remove the table row from the current form
+                            $('td[data-id_detail_peminjaman="' + response
+                                    .id_detail_peminjaman + '"]')
+                                .remove();
+
+                            // Reload or update the content within the container
+                            formContainer.load(window.location.href +
+                                ' #myTable2'
+                            ); // Reload the content within the container
+
+                            formHeight(getActivePanel());
+                        } else {
+                            console.log('Gagal menghapus data.');
+                        }
+                    },
+
+                    error: function(xhr, status, error) {
+                        let errorMessage = xhr.responseJSON && xhr.responseJSON
+                            .message ? xhr.responseJSON.message :
+                            'An error occurred.';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                        });
+                    },
+                    complete: function() {
+                        // Re-enable the button after the request is complete
+                        $('.removeBtn').prop('disabled', false);
+                    }
+
+                });
+            } else {
+                // Re-enable the button if the user cancels the action
+                $('.removeBtn').prop('disabled', false);
+            }
+        });
+    });
+});
+$(document).ready(function() {
+    var idPeminjaman; // Variabel untuk menyimpan ID peminjaman
+
+    // Handle click untuk form "Pilih Barang"
+    // Gunakan event delegation dengan .on()
+    $("#formPeminjaman").on('click', '.js-btn-next', function(e) {
+        e.preventDefault();
+
+        // Dapatkan formulir yang sedang aktif
+        var form = $(this).closest('form');
+
+        // Dapatkan URL dan metode formulir
+        var url = form.attr('action');
+        var method = form.attr('method');
+
+        // Serialize data formulir
+        var data = form.serialize();
+
+        // Kirim data ke server menggunakan AJAX
+        $.ajax({
+                type: method,
+                url: url,
+                data: data,
+            })
+            .done(function(response) {
+                // Dapatkan id_peminjaman dari respons JSON
+                idPeminjaman = response.id_peminjaman;
+                console.log('Form submitted!', response);
+                // form[0].reset();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                let errorMessage = jqXHR.responseText && jqXHR.responseText
+                    .message ? jqXHR.responseText.message :
+                    'An error occurred.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorMessage,
+                });
+                alert(jqXHR.responseText)
+
+            });
+    });
+
+    // Handle click untuk form "Pilih Barang"
+    // Gunakan event delegation dengan .on()
+    $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
+        e.preventDefault();
+
+        // Dapatkan formulir yang sedang aktif
+        var form = $(this).closest('form');
+
+        // Dapatkan URL dan metode formulir
+        var url = form.attr('action');
+        var method = form.attr('method');
+
+        // Serialize data formulir
+        var data = form.serialize();
+        data += '&id_peminjaman=' + idPeminjaman;
+
+        // Kirim data ke server menggunakan AJAX
+        $.ajax({
+                type: method,
+                url: url,
+                data: data,
+            })
+            .done(function(response) {
+                console.log('Additional form submitted!', response);
+
+                // Check if the expected properties exist in the response
+                if (response.nama_barang && response.nama_ruangan) {
+                    var existingRowCount = $('#myTable2 tbody tr').length;
+                    var newRowNumber = existingRowCount + 1;
+                    var formContainer = $(
+                        '#button-new'
+                    );
+                    // Reload or update the content within the container
+
+                    // Create the new row HTML
+                    var newRow = '<tr>' +
+                        '<td>' + newRowNumber + '</td>' +
+                        '<td>' + response.nama_barang + '</td>' +
+                        '<td>' + response.nama_ruangan + '</td>' +
+                        '<td>' + response.jumlah_barang + '</td>' +
+                        '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
+                        response.id_detail_peminjaman + '">Hapus</button></td>'
+                    '</tr>';
+
+                    // Append the new row to the table
+                    $('#myTable2 tbody').append(newRow);
+                    $('#myTable2').addClass('table-responsive');
+                    formHeight(getActivePanel());
+                    form[0].reset();
+                } else {
+                    alert('Error: ' + response);
+                }
+            })
+            .fail(function(xhr) {
+                let errorMessage = xhr.responseJSON && xhr.responseJSON
+                    .message ? xhr.responseJSON.message :
+                    'An error occurred.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorMessage,
+                });
+                alert('Error: ' + xhr.responseText);
+            });
+    });
+});
 
 
+
+
+document.getElementById('exampleInputstatus').addEventListener('click', function() {
+    const selectedStatus = this.value;
+    const siswaElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#siswaForm');
+    const guruElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#guruForm');
+    const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#karyawanForm');
+    const NamaElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#namaForm');
+    const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#kelas');
+    const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#jurusan');
+
+    // Hide all forms
+    siswaElement.style.display = 'none';
+    guruElement.style.display = 'none';
+    karyawanElement.style.display = 'none';
+    NamaElement.style.display = 'block';
+    jurusanElement.removeAttribute('readonly');
+    kelasElement.removeAttribute('readonly');
+
+
+    // Show the selected form
+    if (selectedStatus === 'siswa') {
+        siswaElement.style.display = 'block';
+        NamaElement.style.display = 'none';
+
+    } else if (selectedStatus === 'guru') {
+        guruElement.style.display = 'block';
+        NamaElement.style.display = 'none';
+        kelasElement.setAttribute('readonly', 'true');
+    } else if (selectedStatus === 'karyawan') {
+        karyawanElement.style.display = 'block';
+        NamaElement.style.display = 'none';
+        kelasElement.setAttribute('readonly', 'true');
+        jurusanElement.setAttribute('readonly', 'true');
+
+    }
+});
 
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
     function() {
@@ -394,7 +620,8 @@ document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').for
                     data.forEach(option => {
                         const newOption = document.createElement('option');
                         newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + (option.ket_barang ? ' - ' + option
+                        newOption.text = option.kondisi_barang + (option.ket_barang ? ' - ' +
+                            option
                             .ket_barang : '');
                         kondisiSelect.add(newOption);
                     });

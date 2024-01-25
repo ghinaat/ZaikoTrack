@@ -7,6 +7,8 @@ use App\Models\Barang;
 use App\Models\JenisBarang;
 use App\Models\Pembelian;
 use App\Models\DetailPembelian;
+use App\Models\Peminjaman;
+use App\Models\DetailPeminjaman;
 use App\Models\Inventaris;
 use App\Models\Ruangan;
 use App\Models\Siswa;
@@ -14,6 +16,8 @@ use App\Models\Guru;
 use App\Models\Karyawan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -167,7 +171,11 @@ class DatabaseSeeder extends Seeder
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();
+        \App\Models\Peminjaman::factory(10)->create();
+        \App\Models\DetailPeminjaman::factory(10)->create();
+        \App\Models\Siswa::factory(10)->create();
+        \App\Models\Karyawan::factory(10)->create();
+        \App\Models\Guru::factory(10)->create();
           
-
     }
 }

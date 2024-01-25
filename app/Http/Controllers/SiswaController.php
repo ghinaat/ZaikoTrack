@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use App\Imports\SiswaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
@@ -80,6 +81,16 @@ class SiswaController extends Controller
         $siswa->save();
 
         return redirect()->back()->with('success_message', 'Data telah tersimpan');
+    }
+
+    public function import(Request $request)
+    {
+        
+        Excel::import(new SiswaImport, $request->file('file')->store('siswa'));
+
+        return redirect()->back()->with([
+            'success_message' => 'Data telah Tersimpan',
+        ]);
     }
 
     /**

@@ -46,15 +46,15 @@ Peminjaman
                                         </a>
                                     </td>
                                     <td>
-                                        @if($peminjaman->detailPeminjaman->where('status', '!=',
-                                        'sudah_dikembalikan')->isEmpty())
+                                        @if($peminjaman->detailPeminjaman->where('status', '==',
+                                        'dipinjam')->isEmpty())
+                                        @include('components.action-buttons', ['id' => $peminjaman->id_peminjaman, 'key'
+                                        => $key, 'route' => 'peminjaman'])
+                                        @else
                                         <div style='display: flex; justify-content: center;'>
                                             <span> <i class="fas fa-check-circle fa-2x"
                                                     style="color: #42e619; align-items: center;"></i></span>
                                         </div>
-                                        @else
-                                        @include('components.action-buttons', ['id' => $peminjaman->id_peminjaman, 'key'
-                                        => $key, 'route' => 'peminjaman'])
                                         @endif
                                     </td>
                                     <!-- Modal Edit Pegawai -->

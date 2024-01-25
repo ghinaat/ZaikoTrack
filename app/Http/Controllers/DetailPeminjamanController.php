@@ -20,21 +20,23 @@ class DetailPeminjamanController extends Controller
         ]);
 
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
-        $inventaris = Inventaris::where('id_ruangan', $request->input('id_ruangan'))
-            ->where('id_barang', $request->input('id_barang')) ->where('kondisi_barang', $request->input('kondisi_barang'))
-            ->first();
-
+        $inventaris = Inventaris::with(['ruangan', 'barang'])
+        ->where('id_ruangan', $request->input('id_ruangan'))
+        ->where('id_barang', $request->input('id_barang'))
+        ->where('kondisi_barang', $request->input('kondisi_barang'))
+        ->first();
+        
         // Pastikan Inventaris ditemukan sebelum melanjutkan
         if (!$inventaris) {
          
-            return redirect()->back()->with(['error_message' => 'Data tidak tersimpan.',
+            return response()->json(['error' => 'Data tidak tersimpan.',
         ]);
         }
 
         $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
 
         if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
-            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
+            return response()->json(['error' => 'Stok barang tidak mencukupi.']);
         }
 
         $detailPeminjaman = new DetailPeminjaman([
@@ -47,10 +49,20 @@ class DetailPeminjamanController extends Controller
 
         ]);
         $detailPeminjaman ->save();
+        
+        $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
+        $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
 
-        return redirect()->back()->with([
-            'success_message' => 'Data telah tersimpan.',
-        ]);
+        if ($namaBarang && $namaRuangan) {
+            return response()->json([
+                'nama_ruangan'  => $namaRuangan->ruangan->nama_ruangan,
+                'nama_barang' => $namaBarang->barang->nama_barang,
+                'jumlah_barang' => $detailPeminjaman->jumlah_barang,
+                'id_detail_peminjaman' => $detailPeminjaman->id_detail_peminjaman
+            ]);
+        } else {
+            return response()->json(['error' => 'Ada data belum diisi']);
+        }
     }
 
     public function update(Request $request, $id_detail_peminjaman)
@@ -99,12 +111,27 @@ class DetailPeminjamanController extends Controller
     {
         $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
 
-        if ($detailPeminjaman) {
-          
-            $detailPeminjaman->delete();
-          
+        if (!$detailPeminjaman) {
+            // Handle if the record is not found
+            if (request()->ajax()) {
+                return response()->json(['error' => 'Record not found.'], 404);
+            } else {
+                return redirect()->back()->with('error_message', 'Record not found.');
+            }
         }
 
-        return redirect()->back()->with('success_message', 'Data telah terhapus.');
+            $detailPeminjaman->delete();
+          
+
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dihapus.',
+                'id_detail_peminjaman' => $detailPeminjaman->id_detail_peminjaman,
+            ]);
+            
+        } else {
+            return redirect()->back()->with('success_message', 'Data has been deleted.');
+        }
     }
 }

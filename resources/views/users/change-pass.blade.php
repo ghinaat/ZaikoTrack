@@ -1,9 +1,9 @@
 @extends('layouts.demo')
-@section('title', 'Change Password')
+@section('title', 'Baru Password')
 @section('css')
 @endsection
 @section('breadcrumb-name')
-Change Password
+Baru Password
 @endsection
 @section('content')
 <div class="container-fluid py-4">
@@ -23,7 +23,7 @@ Change Password
                         @endif
                         @csrf
                         <div class="mb-3">
-                            <label for="old_password" class="form-label">Old Password</label>
+                            <label for="old_password" class="form-label">Password Lama</label>
                             <input type="password" class="form-control @error('old_password') is-invalid @enderror"
                                 id="old_password" name="old_password" autofocus required>
                             @error('old_password')
@@ -33,7 +33,7 @@ Change Password
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">New Password</label>
+                            <label for="password" class="form-label">Password Baru</label>
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
                                 id="password" name="password" required>
                             @error('password')
@@ -43,7 +43,7 @@ Change Password
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                            <label for="password_confirmation" class="form-label">Konfirmasi Password Baru</label>
                             <input type="password"
                                 class="form-control @error('password_confirmation') is-invalid @enderror"
                                 id="password_confirmation" name="password_confirmation" required>
