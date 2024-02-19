@@ -110,8 +110,10 @@ Route::delete('/cart', [App\Http\Controllers\CartController::class, 'ButtonBatal
 
 
 Route::resource('/siswa', App\Http\Controllers\SiswaController::class);
+Route::post('/siswa/import', [ App\Http\Controllers\SiswaController::class, 'import'])->name('siswa.import');
 Route::resource('/guru', App\Http\Controllers\GuruController::class);
 Route::post('/guru/import', [App\Http\Controllers\GuruController::class, 'import'])->name('guru.import');
+Route::post('/karyawan/import', [ App\Http\Controllers\KaryawanController::class, 'import'])->name('karyawan.import');
 Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
 });
 

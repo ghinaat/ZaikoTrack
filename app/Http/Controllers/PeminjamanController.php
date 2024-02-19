@@ -6,6 +6,9 @@ use App\Models\DetailPeminjaman;
 use App\Models\Inventaris;
 use App\Models\Barang;
 use App\Models\Ruangan;
+use App\Models\Siswa;
+use App\Models\Guru;
+use App\Models\Karyawan;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,11 +35,11 @@ class PeminjamanController extends Controller
 
         $barang = Barang::all();
         $cart = Cart::all();
+
         
       
         return view('peminjaman.index', [
             'peminjaman' => $peminjaman,
-          
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'barang' => $barang,
@@ -59,12 +62,19 @@ class PeminjamanController extends Controller
             ->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')
             ->get();
-    
+        $detailPeminjaman = DetailPeminjaman::all();
         $barang = Barang::all();
         $cart = Cart::all();
+        $siswa = Siswa::all()->except(1);
+        $guru = Guru::all()->except(1);
+        $karyawan = Karyawan::all()->except(1);
         
         return view('peminjaman.create', [
             'peminjaman' => $peminjaman,
+            'detailPeminjaman' => $detailPeminjaman,
+            'siswa' => $siswa,
+            'guru' => $guru,
+            'karyawan' => $karyawan,
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'barang' => $barang,
@@ -166,17 +176,27 @@ class PeminjamanController extends Controller
 
     //   dd($request);
         $request->validate([
-            'nama_lengkap' => 'required',
-            'jurusan' => 'required',
-            'kelas' => 'required',
+            'id_siswa' => 'nullable',
+            'id_karyawan' => 'nullable',
+            'id_guru' => 'nullable',
+            'jurusan' => 'nullable',
+            'kelas' => 'nullable',
             'keterangan_pemakaian' => 'nullable',
             'tgl_pinjam' => 'required|date',
             'tgl_kembali' => 'required|date|after_or_equal:tgl_peminjaman',
-            'ket_tidak_lengkap_awal' => 'nullable',
         ]);
+        $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
+        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
+        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
+        if ($id_siswa == 1 && $id_karyawan == 1 && $id_guru == 1) {
+            return response()->json(['error' => 'Setidaknya satu dari ID harus diisi.'], 400);
+        }
+        
         $peminjaman = new Peminjaman([
-            'nama_lengkap' => $request->nama_lengkap,
+          'id_siswa' => $id_siswa,
+            'id_guru' => $id_guru,
+            'id_karyawan' => $id_karyawan,
             'jurusan' => $request->jurusan,
             'kelas' => $request->kelas,
             'tgl_pinjam' => $request->tgl_pinjam,
@@ -186,26 +206,10 @@ class PeminjamanController extends Controller
         ]);
 
         $peminjaman ->save();
+        $idPeminjaman = $peminjaman->id_peminjaman;
 
-        foreach (Cart::all() as $cartItem) {
-            $detailPeminjaman = new DetailPeminjaman([
-                'id_inventaris' => $cartItem->id_inventaris,
-                'ket_tidak_lengkap_awal' => $cartItem->ket_barang,
-                'jumlah_barang' => $cartItem->jumlah_barang,
-                'id_peminjaman' => $peminjaman->id_peminjaman,
-                'status' => 'dipinjam'
-            ]);
+        return response()->json(['id_peminjaman' => $idPeminjaman, 'message' => 'Peminjaman berhasil disimpan']);
     
-            // Save each DetailPeminjaman
-            $detailPeminjaman->save();
-        }
-    
-        // Clear the cart after processing
-        Cart::truncate();
-
-        // Redirect atau berikan respons sesuai kebutuhan
-        return redirect()->route('peminjaman.index')->with(['success_message' => 'Data telah tersimpan.'
-    ]);
     }
 
     public function update(Request $request, $id_peminjaman)

@@ -17,8 +17,8 @@ class SiswaFactory extends Factory
     public function definition(): array
     {
         return [
+            'nama_siswa' => $this->faker->firstName,
             'nis' => $this->faker->randomNumber(7),
-            'nama_siswa' =>$this->faker->name,
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Karyawan;
 use Illuminate\Http\Request;
+use App\Imports\KaryawanImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KaryawanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function index(){
+    
+        $karyawan = Karyawan::all()->except(1);
+    
+        return view('karyawan.index',[
+            'karyawan' => $karyawan,
+        ]);
     }
 
     /**
@@ -28,7 +34,17 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_karyawan' => 'required',
+        ]);
+        $array = $request->only([
+            'nama_karyawan',
+        ]);
+        $karyawan = Karyawan::create($array);
+
+        return redirect()->back()
+            ->with('success_message', 'Data telah tersimpan');
+
     }
 
     /**
@@ -50,9 +66,29 @@ class KaryawanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Karyawan $karyawan)
+    public function update(Request $request, $id_karyawan)
     {
-        //
+
+        $request->validate([
+            'nama_karyawan' => 'required',
+        ]);
+
+        $karyawan = Karyawan::find($id_karyawan);
+        $karyawan->nama_karyawan = $request->nama_karyawan;
+        $karyawan->save();
+
+        return redirect()->back()->with('success_message', 'Data telah tersimpan');
+    }
+
+
+    public function import(Request $request)
+    {
+        
+        Excel::import(new KaryawanImport, $request->file('file')->store('karyawan'));
+
+        return redirect()->back()->with([
+            'success_message' => 'Data telah Tersimpan',
+        ]);
     }
 
     /**

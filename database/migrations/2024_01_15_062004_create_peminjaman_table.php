@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedInteger('id_siswa');
             $table->unsignedInteger('id_guru');
             $table->unsignedInteger('id_karyawan');
-            $table->string('nama_lengkap', 100);
             $table->string('kelas', 50)->nullable();
             $table->string('jurusan', 50)->nullable();
             $table->string('keterangan_peminjaman')->nullable();

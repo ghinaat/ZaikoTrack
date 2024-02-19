@@ -18,7 +18,7 @@ class GuruFactory extends Factory
     {
         return [
             'nip' => $this->faker->randomNumber(7),
-            'nama_guru' =>$this->faker->name,
+            'nama_guru' => $this->faker->firstName ,
             'created_at' => now(),
             'updated_at' => now(),
         ];

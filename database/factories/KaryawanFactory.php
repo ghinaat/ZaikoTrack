@@ -17,7 +17,7 @@ class KaryawanFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama_karyawan' =>$this->faker->name,
+            'nama_karyawan' => $this->faker->firstName ,
             'created_at' => now(),
             'updated_at' => now(),
         ];

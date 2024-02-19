@@ -9,8 +9,10 @@ const DOMstrings = {
   stepFormPanels: document.querySelectorAll('.multisteps-form__panel'),
   stepPrevBtnClass: 'js-btn-prev',
   stepNextBtnClass: 'js-btn-next',
+  stepSimpanBtnClass:'js-btn-simpan',
   btnAdd: document.querySelector('.js-btn-add'),
   btnBack: document.querySelector('.js-btn-back'),
+  btnKembali: document.querySelector('.js-btn-kembali'),
   additionalFormContainer: document.getElementById('additionalFormContainer'),  
   
 };
@@ -136,13 +138,24 @@ DOMstrings.stepsBar.addEventListener('click', e => {
 DOMstrings.stepsForm.addEventListener('click', e => {
   const eventTarget = e.target;
   
-  if(!((eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) || (eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`)))) {
+  if(!((eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) ||  eventTarget.classList.contains(`${DOMstrings.stepSimpanBtnClass}`) || (eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`)))) {
     return;
   }
+  e.preventDefault();
+  if (eventTarget.classList.contains(`${DOMstrings.stepSimpanBtnClass}`)) {
+    // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
+    const panelOrderList = document.getElementById('table_id');
+    let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
+
+    setActiveStep(panelOrderListIndex);
+    setActivePanel(panelOrderListIndex);
+    return;
+}
   
   const activePanel = findParent(eventTarget, `${DOMstrings.stepFormPanelClass}`);
   let activePanelNum = Array.from(DOMstrings.stepFormPanels).indexOf(activePanel);
   
+
   if(eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) {
     activePanelNum--;
   } else {
@@ -152,6 +165,8 @@ DOMstrings.stepsForm.addEventListener('click', e => {
   setActiveStep(activePanelNum);
   setActivePanel(activePanelNum);
 });
+
+
 
  
 DOMstrings.btnAdd.addEventListener('click', () => {
@@ -217,3 +232,38 @@ animationSelect.addEventListener('change', () => {
 });
 
 
+// DOMstrings.btnSimpan.addEventListener('click', function(e) {
+//   e.preventDefault();
+
+//   const form = this.closest('form'); // Find the closest form
+//   const url = form.getAttribute('action');
+//   const method = form.getAttribute('method');
+//   const data = new FormData(form);
+
+//   // You can customize the data before sending if needed
+//   // For example, you can add additional data to FormData object
+
+//   // Perform Ajax request
+//   $.ajax({
+//     type: method,
+//     url: url,
+//     data: data,
+//     processData: false,
+//     contentType: false,
+//     success: function(response) {
+//       // Handle success
+//       console.log('Form submitted successfully!');
+
+//       // After successful submission, move to the next step
+//       const activePanel = findParent(DOMstrings.btnSimpan, `${DOMstrings.stepFormPanelClass}`);
+//       let activePanelNum = Array.from(DOMstrings.stepFormPanels).indexOf(activePanel) + 1;
+
+//       setActiveStep(activePanelNum);
+//       setActivePanel(activePanelNum);
+//     },
+//     error: function(xhr) {
+//       // Handle error
+//       console.error('Error submitting form:', xhr.responseText);
+//     }
+//   });
+// });

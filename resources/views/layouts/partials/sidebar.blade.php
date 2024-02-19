@@ -111,7 +111,7 @@
                     href="{{route('siswa.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                        <i class="ni ni-hat-3 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Siswa</span>
                 </a>
@@ -121,7 +121,7 @@
                     href="{{route('guru.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-user-tie text-sm opacity-10" style="color: #4981ab;"></i>
+                        <i class="fas fa-chalkboard-teacher text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Guru</span>
                 </a>
@@ -131,7 +131,7 @@
                     href="{{route('karyawan.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                        <i class="ni ni-briefcase-24 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Karyawan</span>
                 </a>

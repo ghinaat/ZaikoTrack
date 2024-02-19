@@ -1,9 +1,9 @@
 @extends('layouts.demo')
-@section('title', 'List Siswa')
+@section('title', 'List Karyawan')
 @section('css')
 @endsection
 @section('breadcrumb-name')
-Siswa
+Karyawan
 @endsection
 @section('content')
 <div class="container-fluid py-4">
@@ -11,7 +11,7 @@ Siswa
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <h4 class="m-0 text-dark">List Siswa</h4>
+                    <h4 class="m-0 text-dark">List Karyawan</h4>
                 </div>
                 <div class="card-body m-0">
                     <div class="d-flex">
@@ -20,7 +20,7 @@ Siswa
                                 data-target="#addModal">Tambah</button>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <form action="{{ route('siswa.import') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('karyawan.import') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="d-md-flex justify-content-md-end">
                                     <div class="form-group ">
@@ -39,25 +39,23 @@ Siswa
                                 <tr>
                                     <th>No.</th>
                                     <th>Nama Siswa</th>
-                                    <th>NIS</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($siswa as $key => $siswa)
+                                @foreach($karyawan as $key => $karyawan)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td>{{$siswa->nama_siswa}}</td>
-                                    <td>{{$siswa->nis}}</td>
+                                    <td>{{$karyawan->nama_karyawan}}</td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $siswa->id_siswa, 'key' =>
+                                        @include('components.action-buttons', ['id' => $karyawan->id_karyawan, 'key' =>
                                         $key,
-                                        'route' => 'siswa'])
+                                        'route' => 'karyawan'])
                                     </td>
                                 </tr>
                                 <!-- Modal Edit Pegawai -->
-                                <div class="modal fade" id="editModal{{$siswa->id_siswa}}" tabindex="-1" role="dialog"
-                                    aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="editModal{{$karyawan->id_karyawan}}" tabindex="-1"
+                                    role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -68,21 +66,16 @@ Siswa
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{ route('siswa.update', $siswa->id_siswa)}}"
+                                                <form action="{{ route('karyawan.update', $karyawan->id_karyawan)}}"
                                                     method="post">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="form-group">
-                                                        <label for="nama_siswa">Nama Siswa</label>
-                                                        <input type="text" name="nama_siswa" id="nama_siswa"
+                                                        <label for="nama_karyawan">Nama Siswa</label>
+                                                        <input type="text" name="nama_karyawan" id="nama_karyawan"
                                                             class="form-control"
-                                                            value="{{ old('nama_siswa', $siswa->nama_siswa) }}"
+                                                            value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
                                                             required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="nis">NIS</label>
-                                                        <input type="number" name="nis" id="nis" class="form-control"
-                                                            value="{{ old('nis', $siswa->nis) }}" required>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -112,16 +105,12 @@ Siswa
                 </button>
             </div>
             <div class=" modal-body">
-                <form id="addForm" action="{{route('siswa.store')}}" method="post">
+                <form id="addForm" action="{{route('karyawan.store')}}" method="post">
                     @csrf
                     <div class="form-group">
-                        <label for="nama_siswa">Nama Siswa</label>
-                        <input type="text" name="nama_siswa" id="nama_siswa" class="form-control"
-                            value="{{ old('nama_siswa') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nis">NIS</label>
-                        <input type="number" name="nis" id="nis" class="form-control" required>
+                        <label for="nama_karyawan">Nama Siswa</label>
+                        <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control"
+                            value="{{ old('nama_karyawan') }}" required>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
