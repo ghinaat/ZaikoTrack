@@ -2,33 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\GuruImport;
 use App\Models\Guru;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuruController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function import(Request $request){
+        Excel::import(new GuruImport, $request->file('file')->store('guru'));
+
+        return redirect()->back()->with([
+            'success_message' => 'Data telah Tersimpan',
+        ]);
+    }
+
     public function index()
     {
-        //
+        $guru = Guru::all()->except('1');
+        return view ('guru.index', [
+            'guru' => $guru,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nip' => 'required',
+            'nama_guru' => 'required'
+        ]);
+        
+        $guru = new Guru();
+        $guru->nip = $request->nip;
+        $guru->nama_guru = $request->nama_guru;
+        $guru->save();
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
+
     }
 
     /**
@@ -50,16 +64,31 @@ class GuruController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Guru $guru)
+    public function update(Request $request, $id_guru)
     {
-        //
+        $request->validate([
+            'nip' => 'required',
+            'nama_guru' => 'required'
+        ]);
+        
+        $guru = Guru::find($id_guru);
+        $guru->nip = $request->nip;
+        $guru->nama_guru = $request->nama_guru;
+        $guru->save();
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Guru $guru)
+    public function destroy($id_guru)
     {
-        //
+        $guru = Guru::find($id_guru);
+        if ($guru) {
+            $guru->delete();
+        }
+
+        return redirect()->back()->with('success_message', 'Data telah terhapus.');
     }
 }

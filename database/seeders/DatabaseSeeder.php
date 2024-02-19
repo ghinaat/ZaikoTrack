@@ -160,6 +160,7 @@ class DatabaseSeeder extends Seeder
 
         Guru::create([
             'id_guru' => '1',
+            'nip' => '0',
             'nama_guru' => '-',
         ]);
 

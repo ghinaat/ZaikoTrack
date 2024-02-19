@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('detail_pemakaian', function (Blueprint $table) {
             $table->increments('id_detail_pemakaian');
-          
+            $table->unsignedInteger('id_pemakaian');
+            $table->unsignedInteger('id_inventaris');
+            $table->integer('jumlah_barang');
+            $table->foreign('id_inventaris')->references('id_inventaris')->on('inventaris')->onDelete('cascade');
+            $table->foreign('id_pemakaian')->references('id_pemakaian')->on('pemakaian')->onDelete('cascade');
             $table->timestamps();
         });
     }

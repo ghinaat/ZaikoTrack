@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('guru', function (Blueprint $table) {
             $table->increments('id_guru');
+            $table->integer('nip')->index()->nullable();
             $table->string('nama_guru');
             $table->timestamps();
         });

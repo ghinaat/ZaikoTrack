@@ -17,21 +17,22 @@ class Pemakaian extends Model
     {
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
     }
-    public function cart()
+    public function siswa()
     {
-        return $this->belongsTo(Cart::class, 'id_inventaris', 'id_inventaris');
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
+    }
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class, 'id_guru', 'id_guru');
+    }
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
     }
 
 
     
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->tgl_pakai = now();
-        });
-    }
+  
 
 }

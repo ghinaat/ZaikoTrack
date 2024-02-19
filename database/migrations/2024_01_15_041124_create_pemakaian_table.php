@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('pemakaian', function (Blueprint $table) {
             $table->increments('id_pemakaian');
-            $table->unsignedInteger('id_inventaris');
-            $table->string('nama_lengkap', 100);
+            $table->unsignedInteger('id_siswa');
+            $table->unsignedInteger('id_guru');
+            $table->unsignedInteger('id_karyawan');
             $table->string('kelas', 50)->nullable();
             $table->string('jurusan', 50)->nullable();
             $table->date('tgl_pakai');
-            $table->integer('jumlah_barang');
             $table->string('keterangan_pemakaian')->nullable();
-            $table->foreign('id_inventaris')->references('id_inventaris')->on('inventaris')->onDelete('cascade');
+            $table->foreign('id_siswa')->references('id_siswa')->on('siswa')->onDelete('cascade');
+            $table->foreign('id_guru')->references('id_guru')->on('guru')->onDelete('cascade');
+            $table->foreign('id_karyawan')->references('id_karyawan')->on('karyawan')->onDelete('cascade');
             $table->timestamps();
         });
     }

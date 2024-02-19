@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\DetailPemakaian;
+use App\Models\Guru;
 use App\Models\Inventaris;
+use App\Models\Karyawan;
 use App\Models\Pemakaian;
+use App\Models\Siswa;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,51 +17,52 @@ class PemakaianController extends Controller
 {
 
     public function index(){
-        $groupedPemakaians = Pemakaian::select('tgl_pakai', 'nama_lengkap', 'kelas', 'jurusan','keterangan_pemakaian', DB::raw('MAX(id_pemakaian) as id_pemakaian'))
-        ->groupBy('tgl_pakai', 'nama_lengkap', 'kelas', 'jurusan','keterangan_pemakaian' )
-        ->get();
-    
+        $groupedPemakaians = Pemakaian::all();
+        $siswa = Siswa::all()->except('1');
+        $guru = Guru::all()->except('1');
+        $karyawan = Karyawan::all()->except('1');
         // dd($groupedPemakaians);
         return view('pemakaian.index',[
             'groupedPemakaians' => $groupedPemakaians,
+            'siswa' => $siswa,
+            'guru' => $guru,
+            'karyawan' => $karyawan,
+            
         ]);
     }
 
     public function showDetail($id_pemakaian){
-        $pemakaian = Pemakaian::find($id_pemakaian);
-        if ($pemakaian) {
-            $tgl_pakai = $pemakaian->tgl_pakai;
-            $nama_lengkap = $pemakaian->nama_lengkap;
-    
-            $detailPemakaians = Pemakaian::where('tgl_pakai', $tgl_pakai)
-                ->where('nama_lengkap', $nama_lengkap)->with(['inventaris.barang'])
-                ->get();
-        }
-
-        $idJenisBarang = 3;
-        $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
-            $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
-            ->groupBy('id_barang')->with(['barang'])->get();
-
-        return view('pemakaian.show',[
-            'detailpemakaian' => $detailPemakaians,
-            'pemakaian' => $pemakaian,
-            'barang' => $bahanPraktik,
-        ]);
-    }
-
-    public function create(){
-        $cart = Cart::with(['inventaris.barang', 'inventaris.ruangan'])->get();
-        
+        $pemakaian = Pemakaian::with('siswa', 'guru', 'karyawan')->find($id_pemakaian);
+        $detailPemakaians = DetailPemakaian::with(['inventaris.barang'])->where('id_pemakaian', $pemakaian->id_pemakaian)->get();
         $idJenisBarang = 3;
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
             
-            // dd($bahanPraktik);
+
+        return view('pemakaian.show',[
+            'detailpemakaian' => $detailPemakaians,
+            'pemakaian' => $pemakaian,
+            'barang' => $bahanPraktik,
+            
+        ]);
+    }
+
+    public function create(){
+        $idJenisBarang = 3;
+        $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
+            $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
+            ->groupBy('id_barang')->with(['barang'])->get();
+            
+        $siswa = Siswa::all()->except('1');
+        $guru = Guru::all()->except('1');
+        $karyawan = Karyawan::all()->except('1');   
+
         return view('pemakaian.create',[
             'barang' => $bahanPraktik,
-            'cart' => $cart,
+            'siswa' => $siswa,
+            'guru' => $guru,
+            'karyawan' => $karyawan,
         ]);
     }
 
@@ -73,122 +79,159 @@ class PemakaianController extends Controller
         return response()->json($ruanganOptions);
     }
 
-    public function storeDetail(Request $request, $id_pemakaian){
+    public function getPemakaianData($id_pemakaian)
+    {
+        
+        $getdatapemakaian = Pemakaian::where('id_pemakaian', $id_pemakaian)->first();
+
+        // dd($getdatapemakaian);
+
+        return response()->json([
+            'id_siswa' => $getdatapemakaian->id_siswa,    // Ganti dengan nilai sesuai kebutuhan
+            'id_guru' => $getdatapemakaian->id_guru,    // Ganti dengan nilai sesuai kebutuhan
+            'id_karyawan' => $getdatapemakaian->id_karyawan, // Ganti dengan nilai sesuai kebutuhan
+            'kelas' => $getdatapemakaian->kelas,             // Ganti dengan nilai sesuai kebutuhan
+            'jurusan' => $getdatapemakaian->jurusan,             // Ganti dengan nilai sesuai kebutuhan
+            'tgl_pakai' => $getdatapemakaian->tgl_pakai,             // Ganti dengan nilai sesuai kebutuhan
+            'keterangan_pemakaian' => $getdatapemakaian->keterangan_pemakaian,             // Ganti dengan nilai sesuai kebutuhan
+        ]);
+    }
+
+
+    public function storeDetail(Request $request){
+        // dd($request);
         $request->validate([
             'id_barang' => 'required',
             'id_ruangan' => 'required',
             'jumlah_barang' => 'required',
         ]);
-        $id_inventaris = Inventaris::where('id_barang', $request->id_barang)->where('id_ruangan', $request->id_ruangan)->first();
-        $datasiswa = Pemakaian::find($id_pemakaian);
-        // dd($datasiswa);
-        $pemakaian = new Pemakaian();
-        $pemakaian->id_inventaris = $id_inventaris->id_inventaris;
-        $pemakaian->nama_lengkap = $datasiswa->nama_lengkap;
-        $pemakaian->kelas = $datasiswa->kelas;
-        $pemakaian->jurusan = $datasiswa->jurusan;
-        $pemakaian->jumlah_barang = $request->jumlah_barang;
-        $pemakaian->keterangan_pemakaian = $datasiswa->keterangan_pemakaian;
-        $pemakaian->save();
-
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
-
+        $id_inventaris = Inventaris::where('id_barang', $request->id_barang)->where('id_ruangan', $request->id_ruangan)->with(['barang'])->first();
+        $detailPemakaian = new DetailPemakaian();
+        $detailPemakaian->id_pemakaian = $request->id_pemakaian;
+        $detailPemakaian->id_inventaris = $id_inventaris->id_inventaris;
+        $detailPemakaian->jumlah_barang = $request->jumlah_barang;
+        $detailPemakaian->jumlah_barang = $request->jumlah_barang;
+        $detailPemakaian->save();
+        
+        if($request->ajax()){
+            $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPemakaian->id_inventaris)->first();
+            $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPemakaian->id_inventaris)->first();
+            return response()->json([
+                // 'key' => $key,               // Ganti dengan nilai sesuai kebutuhan
+                'nama_barang' => $namaBarang->barang->nama_barang,    // Ganti dengan nilai sesuai kebutuhan
+                'nama_ruangan' => $namaRuangan->ruangan->nama_ruangan,    // Ganti dengan nilai sesuai kebutuhan
+                'jumlah_barang' => $detailPemakaian->jumlah_barang, // Ganti dengan nilai sesuai kebutuhan
+                'id_detail_pemakaian' => $detailPemakaian->id_detail_pemakaian             // Ganti dengan nilai sesuai kebutuhan
+            ]);
+        }else{
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
+        }
+        
     }
 
     public function store(Request $request){
+        // dd($request);
         $request->validate([
-            'nama_lengkap' => 'required',
-            'kelas' => 'required',
-            'jurusan' => 'required',
-            'keterangan_pemakaian'
+            'tgl_pakai' => 'required',
+            'id_siswa' => 'nullable',
+            'id_guru' => 'nullable',
+            'id_karyawan' => 'nullable',
+            'kelas' => 'nullable',
+            'jurusan' => 'nullable',
+            'keterangan_pemakaian' => 'nullable'
 
         ]);
-        $cart = Cart::all();
+        $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
+        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
+        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
-        foreach($cart as $cr){
+        if ($id_siswa == 1 && $id_karyawan == 1 && $id_guru == 1) {
+            return response()->json(['error' => 'Setidaknya satu dari ID harus diisi.'], 400);
+        }
             $pemakaian = new Pemakaian();
-            $pemakaian->id_inventaris = $cr->id_inventaris;
-            $pemakaian->nama_lengkap = $request->nama_lengkap;
+            $pemakaian->tgl_pakai = $request->tgl_pakai;
+            $pemakaian->id_siswa = $id_siswa;
+            $pemakaian->id_guru = $id_guru;
+            $pemakaian->id_karyawan = $id_karyawan;
             $pemakaian->kelas = $request->kelas;
             $pemakaian->jurusan = $request->jurusan;
-            $pemakaian->jumlah_barang = $cr->jumlah_barang;
-            if($request->keterangan_pemakaian){
-                $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
-            }else{
-                $pemakaian->keterangan_pemakaian = null;
-            }
+            $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
             $pemakaian->save();
-        }
-        Cart::truncate();
-        return redirect('pemakaian')->with(['success_message' => 'Data telah tersimpan.',]);
+        
+            return response()->json([
+                'id_pemakaian' => $pemakaian->id_pemakaian,
+            ]);
     }
     
 
-    public function update(Request $request, $id_pemakaian){
+    public function update(Request $request){
+        // dd($request);
         $request->validate([
-            'nama_lengkap' =>'required',
-            'kelas' =>'required',
-            'jurusan' =>'required',
-            'keterangan' =>'nullable',
+            'tgl_pakai' => 'required',
+            'id_siswa' => 'nullable',
+            'id_guru' => 'nullable',
+            'id_karyawan' => 'nullable',
+            'kelas' => 'nullable',
+            'jurusan' => 'nullable',
+            'keterangan_pemakaian' => 'nullable'
+
         ]);
-        $pemakaian = Pemakaian::find($id_pemakaian);
+        $pemakaian = Pemakaian::find($request->id_pemakaian);
 
         if ($pemakaian) {
             // Data ditemukan
-            $tgl_pakai = $pemakaian->tgl_pakai;
-            $nama_lengkap = $pemakaian->nama_lengkap;
-    
-            // Menggunakan nilai yang didapat untuk mencari data lain
-            Pemakaian::where('tgl_pakai', $tgl_pakai)
-                ->where('nama_lengkap', $nama_lengkap)
-                ->update([
-                    'nama_lengkap' => $request->nama_lengkap,
-                    'kelas' => $request->kelas,
-                    'jurusan' => $request->jurusan,
-                    'keterangan_pemakaian' => $request->keterangan_pemakaian,
-                ]);
+            $originalData = [
+                'id_siswa' => $pemakaian->id_siswa,
+                'id_guru' => $pemakaian->id_guru,
+                'id_karyawan' => $pemakaian->id_karyawan,
+            ];
 
-                
+            $updatedData = [
+                'id_siswa' => $request->filled('id_siswa') ? $request->id_siswa : $originalData['id_siswa'],
+                'id_guru' => $request->filled('id_guru') ? $request->id_guru : $originalData['id_guru'],
+                'id_karyawan' => $request->filled('id_karyawan') ? $request->id_karyawan : $originalData['id_karyawan'],
+            ];
+
+            // Update data berdasarkan perubahan pada request
+            $pemakaian->tgl_pakai = $request->tgl_pakai;
+            $pemakaian->id_siswa = $updatedData['id_siswa'];
+            $pemakaian->id_guru = $updatedData['id_guru'];
+            $pemakaian->id_karyawan = $updatedData['id_karyawan'];
+            $pemakaian->kelas = $request->kelas;
+            $pemakaian->jurusan = $request->jurusan;
+            $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
+            $pemakaian->save();
         }
-        return redirect('pemakaian')->with(['success_message' => 'Data telah tersimpan.',]);
+            if($request->ajax()){
+                return response()->json([
+                    'id_pemakaian' => $pemakaian->id_pemakaian,]);
+            }else{
+                return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
+            }
     }
 
     public function destroy($id_pemakaian){
         $pemakaian = Pemakaian::find($id_pemakaian);
         if ($pemakaian) {
-            // Data ditemukan
-            $tgl_pakai = $pemakaian->tgl_pakai;
-            $nama_lengkap = $pemakaian->nama_lengkap;
-    
-            // Menggunakan nilai yang didapat untuk mencari data lain
-            Pemakaian::where('tgl_pakai', $tgl_pakai)
-                ->where('nama_lengkap', $nama_lengkap)
-                ->delete();
-                
+            $pemakaian->delete();
+            $detailpemakaian = DetailPemakaian::where('id_pemakaian', $pemakaian->id_pemakaian)->first();
+
+            if ($detailpemakaian) {
+                return response()->json([
+                    'id_detail_pemakaian' => $detailpemakaian->id_pemakaian,
+                ]);
+            }
         }
-        return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
+
+        // return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
 
     }
 
-    public function  destroyDetail($id_pemakaian){
-        $pemakaian = Pemakaian::find($id_pemakaian);
+    public function  destroyDetail($id_detail_pemakaian){
+        $detailpemakaian = DetailPemakaian::find($id_detail_pemakaian);
         
-        if ($pemakaian) {
-            $tgl_pakai = $pemakaian->tgl_pakai;
-            $nama_lengkap = $pemakaian->nama_lengkap;
-
-            $pemakaian->delete();
-
-            $remainingRecords = Pemakaian::where('tgl_pakai', $tgl_pakai)
-            ->where('nama_lengkap', $nama_lengkap)
-            ->exists();
-            if(!$remainingRecords){
-                return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
-            }else {
-                return redirect()->back()->with(['success_message' => 'Data telah terhapus.',]);
-
-            }
-
+        if ($detailpemakaian) {
+            $detailpemakaian->delete();
         }
 
 
