@@ -155,6 +155,7 @@
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    <script src="../assets/DataTables/datatables.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script> --}}
 
     <!-- Add Bootstrap JavaScript and jQuery (if not already included) -->
 

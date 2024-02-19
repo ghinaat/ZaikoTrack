@@ -156,6 +156,7 @@ class DatabaseSeeder extends Seeder
 
         Guru::create([
             'id_guru' => '1',
+            'nip' => '0',
             'nama_guru' => '-',
         ]);
 
@@ -167,6 +168,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();
+        \App\Models\Guru::factory(10)->create();
+        \App\Models\Siswa::factory(10)->create();
+        \App\Models\Karyawan::factory(10)->create();
           
 
     }

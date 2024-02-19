@@ -34,8 +34,18 @@ Pemakaian
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pakai->tgl_pakai)->format('d F Y')}}</td>
-                                    <td>{{$pakai->nama_lengkap}}</td>
-                                    <td>{{$pakai->kelas}} {{$pakai->jurusan}}</td>
+                                    <td>
+                                        @if($pakai->id_guru == '1' && $pakai->id_karyawan == '1')
+                                            {{$pakai->siswa->nama_siswa}}
+                                        @elseif($pakai->id_siswa == '1' && $pakai->id_karyawan == '1')
+                                            {{$pakai->guru->nama_guru}}
+                                        @elseif($pakai->id_siswa == '1' && $pakai->id_guru == '1')
+                                            {{$pakai->karyawan->nama_karyawan}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{$pakai->kelas}} {{$pakai->jurusan}}
+                                    </td>
                                     <td>
                                         <a href="{{ route('pemakaian.showDetail', $pakai->id_pemakaian) }}"
                                             class="btn btn-info btn-xs mx-1">
@@ -43,8 +53,12 @@ Pemakaian
                                         </a>
                                     </td>
                                     <td>
-                                        @include('components.action-buttons', ['id' => $pakai->id_pemakaian, 'key' => $key,
-                                        'route' => 'pemakaian'])
+                                        <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$pakai->id_pemakaian}}" data-id="{{$pakai->id_pemakaian}}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('pemakaian.destroy', $pakai->id_pemakaian) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -72,31 +86,63 @@ Pemakaian
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addForm" action="{{route('pemakaian.update', $pakai->id_pemakaian)}}" method="POST"
+                <form id="addForm" action="{{route('pemakaian.update')}}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="id_pemakaian" value="{{$pakai->id_pemakaian}}">
                     <div class="form-group">
-                        <label for="tgl_pakai">Tanggal Pakai</label>
-                        <input type="text" name="tgl_pakai" id="tgl_pakai" class="form-control"
-                            value="{{\Carbon\Carbon::parse($pakai->tgl_pakai)->format('d F Y') ?? old('tgl_pakai')}}                            " readonly>
+                        <label for="status">Status</label>
+                            <select class="form-select" id="status_upd{{$pakai->id_pemakaian}}">
+                                    <option value="siswa">Siswa</option>
+                                    <option value="guru">Guru</option>
+                                    <option value="karyawan">Karyawan</option>
+                            </select>                                
                     </div>
-                    <div class="form-group">
-                        <label for="nama_pemakai">Nama Pemakai</label>
-                        <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control"
-                            value="{{old('nama_lengkap', $pakai->nama_lengkap)}}" required>
+                    <div class="form-group" style="display: none;" id="id_siswa_update{{$pakai->id_pemakaian}}">
+                        <label for="id_siswa">Nama Lengkap</label>
+                            <select class="form-select" data-live-search="true" name="id_siswa" id="id_siswa_upd{{$pakai->id_pemakaian}}" >
+                                <option value="" selected hidden>-- Pilih Nama --</option>
+                                @foreach($siswa as $key => $sw)
+                                <option value="{{$sw->id_siswa}}" @if( old('id_siswa')==$sw->id_siswa)selected @endif>
+                                    {{$sw->nama_siswa}}
+                                </option>
+                                @endforeach
+                            </select>                                
+                    </div>
+                    <div class="form-group" style="display: none;" id="id_guru_update{{$pakai->id_pemakaian}}">
+                        <label for="id_guru">Nama Lengkap</label>
+                            <select class="form-select" data-live-search="true" name="id_guru" id="id_guru_upd{{$pakai->id_pemakaian}}" >
+                                <option value="" selected hidden>-- Pilih Nama --</option>
+                                @foreach($guru as $key => $gr)
+                                <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
+                                    {{$gr->nama_guru}}
+                                </option>
+                                @endforeach
+                            </select>                                
+                    </div>
+                    <div class="form-group" style="display: none;" id="id_karyawan_update{{$pakai->id_pemakaian}}">
+                        <label for="id_karyawan">Nama Lengkap</label>
+                            <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan_upd{{$pakai->id_pemakaian}}" >
+                                <option value="" selected hidden>-- Pilih Nama --</option>
+                                @foreach($karyawan as $key => $krywn)
+                                <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
+                                    {{$krywn->nama_karyawan}}
+                                </option>
+                                @endforeach
+                            </select>                                
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
                                 <label for="kelas" class="mb-0">Kelas</label>
-                                <input class=" form-control" type="text" name="kelas" id="kelas" value="{{old('kelas', $pakai->kelas)}}" >
+                                <input class=" form-control" type="text" name="kelas" id="kelas_update{{$pakai->id_pemakaian}}" value="{{old('kelas', $pakai->kelas)}}" >
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group">
                                 <label for="jurusan" class="mb-0">Jurusan</label>
-                                <input class="form-control" type="text" name="jurusan" id="jurusan" value="{{old('jurusan', $pakai->jurusan)}}">
+                                <input class="form-control" type="text" name="jurusan" id="jurusan_update{{$pakai->id_pemakaian}}" value="{{old('jurusan', $pakai->jurusan)}}">
                             </div>
                         </div>
                     </div>
@@ -104,6 +150,10 @@ Pemakaian
                         <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
                         <textarea rows="3" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control" >{{old('keterangan_pemakaian', $pakai->keterangan_pemakaian)}}
                         </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tgl_pakai">Tanggal Pakai</label>
+                        <input type="date" name="tgl_pakai" id="tgl_pakai" class="form-control" value="{{old('tgl_pakai', $pakai->tgl_pakai)}}">
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -118,91 +168,11 @@ Pemakaian
 
 @stop
 @push('js')
-<script src="{{ asset('js/pemakaian.js ') }}"></script>
 {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> --}}
-
 <form action="" id="delete-form" method="post">
     @method('delete')
     @csrf
 </form>
-<script>
-$(document).ready(function() {
-    // Handle click untuk form "Pilih Barang"
-    // Gunakan event delegation dengan .on()
-    $("#addFormCart").on('click', '.js-btn-choose', function(e) {
-        e.preventDefault();
-        var form = $(this).closest('form');  // Gunakan closest('form') untuk mencari formulir terdekat
-        var url = form.attr('action');
-        var method = form.attr('method');
-        var data = form.serialize();
-        $.ajax({
-            type: method,
-            url: url,
-            data: data,
-        })
-        .done(function(response) {
-            // Penanganan jika sukses
-            var newRow = '<tr>' +
-                '<td>' + (response.key + 1) + '</td>' +
-                '<td>' + response.nama_barang + '</td>' +
-                '<td>' + response.jumlah_barang + '</td>' +
-                '<td>' + (response.keterangan_pemakaian ? response.keterangan_pemakaian : '-') + '</td>' +
-                '<td><button class="btn btn-danger btn-sm removeBtn" data-cart-id="' + response.id_cart + '">Remove</button></td>' +
-                '</tr>';
-            $('#cartTable tbody').append(newRow);
-
-            console.log('Form submitted!');
-            form[0].reset(); // Gunakan form[0] untuk mereset formulir
-        })
-        .fail(function(xhr) {
-            // Penanganan jika gagal
-            console.error('Error sending data:', xhr.responseText);
-        });
-    });
-});
-
-$(document).ready(function() {
-    $('#cartTable tbody').on('click', '.removeBtn', function(e) {
-        e.preventDefault();
-
-            // $.ajaxSetup({
-            // headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     }
-            // });
-        let cartId = $(this).data('cart-id');
-        // Ambil token CSRF dari tag meta
-        let token = $('meta[name="csrf-token"]').attr('content');
-
-        Swal.fire({
-            title: 'Apa kamu yakin?',
-            text: "Data akan dihapus!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $(this).closest('tr').remove();
-                $.ajax({
-                    url: `/cart/${cartId}`,
-                    type: "DELETE",
-                    cache: false,
-                    headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    // success: function(response) {
-                    //     console.log('ok');
-                    //     // Hapus baris dari tabel setelah penghapusan berhasil
-                    //     $(this).closest('tr').remove();
-                    // },
-                });
-            }
-        });
-    });
-});
-</script>
 <script>
 $(document).ready(function() {
     $('#myTable').DataTable({
@@ -215,35 +185,109 @@ $(document).ready(function() {
         }
     });
 });
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change',
-    function() {
-        const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
-            'select[name=id_ruangan]');
-        const selectedIdRuangan = this.value;
+</script>
+<script>
+$(document).ready(function() {
+    $('.edit-button').click(function(e) {
+        e.preventDefault();
 
-        // Fetch id_barang options for the selected id_ruangan
-        fetch(`/get-ruangan-options/${selectedIdRuangan}`)
-            .then(response => response.json())
-            .then(data => {
-                
-                // Clear existing options
-                id_barangSelect.innerHTML = '';
+        let IdPemakaian = $(this).data('id');
 
-                // Populate options based on the received data
-                data.forEach(option => {
-                    const newOption = document.createElement('option');
-                    newOption.value = option.ruangan.id_ruangan;
-                    newOption.text =
-                        option.ruangan.nama_ruangan;
-                    id_barangSelect.add(newOption);
-                });
+        $.ajax({
+            type: 'GET',
+            url: `/get-pemakaian-data/${IdPemakaian}`,
+        })
+        .done(function(response) {
+            console.log('Data terkirim!!', response);
+                const namaSiswaElement = document.querySelector('#id_siswa_update' + IdPemakaian);
+                const namaGuruElement = document.querySelector('#id_guru_update' + IdPemakaian);
+                const namaKaryawanElement = document.querySelector('#id_karyawan_update' + IdPemakaian );
+                const kelasElement = document.querySelector('#kelas_update' + IdPemakaian);
+                const jurusanElement = document.querySelector('#jurusan_update' + IdPemakaian);
+                let readonlyValue = false;
 
-                // Show or hide the id_barang select based on whether options are available
-                id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
-                id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
-            })
-            .catch(error => console.error('Error:', error));
-    }));
+                namaSiswaElement.style.display = 'none';
+                namaGuruElement.style.display = 'none';
+                namaKaryawanElement.style.display = 'none';
+
+            document.querySelectorAll('select[id="status_upd' + IdPemakaian + '"]').forEach(select => select.addEventListener('click', function() {
+
+                if (this.value === 'siswa') {
+                    namaSiswaElement.style.display = 'block';
+                    namaGuruElement.style.display = 'none';
+                    namaKaryawanElement.style.display = 'none';
+                    readonlyValue = false;
+                } else if (this.value === 'guru') {
+                    namaSiswaElement.style.display = 'none';
+                    namaGuruElement.style.display = 'block';
+                    namaKaryawanElement.style.display = 'none';
+                    readonlyValue = true;
+                } else if (this.value === 'karyawan') {
+                    namaSiswaElement.style.display = 'none';
+                    namaGuruElement.style.display = 'none';
+                    namaKaryawanElement.style.display = 'block';
+                    readonlyValue = true;
+                }
+
+                // Atur atribut readonly untuk elemen kelas
+                kelasElement.readOnly = readonlyValue;
+
+                // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
+                jurusanElement.readOnly = (this.value === 'karyawan');
+            
+            }));
+
+                if (response.id_siswa !== 1) {
+                    namaSiswaElement.style.display = 'block';
+                    var selectSiswa = document.getElementById('id_siswa_upd' + IdPemakaian);
+                    var statusSiswa = document.getElementById('status_upd' + IdPemakaian);
+                    $('#status_upd' + IdPemakaian).val('siswa');
+
+                    for (var i = 0; i < selectSiswa.options.length; i++) {
+                        if (selectSiswa.options[i].value == response.id_siswa) {
+                            selectSiswa.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    // $('#id_siswa_update').prop('value', response.id_siswa);
+                } else if(response.id_guru !== 1){
+                    namaGuruElement.style.display = 'block';
+                    readonlyValue = true;
+                    var selectGuru = document.getElementById('id_guru_upd' + IdPemakaian);
+                    var statusGuru = document.getElementById('status_upd' + IdPemakaian);
+                    $('#status_upd' + IdPemakaian).val('guru');
+    
+                    for (var i = 0; i < selectGuru.options.length; i++) {
+                        if (selectGuru.options[i].value == response.id_guru) {
+                            selectGuru.selectedIndex = i;
+                            break;
+                        }
+                    }                
+                } else if (response.id_karyawan !== 1) {
+                    namaKaryawanElement.style.display = 'block';
+                    readonlyValue = true;
+                    var statusKaryawan = document.getElementById('status_upd' + IdPemakaian);
+                    $('#status_upd' + IdPemakaian).val('karyawan');
+
+                    var selectKaryawan = document.getElementById('id_karyawan_upd' + IdPemakaian);
+    
+                    for (var i = 0; i < selectKaryawan.options.length; i++) {
+                        if (selectKaryawan.options[i].value == response.id_karyawan) {
+                            selectKaryawan.selectedIndex = i;
+                            break;
+                        }
+                    }         
+                }
+                kelasElement.readOnly = readonlyValue;
+                jurusanElement.readOnly = (document.getElementById('status_upd'+ IdPemakaian).value === 'karyawan');
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('Data gagal terkirim!!', errorThrown);
+        });
+    });
+});
+
+
 </script>
 
 @endpush
