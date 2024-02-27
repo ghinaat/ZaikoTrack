@@ -14,6 +14,23 @@ Pemakaian
                     <h4 class="m-0 text-dark">List Pemakaian</h4>
                 </div>
                 <div class="card-body m-0">
+                    <div class="row mb-4">
+                        <form method="get" action="{{ route('pemakaian.export' , ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}" class="d-flex ">
+                            <div class="col-5">
+                                <label for="start_date">Tanggal Awal:</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date"  value="{{ request()->input('start_date') }}">
+                            </div>
+                    
+                            <div class="col-5 mx-3">
+                                <label for="end_date">Tanggal Akhir:</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request()->input('end_date') }}">
+                            </div>
+                            <div class="col-2  mt-4">
+                                <button type="submit" class="btn btn-danger">Unduh Excel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
                     <div class="mb-2">
                         <a class="btn btn-primary mb-2" href="{{route('pemakaian.create')}}">Tambah</a>
                     </div>
@@ -23,9 +40,9 @@ Pemakaian
                                 <tr>
                                     <th>No.</th>
                                     <th>Tanggal Pakai</th>
-                                    <th>Nama Pemakai</th>
+                                    <th>Nama</th>
                                     <th>Kelas</th>
-                                    <th>Barang</th>
+                                    <th>List Barang</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>

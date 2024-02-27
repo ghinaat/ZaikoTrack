@@ -2,25 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\DetailPemakaian;
 use App\Models\Guru;
 use App\Models\Inventaris;
 use App\Models\Karyawan;
 use App\Models\Pemakaian;
 use App\Models\Siswa;
-use Dotenv\Exception\ValidationException;
+use App\Exports\PemakaianExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PemakaianController extends Controller
 {
+    public function export(Request $request)
+    {
+        $defaultStartDate = '2023-01-01';
+        $defaultEndDate = '2023-12-31';
+    
+        $start_date = $request->input('start_date', $defaultStartDate);
+        $end_date = $request->input('end_date', $defaultEndDate);
+    
+        // Cek apakah start_date dan end_date diberikan atau tidak
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $pemakaians = Pemakaian::with(['siswa', 'guru', 'karyawan'])
+                ->whereBetween('tgl_pakai', [$start_date, $end_date])
+                ->orderBy('id_siswa')
+                ->orderBy('id_guru')
+                ->orderBy('id_karyawan')
+                ->orderBy('tgl_pakai')
+                ->get();
+        } else {
+            $pemakaians = Pemakaian::with(['siswa', 'guru', 'karyawan'])
+                ->orderBy('id_siswa')
+                ->orderBy('id_guru')
+                ->orderBy('id_karyawan')
+                ->orderBy('tgl_pakai')
+                ->get();
+        }
+    
+        $dataDetail = DetailPemakaian::with(['inventaris.barang'])
+            ->whereIn('id_pemakaian', $pemakaians->pluck('id_pemakaian'))
+            ->get();
+    
+        return Excel::download((new PemakaianExport)
+            ->setPemakaians($pemakaians)
+            ->setDataDetail($dataDetail)
+            ->setStartDate($start_date)
+            ->setEndDate($end_date), 'pemakaian.xlsx');
+    }
+    
 
     public function index(){
         $groupedPemakaians = Pemakaian::all();
-        $siswa = Siswa::all()->except('1');
-        $guru = Guru::all()->except('1');
-        $karyawan = Karyawan::all()->except('1');
+        $siswa = Siswa::all()->except(1);
+        $guru = Guru::all()->except(1);
+        $karyawan = Karyawan::all()->except(1);
         // dd($groupedPemakaians);
         return view('pemakaian.index',[
             'groupedPemakaians' => $groupedPemakaians,
@@ -136,23 +173,36 @@ class PemakaianController extends Controller
             'id_siswa' => 'nullable',
             'id_guru' => 'nullable',
             'id_karyawan' => 'nullable',
+            'status' => 'required',
             'kelas' => 'nullable',
             'jurusan' => 'nullable',
             'keterangan_pemakaian' => 'nullable'
 
         ]);
-        $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
-        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
-        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
+        // $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
+        // $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
+        // $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
-        if ($id_siswa == 1 && $id_karyawan == 1 && $id_guru == 1) {
-            return response()->json(['error' => 'Setidaknya satu dari ID harus diisi.'], 400);
+        if($request->status == 'siswa'){
+            $id_siswa = $request->id_siswa;
+            $id_karyawan = 1;
+            $id_guru = 1;
+        }elseif($request->status == 'guru'){
+            $id_siswa = 1;
+            $id_karyawan = 1;
+            $id_guru = $request->id_guru;
+        }else{
+            $id_siswa = 1;
+            $id_karyawan = $request->id_karyawan;
+            $id_guru = 1;
         }
+
             $pemakaian = new Pemakaian();
             $pemakaian->tgl_pakai = $request->tgl_pakai;
             $pemakaian->id_siswa = $id_siswa;
             $pemakaian->id_guru = $id_guru;
             $pemakaian->id_karyawan = $id_karyawan;
+            $pemakaian->status = $request->status;
             $pemakaian->kelas = $request->kelas;
             $pemakaian->jurusan = $request->jurusan;
             $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
@@ -180,23 +230,25 @@ class PemakaianController extends Controller
 
         if ($pemakaian) {
             // Data ditemukan
-            $originalData = [
-                'id_siswa' => $pemakaian->id_siswa,
-                'id_guru' => $pemakaian->id_guru,
-                'id_karyawan' => $pemakaian->id_karyawan,
-            ];
-
-            $updatedData = [
-                'id_siswa' => $request->filled('id_siswa') ? $request->id_siswa : $originalData['id_siswa'],
-                'id_guru' => $request->filled('id_guru') ? $request->id_guru : $originalData['id_guru'],
-                'id_karyawan' => $request->filled('id_karyawan') ? $request->id_karyawan : $originalData['id_karyawan'],
-            ];
+            if($request->status == 'siswa'){
+                $id_siswa = $request->id_siswa;
+                $id_karyawan = 1;
+                $id_guru = 1;
+            }elseif($request->status == 'guru'){
+                $id_siswa = 1;
+                $id_karyawan = 1;
+                $id_guru = $request->id_guru;
+            }else{
+                $id_siswa = 1;
+                $id_karyawan = $request->id_karyawan;
+                $id_guru = 1;
+            }
 
             // Update data berdasarkan perubahan pada request
             $pemakaian->tgl_pakai = $request->tgl_pakai;
-            $pemakaian->id_siswa = $updatedData['id_siswa'];
-            $pemakaian->id_guru = $updatedData['id_guru'];
-            $pemakaian->id_karyawan = $updatedData['id_karyawan'];
+            $pemakaian->id_siswa = $id_siswa;
+            $pemakaian->id_guru = $id_karyawan;
+            $pemakaian->id_karyawan = $id_guru;
             $pemakaian->kelas = $request->kelas;
             $pemakaian->jurusan = $request->jurusan;
             $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;

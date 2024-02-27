@@ -90,7 +90,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '1',
             'nama_barang' => 'Router',
             'merek' => 'Mikrotik',
-            'stok_barang' => '5',
+            'stok_barang' => null,
+            'kode_barang' => '1038439',
             'id_jenis_barang' => '2',
         ]);
 
@@ -98,7 +99,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '2',
             'nama_barang' => 'Switch',
             'merek' => 'Cisco',
-            'stok_barang' => '20',
+            'stok_barang' => null,
+            'kode_barang' => '12190291',
             'id_jenis_barang' => '2',
         ]);
 
@@ -106,7 +108,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '3',
             'nama_barang' => 'Kabel UTP',
             'merek' => 'Belden',
-            'stok_barang' => '7',
+            'stok_barang' => '10',
+            'kode_barang' => null,
             'id_jenis_barang' => '3',
         ]);
 
@@ -114,7 +117,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '4',
             'nama_barang' => 'Meja Siswa',
             'merek' => 'Informa',
-            'stok_barang' => '60',
+            'stok_barang' => null,
+            'kode_barang' => '2032018',
             'id_jenis_barang' => '1',
         ]);
 
@@ -122,7 +126,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '5',
             'nama_barang' => 'Connector rj45',
             'merek' => 'Belden',
-            'stok_barang' => '15',
+            'stok_barang' => '50',
+            'kode_barang' => null,
             'id_jenis_barang' => '3',
         ]);
 
@@ -130,7 +135,8 @@ class DatabaseSeeder extends Seeder
             'id_barang' => '6',
             'nama_barang' => 'Connector Fiber Optik',
             'merek' => 'Netlink',
-            'stok_barang' => '10',
+            'stok_barang' => '50',
+            'kode_barang' => '29103802',
             'id_jenis_barang' => '3',
         ]);
 
@@ -177,6 +183,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Siswa::factory(10)->create();
         \App\Models\Karyawan::factory(10)->create();
         \App\Models\Guru::factory(10)->create();
-          
+        \App\Models\Pemakaian::factory(10)->create();
+        \App\Models\DetailPemakaian::factory(20)->create();
     }
 }
