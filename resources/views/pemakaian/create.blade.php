@@ -37,7 +37,7 @@ Tambah Pemakaian
                                                             <div class="form-row mt-2">
                                                                 <div class="form-group">
                                                                     <label for="status">Status</label>
-                                                                        <select class="form-select" id="status">
+                                                                        <select class="form-select" name="status" id="status">
                                                                                 <option value="siswa">Siswa</option>
                                                                                 <option value="guru">Guru</option>
                                                                                 <option value="karyawan">Karyawan</option>
@@ -187,7 +187,7 @@ Tambah Pemakaian
                                                         <div class="form-row mt-2">
                                                             <div class="form-group">
                                                                 <label for="status">Status</label>
-                                                                    <select class="form-select" id="status_upd">
+                                                                    <select class="form-select" name="status" id="status_upd">
                                                                             <option value="siswa">Siswa</option>
                                                                             <option value="guru">Guru</option>
                                                                             <option value="karyawan">Karyawan</option>
@@ -539,21 +539,48 @@ $(document).ready(function() {
                 data: data,
             })
             .done(function(response) {
-                console.log('Data terkirim!!', response);
                 const namaSiswaElement = document.querySelector('#id_siswa_update');
-                const namaGuruElement = document.querySelector('#id_guru_update');
+                const namaGuruElement = document.querySelector('#id_guru_update' );
                 const namaKaryawanElement = document.querySelector('#id_karyawan_update');
                 const kelasElement = document.querySelector('#kelas_update');
                 const jurusanElement = document.querySelector('#jurusan_update');
                 let readonlyValue = false;
+
                 namaSiswaElement.style.display = 'none';
                 namaGuruElement.style.display = 'none';
                 namaKaryawanElement.style.display = 'none';
 
+            document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
+
+                if (this.value === 'siswa') {
+                    namaSiswaElement.style.display = 'block';
+                    namaGuruElement.style.display = 'none';
+                    namaKaryawanElement.style.display = 'none';
+                    readonlyValue = false;
+                } else if (this.value === 'guru') {
+                    namaSiswaElement.style.display = 'none';
+                    namaGuruElement.style.display = 'block';
+                    namaKaryawanElement.style.display = 'none';
+                    readonlyValue = true;
+                } else if (this.value === 'karyawan') {
+                    namaSiswaElement.style.display = 'none';
+                    namaGuruElement.style.display = 'none';
+                    namaKaryawanElement.style.display = 'block';
+                    readonlyValue = true;
+                }
+
+                // Atur atribut readonly untuk elemen kelas
+                kelasElement.readOnly = readonlyValue;
+
+                // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
+                jurusanElement.readOnly = (this.value === 'karyawan');
+            
+            }));
+
                 if (response.id_siswa !== 1) {
                     namaSiswaElement.style.display = 'block';
                     var selectSiswa = document.getElementById('id_siswa_upd');
-                    var statusSiswa = document.getElementById('status');
+                    var statusSiswa = document.getElementById('status_upd');
                     $('#status_upd').val('siswa');
 
                     for (var i = 0; i < selectSiswa.options.length; i++) {
@@ -567,7 +594,7 @@ $(document).ready(function() {
                     namaGuruElement.style.display = 'block';
                     readonlyValue = true;
                     var selectGuru = document.getElementById('id_guru_upd');
-                    var statusGuru = document.getElementById('status');
+                    var statusGuru = document.getElementById('status_upd' );
                     $('#status_upd').val('guru');
     
                     for (var i = 0; i < selectGuru.options.length; i++) {
@@ -579,7 +606,7 @@ $(document).ready(function() {
                 } else if (response.id_karyawan !== 1) {
                     namaKaryawanElement.style.display = 'block';
                     readonlyValue = true;
-                    var statusKaryawan = document.getElementById('status');
+                    var statusKaryawan = document.getElementById('status_upd');
                     $('#status_upd').val('karyawan');
 
                     var selectKaryawan = document.getElementById('id_karyawan_upd');
@@ -592,8 +619,6 @@ $(document).ready(function() {
                     }         
                 }
                 kelasElement.readOnly = readonlyValue;
-
-                // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
                 jurusanElement.readOnly = (document.getElementById('status_upd').value === 'karyawan');
                 $('#kelas_update').prop('value', response.kelas);
                 $('#jurusan_update').prop('value',response.jurusan);

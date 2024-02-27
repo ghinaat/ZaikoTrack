@@ -13,6 +13,11 @@ class Pemakaian extends Model
     protected $guarded = ['id_pemakaian'];
     protected $dates = ['tgl_pakai']; // Perhatikan penggunaan 'dates' bukan 'date'
 
+
+    public function detailpemakaian()
+    {
+    return $this->hasMany(DetailPemakaian::class, 'id_pemakaian', 'id_pemakaian');
+    }
     public function inventaris()
     {
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
