@@ -20,36 +20,24 @@ class PeminjamanController extends Controller
     
         $peminjaman = Peminjaman::all();
 
-        $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
-            ->groupBy('id_ruangan')
-            ->with(['ruangan'])
-            ->get();
-            
-       
-        
-        $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
-            ->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
-            ->groupBy('id_barang')
-            ->with(['barang']) // Assuming you have defined the relationship in the Inventaris model
-            ->get();
-
         $barang = Barang::all();
-        $cart = Cart::all();
+
+        $detailPeminjaman = DetailPeminjaman::all();
 
         
       
         return view('peminjaman.index', [
             'peminjaman' => $peminjaman,
-            'ruangan' => $ruangan,
-            'id_barang_options' => $id_barang_options,
             'barang' => $barang,
-            'cart' => $cart
+            'detailPeminjaman' => $detailPeminjaman,
+           
         ]);
         
     }
 
     public function create()
     {
+      
         $peminjaman = Peminjaman::all();
         
         // Get the maximum id_inventaris for each id_ruangan
@@ -62,23 +50,32 @@ class PeminjamanController extends Controller
             ->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')
             ->get();
-        $detailPeminjaman = DetailPeminjaman::all();
+      
         $barang = Barang::all();
-        $cart = Cart::all();
-        $siswa = Siswa::all()->except(1);
-        $guru = Guru::all()->except(1);
-        $karyawan = Karyawan::all()->except(1);
+        $siswa = Siswa::where('id_siswa', '!=', 1)  
+        ->orderByRaw("LOWER(nama_siswa)")  
+        ->get(); 
+        $guru = Guru::where('id_guru', '!=', 1)  
+        ->orderByRaw("LOWER(nama_guru)")  
+        ->get(); 
+        $karyawan = Karyawan::where('id_karyawan', '!=', 1)  
+        ->orderByRaw("LOWER(nama_karyawan)")  
+        ->get(); 
+        $peminjamans = Peminjaman::with('detailPeminjaman')->get();
+        $idPeminjaman = session('id_peminjaman');
+        
         
         return view('peminjaman.create', [
             'peminjaman' => $peminjaman,
-            'detailPeminjaman' => $detailPeminjaman,
+            'peminjamans' => $peminjamans,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'barang' => $barang,
-            'cart' => $cart
+            'idPeminjaman' => $idPeminjaman,
+            
         ]);
     }
     
@@ -94,6 +91,7 @@ class PeminjamanController extends Controller
         ->groupBy('id_barang')
         ->get();
         $ruangans = Ruangan::all();
+      
     
         return view('peminjaman.show', [
             'peminjaman' => $peminjaman,
@@ -101,6 +99,7 @@ class PeminjamanController extends Controller
             'id_barang_options' => $id_barang_options,
             'ruangan' => $ruangan,
             'ruangans' => $ruangans,
+            
            
         ]);
     }
@@ -126,77 +125,40 @@ class PeminjamanController extends Controller
         return response()->json($kondisiBarangOptions);
     }
 
-    public function cart(Request $request)
-    {
-
-        // dd($request);
-        // Validasi request sesuai kebutuhan Anda
-        $request->validate([
-            'id_ruangan' => 'required',
-            'id_barang' => 'required',
-            'kondisi_barang' => 'required',
-            'ket_barang' => 'nullable',
-            'jumlah_barang' => 'required',
-        ]);
-
-        // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
-        $inventaris = Inventaris::where('id_ruangan', $request->input('id_ruangan'))
-            ->where('id_barang', $request->input('id_barang')) ->where('kondisi_barang', $request->input('kondisi_barang'))
-            ->first();
-
-        // Pastikan Inventaris ditemukan sebelum melanjutkan
-        if (!$inventaris) {
-            return redirect()->back()->with(['error' => 'Data tidak tersimpan.',
-        ]);
-        }
-
-        $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
-
-        if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
-            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
-        }
-        
-
-        $cart = new Cart([
-            'id_inventaris' => $inventaris->id_inventaris,
-            'jumlah_barang' => $request->jumlah_barang,
-            'ket_barang' => $request->ket_barang,
-           
-
-        ]);
-        $cart ->save();
-
-        return redirect()->back()->with([
-            'success_message' => 'Data telah tersimpan.',
-        ]);
-    }
+  
 
     public function store(Request $request)
     {
 
     //   dd($request);
+    try{
         $request->validate([
             'id_siswa' => 'nullable',
             'id_karyawan' => 'nullable',
             'id_guru' => 'nullable',
             'jurusan' => 'nullable',
             'kelas' => 'nullable',
+            'status' => 'nullable',
             'keterangan_pemakaian' => 'nullable',
             'tgl_pinjam' => 'required|date',
             'tgl_kembali' => 'required|date|after_or_equal:tgl_peminjaman',
         ]);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->validator->errors()], 422);
+        }
         $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
         if ($id_siswa == 1 && $id_karyawan == 1 && $id_guru == 1) {
-            return response()->json(['error' => 'Setidaknya satu dari ID harus diisi.'], 400);
+            return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
         }
         
         $peminjaman = new Peminjaman([
           'id_siswa' => $id_siswa,
             'id_guru' => $id_guru,
             'id_karyawan' => $id_karyawan,
+            'status' =>  $request->status,
             'jurusan' => $request->jurusan,
             'kelas' => $request->kelas,
             'tgl_pinjam' => $request->tgl_pinjam,
@@ -212,23 +174,41 @@ class PeminjamanController extends Controller
     
     }
 
-    public function update(Request $request, $id_peminjaman)
+    public function update(Request $request)
     {
 
     //   dd($request);
+    try{
         $request->validate([
-            'nama_lengkap' => 'required',
-            'jurusan' => 'required',
-            'kelas' => 'required',
+            'id_siswa' => 'nullable',
+            'id_karyawan' => 'nullable',
+            'id_guru' => 'nullable',
+            'jurusan' => 'nullable',
+            'kelas' => 'nullable',
+            'status' => 'required',
             'keterangan_pemakaian' => 'nullable',
             'tgl_pinjam' => 'required|date',
-            'tgl_kembali' => 'required|date|after_or_equal:tgl_peminjaman',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->validator->errors()], 422);
+        }
+        
+        $id_siswa = $request->filled('id_siswa') ? $request->id_siswa : 1;
+        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
+        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
-        $peminjaman = Peminjaman::find($id_peminjaman);
+        if ($id_siswa == 1 && $id_karyawan == 1 && $id_guru == 1) {
+            return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
+        }
+        $idPeminjaman = session('id_peminjaman');
+        $peminjaman = $request->id_peminjaman;
 
-        $peminjaman-> nama_lengkap = $request->nama_lengkap;
-        $peminjaman->   jurusan = $request->jurusan;
+        $peminjaman-> id_siswa = $id_siswa;
+        $peminjaman-> id_karyawan = $id_karyawan;
+        $peminjaman-> id_guru = $id_guru;
+        $peminjaman->status = $request->status;
+        $peminjaman->jurusan = $request->jurusan;
         $peminjaman->kelas = $request->kelas;
         $peminjaman->tgl_pinjam = $request->tgl_pinjam;
         $peminjaman->tgl_kembali = $request->tgl_kembali;
@@ -237,27 +217,59 @@ class PeminjamanController extends Controller
 
         $peminjaman ->save();
 
-      
-        return redirect()->route('peminjaman.index')->with(['success_message' => 'Data telah tersimpan.'
-    ]);
-    }
+        if (request()->ajax()) {
+            return response()->json(['id_peminjaman' => $idPeminjaman]);
 
-
-    Public function destroyCart($id_cart)
-    {
-        $cart = Cart::find($id_cart);
-        if ($cart) {
-            $cart->delete();
+        }else{
+        return redirect()->route('peminjaman.index')->with(['success_message' => 'Data telah tersimpan.'       
+            ]);
         }
-
-        return redirect()->back()->with('success_message', 'Data telah terhapus.');
     }
 
-    Public function clearCart()
+    public function export(Request $request)
     {
-        Cart::truncate();
-        return redirect()->route("peminjaman.index");
+
+        $peminjaman = [];
+
+        $defaultStartDate = '2023-01-01';
+        $defaultEndDate = '2023-12-31';
+
+        $tglawal = $request->input('tglawal', $defaultStartDate);
+        $tglakhir = $request->input('tglakhir', $defaultEndDate);
+
+        $peminjaman['data'] = Peminjaman::whereBetween('tgl_pinjam', [$tglawal, $tglakhir])->get();
+
+        $peminjaman['tglawal'] = $tglawal;
+        $peminjaman['tglakhir'] = $tglakhir;
+
+        return Excel::download(new PeminjamanExport($peminjaman), 'peminjaman.xlsx');
+
     }
+
+    public function filter(Request $request)
+    {
+
+        $peminjaman = [];
+
+        $defaultStartDate = '2023-01-01';
+        $defaultEndDate = '2023-12-31';
+
+        $tglawal = $request->input('tglawal', $defaultStartDate);
+        $tglakhir = $request->input('tglakhir', $defaultEndDate);
+
+        $peminjaman['data'] = Peminjaman::whereBetween('tgl_pinjam', [$tglawal, $tglakhir])->get();
+
+        $peminjaman['tglawal'] = $tglawal;
+        $peminjaman['tglakhir'] = $tglakhir;
+
+        return view('peminjaman.filter', [
+            'peminjaman' => $peminjaman,
+        ]);
+
+    }
+
+  
+ 
 
     Public function destroy($id_peminjaman)
     {

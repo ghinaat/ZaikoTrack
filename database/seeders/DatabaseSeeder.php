@@ -171,8 +171,8 @@ class DatabaseSeeder extends Seeder
         \App\Models\Pembelian::factory(10)->create();
         \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();
-        \App\Models\Peminjaman::factory(10)->create();
-        \App\Models\DetailPeminjaman::factory(10)->create();
+        // \App\Models\Peminjaman::factory(10)->create();
+        // \App\Models\DetailPeminjaman::factory(10)->create();
         \App\Models\Siswa::factory(10)->create();
         \App\Models\Karyawan::factory(10)->create();
         \App\Models\Guru::factory(10)->create();

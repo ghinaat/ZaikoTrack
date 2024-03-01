@@ -15,10 +15,45 @@ Peminjaman
                     <h4 class="m-0 text-dark">List Peminjaman</h4>
                 </div>
                 <div class="card-body m-0">
-                    <div class="mb-2">
-                        <a href="{{ route('peminjaman.create') }}" class="btn btn-primary mb-2">
-                            Tambah
-                        </a>
+                    <div class="row align-items-end">
+                        <!-- Adjusted to align items at the bottom -->
+                        <div class="col-md-10">
+                            <form action="{{ route('peminjaman.filter') }}" method="GET" class="form-inline mb-3">
+                                <div class="form-group mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tglawal" class="my-label mr-2">Tanggal
+                                                Awal:&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                                            <input type="date" id="tglawal" name="tglawal" required class="form-control"
+                                                value="{{request()->input('tglawal')}}">&nbsp;&nbsp;
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tglakhir" class="form-label">Tanggal
+                                                Akhir:</label>&nbsp;&nbsp;
+                                            <input type="date" id="tglakhir" name="tglakhir" required
+                                                class="form-control"
+                                                value="{{request()->input('tglakhir')}}">&nbsp;&nbsp;
+                                        </div>
+                                        <div class="col-md-2 mb-3 ml-md-auto">
+                                            <button type="submit"
+                                                class="btn btn-primary align-bottom">Tampilkan</button>
+                                            <!-- Added align-bottom -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{{ route('peminjaman.create') }}" class="btn btn-primary mb-2">
+                                Tambah
+                            </a>
+                        </div>
+                        <div class="col-md-2 d-flex flex-column  justify-content-md-end">
+                            <a href="{{ route('peminjaman.filter', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
+                                class="btn btn-danger">Export Data</a>
+                        </div>
                     </div>
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
@@ -27,18 +62,36 @@ Peminjaman
                                     <th>No.</th>
                                     <th>Tanggal Pinjam</th>
                                     <th>Nama</th>
-                                    <th>Kelas</th>
+                                    <th>Jurusan</th>
                                     <th>List Barang</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($peminjaman as $key => $peminjaman)
+                                @php
+                                $sortedPeminjaman = $peminjaman->sortByDesc('id_peminjaman');
+
+                                @endphp
+                                @foreach($sortedPeminjaman as $key => $peminjaman)
                                 <tr>
-                                    <td>{{$key+1}}</td>
+                                    <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>
-                                    <td>{{$peminjaman->nama_lengkap}}</td>
+                                    @if ($peminjaman->status === 'guru')
+                                    <td>{{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }}</td>
+                                    @elseif ($peminjaman->status === 'karyawan')
+                                    <td>{{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }}
+                                    </td>
+                                    @else
+                                    <td>{{ $peminjaman->siswa ? $peminjaman->siswa->nama_siswa : 'N/A' }}</td>
+                                    @endif
+                                    @if($peminjaman->kelas == null && $peminjaman->jurusan == null)
+                                    <td>
+                                        <div style='display: flex; justify-content: center;'>-
+                                        </div>
+                                    </td>
+                                    @else
                                     <td>{{$peminjaman->kelas}} {{$peminjaman->jurusan}}</td>
+                                    @endif
                                     <td>
                                         <a href="{{ route('peminjaman.showDetail', $peminjaman->id_peminjaman) }}"
                                             class="btn btn-info btn-xs mx-1">
@@ -46,13 +99,13 @@ Peminjaman
                                         </a>
                                     </td>
                                     <td>
-                                        @if($peminjaman->detailPeminjaman->where('status', '==',
-                                        'dipinjam')->isEmpty())
-                                        @include('components.action-buttons', ['id' => $peminjaman->id_peminjaman, 'key'
+                                        @if ($detailPeminjaman)
+                                        @include('components.action-buttons', ['id' =>
+                                        $peminjaman->id_peminjaman, 'key'
                                         => $key, 'route' => 'peminjaman'])
                                         @else
                                         <div style='display: flex; justify-content: center;'>
-                                            <span> <i class="fas fa-check-circle fa-2x"
+                                            <span><i class="fas fa-check-circle fa-2x"
                                                     style="color: #42e619; align-items: center;"></i></span>
                                         </div>
                                         @endif
@@ -63,7 +116,8 @@ Peminjaman
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel">Pengembalian Barang</h5>
+                                                    <h5 class="modal-title" id="editModalLabel">Pengembalian
+                                                        Barang</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <i class="fa fa-close" style="color: black;"></i>
@@ -145,261 +199,9 @@ Peminjaman
     </div>
 </div>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Peminjaman</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <i class="fa fa-close" style="color: black;"></i>
-                </button>
-            </div>
-            <div class=" modal-body">
-                <!--content title-->
-                <h2 class="content__title content__title--m-sm">Form Peminjaman</h2>
-                <div class="multisteps-form">
-                    <!--progress bar-->
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-8 ml-auto mr-auto mb-2">
-                            <div class="multisteps-form__progress">
-                                <button class="multisteps-form__progress-btn js-active" type="button"
-                                    title="User Info">Data
-                                    Peminjam</button>
-                                <button class="multisteps-form__progress-btn" type="button" title="Order Info">Detail
-                                    Peminjaman</button>
-                                <button class="multisteps-form__progress-btn" type="button" title="Comments">Barang
-                                    Dipinjam
-                                </button>
-                            </div>
-                        </div>
 
 
 
-                        <!--multisteps-form-->
-
-                        <!--form panels-->
-
-                        <div class="row">
-
-                            <form class="multisteps-form__form" action="{{ route('peminjaman.store') }}" method="post">
-                                @csrf
-                                <!--single form panel-->
-                                <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active"
-                                    data-animation="scaleIn">
-
-                                    <h4 class="multisteps-form__title">Data Diri</h4>
-                                    <div class="multisteps-form__content">
-                                        <div class="form-row mt-3">
-                                            <div class="form-group">
-                                                <label for="nama_lengkap">Nama</label>
-                                                <input type="text" name="nama_lengkap" id="nama_lengkap"
-                                                    class="form-control" required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="form-input-group">
-                                                    <div class="form-input-text1">
-                                                        <label for="kelas" class="form-label">Kelas</label>
-                                                        <input type="text" name="kelas" id="kelas" class="form-control"
-                                                            required>
-                                                    </div>
-                                                    <div class="form-input-text">
-                                                        <label for="jurusan" class="form-label">Jurusan</label>
-                                                        <input type="text" name="jurusan" id="jurusan"
-                                                            class="form-control" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="button-row d-flex  justify-content-end mt-4">
-                                            <button class="btn btn-primary ml-auto js-btn-next" type="button"
-                                                title="Next">Next</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--single form panel-->
-                                <div class="multisteps-form__panel shadow p-4 rounded bg-white"
-                                    data-animation="scaleIn">
-                                    <h4 class="multisteps-form__title">Detail
-                                        Peminjaman</h4>
-                                    <div class="multisteps-form__content">
-                                        <div class="form-row mt-3">
-                                            <div class="form-group">
-                                                <div class="form-input-group">
-                                                    <div class="form-input-text1">
-                                                        <label for="tgl_pinjam" class="form-label">Tanggal
-                                                            Pinjam</label>
-                                                        <input type="date" name="tgl_pinjam" id="tgl_pinjam"
-                                                            class="form-control" required>
-                                                    </div>
-                                                    <div class="form-input-text">
-                                                        <label for="tgl_kembali" class="form-label">Tanggal
-                                                            Kembali</label>
-                                                        <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                            class="form-control" required>
-                                                    </div>
-
-                                                </div>
-                                                <div class="form-group mt-2">
-                                                    <label for="keterangan_pemakaian">Keterangan
-                                                        Pemakaian</label>
-                                                    <input type="text" name="keterangan_pemakaian"
-                                                        id="keterangan_pemakaian" class="form-control" required>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="button-row d-flex justify-content-end mt-4">
-                                            <button class="btn btn-secondary js-btn-prev" type="button"
-                                                title="Prev">Prev</button>
-                                            <button class="btn btn-primary ml-auto js-btn-next" type="button"
-                                                title="Next">Next
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--single form panel-->
-                                <div class="multisteps-form__panel shadow p-4 rounded bg-white"
-                                    data-animation="scaleIn">
-                                    <h4 class="multisteps-form__title">Detail
-                                        Peminjaman</h4>
-                                    <div class="multisteps-form__content">
-                                        <div class="form-row mt-3">
-                                            <div class="table-container">
-                                                <div class="table-responsive">
-                                                    <div class="mb-2">
-                                                        <button class="btn btn-primary ml-auto js-btn-add" type="button"
-                                                            title="Next" id="tambahButton">Tambah</button>
-                                                    </div>
-                                                    <table id="myTable2"
-                                                        class="table table-bordered table-striped align-items-center mb-0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>No.</th>
-                                                                <th>Nama Barang</th>
-                                                                <th>Jumlah</th>
-                                                                <th>Keterangan</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($cart as $key => $cart)
-                                                            <tr>
-                                                                <td>{{$key+1}}</td>
-                                                                <td>{{$cart->inventaris->barang->nama_barang}}
-                                                                </td>
-                                                                <td>{{$cart->jumlah_barang}}</td>
-                                                                <td>{{$cart->ket_barang}}</td>
-                                                                <td>
-
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="button-row d-flex justify-content-end mt-4">
-                                            <button class="btn btn-secondary js-btn-prev" type="button"
-                                                title="Prev">Prev</button>
-                                            <button class="btn btn-primary ml-auto" type="submit" title="Next">Simpan
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <!-- tambah barang -->
-                            <div id="additionalFormContainer" style="display: none;">
-                                <form class="addForm" action="{{ route('peminjaman.cart') }}" method="post">
-                                    @csrf
-
-                                    <div class="form-row mt-3">
-                                        <div class="form-group">
-                                            <label for="id_barang">Barang</label>
-                                            <select class="form-select" name="id_barang" id="id_barang" required>
-                                                @foreach($id_barang_options as $key => $b)
-                                                <option value="{{ $b->barang->id_barang }}">
-                                                    {{ $b->barang->nama_barang }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            @error('id_barang')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="form-input-group">
-                                                <div class="form-input-text1">
-                                                    <label for="id_ruangan">Ruangan</label>
-                                                    <select class="form-select" name="id_ruangan" id="id_ruangan"
-                                                        required>
-
-                                                    </select>
-                                                </div>
-                                                @error('id_ruangan')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                                @enderror
-                                                <div class="form-input-text">
-                                                    <label for="jumlah_barang">Jumlah Barang</label>
-                                                    <input type="text" name="jumlah_barang" id="jumlah_barang"
-                                                        class="form-control" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="kondisi_barang">Kondisi Barang</label>
-                                            <select class="form-select" name="kondisi_barang" id="kondisi_barang"
-                                                required>
-
-                                            </select>
-                                            @error('kondisi_barang')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group mt-2">
-                                            <label for="ket_barang">Keterangan Barang</label>
-                                            <input type="text" name="ket_barang" id="ket_barang" class="form-control">
-                                            <small class="form-text text-muted">*wajib diisi ketika
-                                                barang tidak lengkap/rusak. </small>
-                                            @error('ket_barang')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-
-                                        </div>
-                                    </div>
-
-                                    <div class="button-row d-flex justify-content-end mt-4">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                        <button class="btn btn-secondary js-btn-back" type="button"
-                                            title="Prev">Prev</button>
-                                        <!-- <button class="btn btn-primary ml-auto js-btn-next" type="button"
-                                                title="Next">Next
-                                            </button> -->
-
-                                    </div>
-
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -418,8 +220,11 @@ Peminjaman
 
 <script>
 $(document).ready(function() {
-    $('#myTable').DataTable({
+    var table = $('#myTable').DataTable({
         "responsive": true,
+        "order": [
+            [0, 'desc']
+        ],
         "language": {
             "paginate": {
                 "previous": "<",
@@ -427,95 +232,16 @@ $(document).ready(function() {
             }
         }
     });
+
+    table.on('order.dt search.dt', function() {
+        table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
 });
-
-$(document).ready(function() {
-    $('#myTable1').DataTable({
-        "responsive": true,
-        "language": {
-            "paginate": {
-                "previous": "<",
-                "next": ">"
-            }
-        }
-    });
-});
-
-
-
-
-
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener(
-    'click',
-    function() {
-        const id_barangSelect = this.closest('.form-group').nextElementSibling
-            .querySelector(
-                'select[name=id_ruangan]');
-        const selectedIdRuangan = this.value;
-
-        // Fetch id_barang options for the selected id_ruangan
-        fetch(`/fetch-id-barang/${selectedIdRuangan}`)
-            .then(response => response.json())
-            .then(data => {
-                // Clear existing options
-                id_barangSelect.innerHTML = '';
-
-                // Populate options based on the received data
-                data.forEach(option => {
-                    const newOption = document.createElement('option');
-                    newOption.value = option.ruangan.id_ruangan;
-                    newOption.text =
-                        option.ruangan.nama_ruangan;
-                    id_barangSelect.add(newOption);
-                });
-
-                // Show or hide the id_barang select based on whether options are available
-                id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
-                id_barangSelect.setAttribute('required', data.length > 0 ? 'true' :
-                    'false');
-
-                const event = new Event('change');
-                id_barangSelect.dispatchEvent(event);
-            })
-            .catch(error => console.error('Error:', error));
-
-    }));
-document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').forEach(select =>
-    select
-    .addEventListener(
-        'change',
-        function() {
-            const id_ruanganSelect = document.querySelector('select[name=id_ruangan]');
-            const id_barangSelect = document.querySelector('select[name=id_barang]');
-
-            const selectedIdRuangan = id_ruanganSelect.value;
-            const selectedIdBarang = id_barangSelect.value;
-            const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector(
-                'select[name=kondisi_barang]');
-
-            // Fetch kondisi barang for the selected id_ruangan and id_barang
-            fetch(`/fetch-kondisi-barang/${selectedIdRuangan}/${selectedIdBarang}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing options
-                    kondisiSelect.innerHTML = '';
-
-                    // Populate options based on the received data
-                    data.forEach(option => {
-                        const newOption = document.createElement('option');
-                        newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + ' - ' + option
-                            .ket_barang;
-                        kondisiSelect.add(newOption);
-                    });
-
-                    // Show or hide the kondisi_barang select based on whether options are available
-                    kondisiSelect.style.display = data.length > 0 ? 'block' : 'none';
-                    kondisiSelect.setAttribute('required', data.length > 0 ? 'true' :
-                        'false');
-                })
-                .catch(error => console.error('Error:', error));
-        }));
 </script>
 
 

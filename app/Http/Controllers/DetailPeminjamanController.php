@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\DetailPeminjaman;
 use App\Models\Inventaris;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 class DetailPeminjamanController extends Controller
@@ -10,7 +11,7 @@ class DetailPeminjamanController extends Controller
 
     public function store(Request $request)
     {
-
+        try{
         $request->validate([
             'id_ruangan' => 'required',
             'id_barang' => 'required',
@@ -18,6 +19,9 @@ class DetailPeminjamanController extends Controller
             'ket_tidak_lengkap_awal' => 'nullable',
             'jumlah_barang' => 'required',
         ]);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->validator->errors()], 400);
+        }
 
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
         $inventaris = Inventaris::with(['ruangan', 'barang'])
@@ -30,15 +34,16 @@ class DetailPeminjamanController extends Controller
         if (!$inventaris) {
          
             return response()->json(['error' => 'Data tidak tersimpan.',
-        ]);
+        ], 400);
         }
 
         $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
 
         if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
-            return response()->json(['error' => 'Stok barang tidak mencukupi.']);
+            return response()->json(['error' => 'Stok barang tidak mencukupi.'], 400);
         }
 
+     
         $detailPeminjaman = new DetailPeminjaman([
             'id_peminjaman' => $request->id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
@@ -52,17 +57,22 @@ class DetailPeminjamanController extends Controller
         
         $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
         $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
-
-        if ($namaBarang && $namaRuangan) {
-            return response()->json([
-                'nama_ruangan'  => $namaRuangan->ruangan->nama_ruangan,
-                'nama_barang' => $namaBarang->barang->nama_barang,
-                'jumlah_barang' => $detailPeminjaman->jumlah_barang,
-                'id_detail_peminjaman' => $detailPeminjaman->id_detail_peminjaman
-            ]);
-        } else {
-            return response()->json(['error' => 'Ada data belum diisi']);
+        if (request()->ajax()) {
+            if ($namaBarang && $namaRuangan) {
+                return response()->json([
+                    'nama_ruangan'  => $namaRuangan->ruangan->nama_ruangan,
+                    'nama_barang' => $namaBarang->barang->nama_barang,
+                    'jumlah_barang' => $detailPeminjaman->jumlah_barang,
+                    'id_detail_peminjaman' => $detailPeminjaman->id_detail_peminjaman
+                ]);
+            } else {
+                return response()->json(['error' => 'One or more relationships are null or undefined'],400);
+            }
+        }else{
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
+        ]);
         }
+        
     }
 
     public function update(Request $request, $id_detail_peminjaman)

@@ -37,10 +37,14 @@ Tambah Peminjaman
                             <!--form panels-->
                             <div class="row">
                                 <div class="multisteps-form__form">
-                                    <form id='formPeminjaman' action="{{ route('peminjaman.store') }}" method="post">
+                                    <form id='formPeminjaman'
+                                        action="{{ $idPeminjaman ? route('peminjaman.update', ['id_peminjaman' => $idPeminjaman]) : route('peminjaman.store') }}"
+                                        method="post">
+                                        @if(isset($idPeminjaman))
+                                        @method('PUT')
+                                        @endif
                                         @csrf
                                         <div class="multisteps-form__panel js-active" data-animation="scaleIn">
-
                                             <h4 class="multisteps-form__title">Data Diri</h4>
                                             <div class="multisteps-form__content">
                                                 <div class="form-row mt-3">
@@ -67,18 +71,7 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-                                                    <div class="form-group" id="namaForm" style="display: block;">
-                                                        <label for="id_siswa">Nama Lengkap</label>
-                                                        <select class="form-select">
-
-                                                        </select>
-                                                        @error('id_siswa')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group" id="siswaForm" style="display: none;">
+                                                    <div class="form-group" id="siswaForm" style="display: block;">
                                                         <label for="id_siswa">Nama Siswa</label>
                                                         <select class="form-select" name="id_siswa" id="id_siswa">
                                                             <option value="" selected disabled>Pilih Nama</option>
@@ -171,12 +164,12 @@ Tambah Peminjaman
 
 
                                                 <div class="button-row d-flex justify-content-end mt-4">
-                                                    <a href="{{route('peminjaman.index')}}"
+                                                    <a href="{{route('peminjaman.index' , $idPeminjaman)}}"
                                                         class="btn btn-danger mybtn">
                                                         Batal
                                                     </a>
-                                                    <button class="btn btn-primary ml-auto js-btn-next mybtn"
-                                                        title="Next">Next</button>
+                                                    <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
+                                                        title="Selanjutnya">Selanjutnya</button>
                                                 </div>
                                     </form>
                                 </div>
@@ -191,7 +184,7 @@ Tambah Peminjaman
                                                 <div class="table-responsive">
                                                     <div class="mb-2">
                                                         <button class="btn btn-primary ml-auto js-btn-add" type="button"
-                                                            title="Next" id="tambahButton">Tambah</button>
+                                                            title="Selanjutnya" id="tambahButton">Tambah</button>
                                                     </div>
                                                     <table id="myTable2"
                                                         class="table table-bordered table-striped align-items-center mb-0">
@@ -260,8 +253,13 @@ Tambah Peminjaman
                                             @enderror
                                             <div class="form-input-text">
                                                 <label for="jumlah_barang">Jumlah Barang</label>
-                                                <input type="text" name="jumlah_barang" id="jumlah_barang"
+                                                <input type="number" name="jumlah_barang" id="jumlah_barang"
                                                     class="form-control" required>
+                                                @error('jumlah_barang')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -291,10 +289,10 @@ Tambah Peminjaman
                                 </div>
 
                                 <div class="button-row d-flex justify-content-end mt-4 ">
-                                    <button class="btn btn-secondary js-btn-simpan mybtn" type="button"
+                                    <button class="btn btn-secondary js-btn-kembali mybtn" type="button"
                                         title="Prev">Kembali</button>
                                     <button class="btn btn-primary js-btn-back mybtn" type="button"
-                                        title="Prev">Simpan</button>
+                                        title="Prev">Selanjutnya</button>
                                 </div>
                             </form>
                         </div>
@@ -319,9 +317,7 @@ Tambah Peminjaman
     @method('delete')
     @csrf
 </form>
-<form id="clear-cart-form" action="{{ route('peminjaman.clearCart') }}" method="POST" style="display: none;">
-    @csrf
-</form>
+
 <script src="../js/script.js"></script>
 <script>
 $(document).ready(function() {
@@ -336,23 +332,194 @@ $(document).ready(function() {
     });
 });
 $(document).ready(function() {
+
+});
+$(document).ready(function() {
+    var idPeminjaman; // Variabel untuk menyimpan ID peminjaman
+
+
+    $("#formPeminjaman").on('click', '.js-btn-simpan', function(e) {
+        e.preventDefault();
+
+        // Get the active form
+        var form = $(this).closest('form');
+
+        // Get the URL and method of the form
+        var url = form.attr('action');
+        var method = form.attr('method');
+
+        // Serialize form data
+        var data = form.serialize();
+
+        // Append the CSRF token to the data
+        data += '&_token=' + $('meta[name="csrf-token"]').attr('content');
+
+        // Check if idPeminjaman exists
+        if (idPeminjaman) {
+            data += '&id_peminjaman=' + idPeminjaman;
+            method = 'PUT';
+        }
+
+        // Kirim data ke server menggunakan AJAX
+        $.ajax({
+                type: method,
+                url: url,
+                data: data,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            })
+            .done(function(response) {
+                idPeminjaman = response.id_peminjaman;
+                console.log('Form submitted!', response);
+                // form[0].reset();
+                const eventTarget = e.target;
+                e.preventDefault();
+                if (eventTarget.classList.contains(`${DOMstrings.stepSimpanBtnClass}`)) {
+
+                    const panelOrderList = document.getElementById('table_id');
+                    let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(
+                        panelOrderList);
+
+                    setActiveStep(panelOrderListIndex);
+                    setActivePanel(panelOrderListIndex);
+                    return;
+                }
+                form.attr('action', '/peminjaman/create/' + idPeminjaman);
+
+                sessionStorage.setItem('id_peminjaman', idPeminjaman);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                let errorMessage;
+                try {
+                    const responseJson = JSON.parse(jqXHR.responseText);
+                    errorMessage = responseJson.error || 'An error occurred.';
+                } catch (error) {
+                    errorMessage = 'Data Belum Terisi.';
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: errorMessage,
+                });
+            });
+    });
+
+
+    $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
+        e.preventDefault();
+
+        // Dapatkan formulir yang sedang aktif
+        var form = $(this).closest('form');
+
+        // Dapatkan URL dan metode formulir
+        var url = form.attr('action');
+        var method = form.attr('method');
+
+        // Serialize data formulir
+        var data = form.serialize();
+
+        if (idPeminjaman) {
+            data += '&id_peminjaman=' + idPeminjaman;
+
+            $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                })
+                .done(function(response) {
+                    console.log('Additional form submitted!', response);
+
+                    // Check if the expected properties exist in the response
+                    if (response.nama_barang && response.nama_ruangan) {
+                        const progressButtons = document.querySelectorAll(
+                            '.multisteps-form__progress-btn');
+                        progressButtons.forEach(button => {
+                            button.disabled = false;
+                        });
+                        DOMstrings.stepsForm.style.display = 'block';
+                        DOMstrings.additionalFormContainer.style.display = 'none';
+                        var existingRowCount = $('#myTable2 tbody tr').length;
+                        var newRowNumber = existingRowCount + 1;
+                        var formContainer = $(
+                            '#button-new'
+                        );
+                        // Reload or update the content within the container
+
+                        // Create the new row HTML
+                        var newRow = '<tr>' +
+                            '<td>' + newRowNumber + '</td>' +
+                            '<td>' + response.nama_barang + '</td>' +
+                            '<td>' + response.nama_ruangan + '</td>' +
+                            '<td>' + response.jumlah_barang + '</td>' +
+                            '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
+                            response.id_detail_peminjaman + '">Hapus</button></td>'
+                        '</tr>';
+
+                        // Append the new row to the table
+                        $('#myTable2 tbody').append(newRow);
+                        $('#myTable2').addClass('table-responsive');
+                        formHeight(getActivePanel());
+                        form[0].reset();
+                    } else {
+                        let errorMessage;
+                        try {
+                            const responseJson = JSON.parse(jqXHR.responseText);
+                            errorMessage = responseJson.error || 'An error occurred.';
+                        } catch (error) {
+                            errorMessage = 'Data Belum Terisi.';
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                        });
+                    }
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    let errorMessage;
+                    try {
+                        const responseJson = JSON.parse(jqXHR.responseText);
+                        errorMessage = responseJson.error || 'An error occurred.';
+                    } catch (error) {
+                        errorMessage = 'Data Belum Terisi.';
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMessage,
+                    });
+                });
+        } else {
+            // Handle the case where idPeminjaman is not defined or empty
+            console.error('Error: idPeminjaman is not defined or empty');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Data Diri Belum Lengkap Terisi ',
+            });
+        }
+    });
+
+
     $('#myTable2 tbody').on('click', '.removeBtn', function(e) {
         e.preventDefault();
 
         let id_detail_peminjaman = $(this).data('id_detail_peminjaman');
-
+        var rowToRemove = $(this).closest('tr');
+        var idToRemove = $(this).data('id_detail_peminjaman');
         // Ambil token CSRF dari tag meta
         let token = $('meta[name="csrf-token"]').attr('content');
         $(this).prop('disabled', true);
 
         Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
+            title: 'Apa kamu yakin?',
+            text: "Data akan dihapus!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Ya, hapus!'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -364,22 +531,18 @@ $(document).ready(function() {
                     },
                     success: function(response) {
                         if (response.success) {
-                            console.log(response.message);
-                            // Find the container element that wraps your forms
-                            var formContainer = $(
-                                '#myTable2'
-                            ); // Replace 'yourContainerId' with the actual ID or class of your container
+                            console.log('Response id_detail_peminjaman:',
+                                response
+                                .id_detail_peminjaman);
+                            console.log('Successfully deleted data.');
 
-                            // Remove the table row from the current form
-                            $('td[data-id_detail_peminjaman="' + response
-                                    .id_detail_peminjaman + '"]')
-                                .remove();
+                            // Remove the corresponding row from the DOM
+                            if (rowToRemove) {
+                                rowToRemove.remove();
+                            }
 
-                            // Reload or update the content within the container
-                            formContainer.load(window.location.href +
-                                ' #myTable2'
-                            ); // Reload the content within the container
-
+                            // Optionally, update row numbers or perform other necessary tasks
+                            updateRowNumbers();
                             formHeight(getActivePanel());
                         } else {
                             console.log('Gagal menghapus data.');
@@ -387,7 +550,8 @@ $(document).ready(function() {
                     },
 
                     error: function(xhr, status, error) {
-                        let errorMessage = xhr.responseJSON && xhr.responseJSON
+                        let errorMessage = xhr.responseJSON && xhr
+                            .responseJSON
                             .message ? xhr.responseJSON.message :
                             'An error occurred.';
                         Swal.fire({
@@ -406,118 +570,16 @@ $(document).ready(function() {
                 // Re-enable the button if the user cancels the action
                 $('.removeBtn').prop('disabled', false);
             }
+
         });
     });
-});
-$(document).ready(function() {
-    var idPeminjaman; // Variabel untuk menyimpan ID peminjaman
 
-    // Handle click untuk form "Pilih Barang"
-    // Gunakan event delegation dengan .on()
-    $("#formPeminjaman").on('click', '.js-btn-next', function(e) {
-        e.preventDefault();
-
-        // Dapatkan formulir yang sedang aktif
-        var form = $(this).closest('form');
-
-        // Dapatkan URL dan metode formulir
-        var url = form.attr('action');
-        var method = form.attr('method');
-
-        // Serialize data formulir
-        var data = form.serialize();
-
-        // Kirim data ke server menggunakan AJAX
-        $.ajax({
-                type: method,
-                url: url,
-                data: data,
-            })
-            .done(function(response) {
-                // Dapatkan id_peminjaman dari respons JSON
-                idPeminjaman = response.id_peminjaman;
-                console.log('Form submitted!', response);
-                // form[0].reset();
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                let errorMessage = jqXHR.responseText && jqXHR.responseText
-                    .message ? jqXHR.responseText.message :
-                    'An error occurred.';
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: errorMessage,
-                });
-                alert(jqXHR.responseText)
-
-            });
-    });
-
-    // Handle click untuk form "Pilih Barang"
-    // Gunakan event delegation dengan .on()
-    $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
-        e.preventDefault();
-
-        // Dapatkan formulir yang sedang aktif
-        var form = $(this).closest('form');
-
-        // Dapatkan URL dan metode formulir
-        var url = form.attr('action');
-        var method = form.attr('method');
-
-        // Serialize data formulir
-        var data = form.serialize();
-        data += '&id_peminjaman=' + idPeminjaman;
-
-        // Kirim data ke server menggunakan AJAX
-        $.ajax({
-                type: method,
-                url: url,
-                data: data,
-            })
-            .done(function(response) {
-                console.log('Additional form submitted!', response);
-
-                // Check if the expected properties exist in the response
-                if (response.nama_barang && response.nama_ruangan) {
-                    var existingRowCount = $('#myTable2 tbody tr').length;
-                    var newRowNumber = existingRowCount + 1;
-                    var formContainer = $(
-                        '#button-new'
-                    );
-                    // Reload or update the content within the container
-
-                    // Create the new row HTML
-                    var newRow = '<tr>' +
-                        '<td>' + newRowNumber + '</td>' +
-                        '<td>' + response.nama_barang + '</td>' +
-                        '<td>' + response.nama_ruangan + '</td>' +
-                        '<td>' + response.jumlah_barang + '</td>' +
-                        '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
-                        response.id_detail_peminjaman + '">Hapus</button></td>'
-                    '</tr>';
-
-                    // Append the new row to the table
-                    $('#myTable2 tbody').append(newRow);
-                    $('#myTable2').addClass('table-responsive');
-                    formHeight(getActivePanel());
-                    form[0].reset();
-                } else {
-                    alert('Error: ' + response);
-                }
-            })
-            .fail(function(xhr) {
-                let errorMessage = xhr.responseJSON && xhr.responseJSON
-                    .message ? xhr.responseJSON.message :
-                    'An error occurred.';
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: errorMessage,
-                });
-                alert('Error: ' + xhr.responseText);
-            });
-    });
+    function updateRowNumbers() {
+        $('#myTable2 tbody tr').each(function(index) {
+            // Update the content of the first <td> in each row with the new row number
+            $(this).find('td:first').text(index + 1);
+        });
+    }
 });
 
 
@@ -531,18 +593,17 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
         '#guruForm');
     const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
         '#karyawanForm');
-    const NamaElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#namaForm');
+
     const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
         '#kelas');
     const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
         '#jurusan');
 
     // Hide all forms
-    siswaElement.style.display = 'none';
+    siswaElement.style.display = 'block';
     guruElement.style.display = 'none';
     karyawanElement.style.display = 'none';
-    NamaElement.style.display = 'block';
+    // NamaElement.style.display = 'block';
     jurusanElement.removeAttribute('readonly');
     kelasElement.removeAttribute('readonly');
 
@@ -550,15 +611,15 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
     // Show the selected form
     if (selectedStatus === 'siswa') {
         siswaElement.style.display = 'block';
-        NamaElement.style.display = 'none';
+        // siswaElement.style.display = 'none';
 
     } else if (selectedStatus === 'guru') {
         guruElement.style.display = 'block';
-        NamaElement.style.display = 'none';
+        siswaElement.style.display = 'none';
         kelasElement.setAttribute('readonly', 'true');
     } else if (selectedStatus === 'karyawan') {
         karyawanElement.style.display = 'block';
-        NamaElement.style.display = 'none';
+        siswaElement.style.display = 'none';
         kelasElement.setAttribute('readonly', 'true');
         jurusanElement.setAttribute('readonly', 'true');
 
@@ -620,7 +681,8 @@ document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').for
                     data.forEach(option => {
                         const newOption = document.createElement('option');
                         newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + (option.ket_barang ? ' - ' +
+                        newOption.text = option.kondisi_barang + (option.ket_barang ?
+                            ' - ' +
                             option
                             .ket_barang : '');
                         kondisiSelect.add(newOption);

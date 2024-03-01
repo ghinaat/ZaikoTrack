@@ -76,13 +76,12 @@ Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name(
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
 Route::get('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'showDetail'])->name('peminjaman.showDetail');
 Route::post('/peminjaman/create', [App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
-Route::put('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
+Route::put('/peminjaman/create/update', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
 Route::delete('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
-Route::post('/peminjaman/clear-cart', [PeminjamanController::class, 'clearCart'])->name('peminjaman.clearCart');
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
 Route::get('/fetch-kondisi-barang/{id_ruangan}/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchKondisiBarang'])->name('peminjaman.fetchKondisiBarang');
-Route::post('/peminjaman/cart', [App\Http\Controllers\PeminjamanController::class, 'cart'])->name('peminjaman.cart');
-Route::delete('/peminjaman/cart/{id_cart}', [App\Http\Controllers\PeminjamanController::class, 'destroyCart'])->name('peminjaman.destroyCart');
+Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
+Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
 
 
 Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'destroy'])->name('detailPeminjaman.destroy');
