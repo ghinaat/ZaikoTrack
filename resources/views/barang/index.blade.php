@@ -2,65 +2,157 @@
 @section('title', 'List Barang')
 @section('css')
 <link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
+<style>
+    .nav-pills {
+        height: 50px; /* Sesuaikan tinggi sesuai kebutuhan */
+    }
+
+    .nav-pills .nav-link {
+        height: 90%; /* Sesuaikan tinggi sesuai kebutuhan */
+        font-size: 18px; /* Sesuaikan ukuran font sesuai kebutuhan */
+    }
+</style>
+
 @endsection
 @section('breadcrumb-name')
 Barang
 @endsection
 @section('content')
-<div class="container">
+<div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
             <div class="card mb-2">
                 <div class="card-header pb-0">
-                    <h4 class="m-0 text-dark">List Barang</h4>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h4 class="text-dark">List Barang</h4>
+                        </div>
+                        <div class="col-lg-5 col-md-8 col-sm-12 text-end">
+                            <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                                <li class="nav-item" id="option1" class="active">
+                                    <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
+                                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                                        <span class="ms-2">Alat & Perlengkapan</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" id="option2">
+                                    <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center " data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
+                                        <i class="fa-solid fa-suitcase"></i>
+                                        <span class="ms-2">Bahan Praktik</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body m-0">
-                    <div class="mb-2">
-                        <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModal">Tambah</button>
-                    </div>
-                    <div class="table-responsive ">
-                        <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nama Barang</th>
-                                    <th>Merek</th>
-                                    <th style="text-align: center;">Total Stok<br>Barang</th>
-                                    <th>Jumlah Barang</th>
-                                    <th style="text-align: center;">
-                                        Jumlah Barang<br>Terinventarisasi
-                                        <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
-                                    </th>
-                                    <th>Jenis Barang</th>
-                                    <th style="width:189px;">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($barang as $key => $br)
-                                <tr>
-                                    <td>{{$key+1}}</td>
-                                    <td>{{$br->nama_barang}}</td>
-                                    <td>{{$br->merek}}</td>
-                                    <td>{{$br->stok_barang}}</td>
-                                    <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
-                                    <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
-                                    <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
-                                    <td>
-                                        @include('components.action-buttons', ['id' => $br->id_barang, 'key' =>
-                                        $key,
-                                        'route' => 'barang'])
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div id="tableAlatPerlengkapan" class="card-body m-0">
+                        <div class="mb-2">
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
+                        </div>
+                        <div class="table-responsive ">
+                            <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nama Barang</th>
+                                        <th>Merek</th>
+                                        <th>Kode Barang
+                                        <th style="text-align: center;">
+                                            Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
+                                        </th>
+                                        <th>Jenis Barang</th>
+                                        <th style="width:189px;">Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($alatdanperlengkapan as $key => $br)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$br->nama_barang}}</td>
+                                        <td>{{$br->merek}}</td>
+                                        <td>{{$br->kode_barang}}</td>
+                                        <td>
+                                            @if($br->inventaris()->exists())
+                                            <span class="badge bg-gradient-success">Sudah</span>
+                                            @else
+                                            <span class="badge bg-gradient-secondary">Belum</span>                                            
+                                            @endif                                        
+                                        </td>
+                                        <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
+                                        
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModalPerlengkapan{{$br->id_barang}}"
+                                                    data-id="{{$br->id_barang}}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="{{ route('barang.destroy', $br->id_barang) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})"
+                                                    class="btn btn-danger btn-xs mx-1">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                </div> 
+                <div id="tableBahanPraktik" class="card-body m-0">
+                        <div class="mb-2">
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
+                        </div>
+                        <div class="table-responsive ">
+                            <table id="myTable2" class="table table-bordered table-striped align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nama Barang</th>
+                                        <th style="text-align: center;">Total Stok<br>Barang</th>
+                                        <th>Merek</th>
+                                        <th>Jumlah Barang</th>
+                                        <th style="text-align: center;">
+                                            Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
+                                        </th>
+                                        <th>Jenis Barang</th>
+                                        <th style="width:189px;">Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($bahan as $key => $br)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$br->nama_barang}}</td>
+                                        <td>{{$br->merek}}</td>
+                                        <td>{{$br->stok_barang}}</td>
+                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
+                                        <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
+                                        <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModalBahan{{$br->id_barang}}"
+                                                    data-id="{{$br->id_barang}}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="{{ route('barang.destroy', $br->id_barang) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})"
+                                                    class="btn btn-danger btn-xs mx-1">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="addModalPeralatan" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -81,8 +173,53 @@ Barang
                         <input type="text" name="merek" id="merek" class="form-control" required>
                     </div>
                     <div class="form-group">
+                        <label for="kode_barang">Kode Barang</label>
+                        <input type="text" name="kode_barang" id="kode_barang" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_barang">Jenis Barang</label>
+                        <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
+                            @foreach($jenisBarang as $key => $jb)
+                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
+                                id_jenis_barang)selected @endif>
+                                {{$jb->nama_jenis_barang}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addModalBahan" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Tambah barang</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm" action="{{route('barang.store')}}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="nama_barang">Nama Barang</label>
+                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="merek">Merek</label>
+                        <input type="text" name="merek" id="merek" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control" required>
+                        <input type="number" name="stok_barang" id="stok_barang" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="jenis_barang">Jenis Barang</label>
@@ -105,8 +242,61 @@ Barang
     </div>
 </div>
 
-@foreach($barang as $key => $br)
-<div class="modal fade" id="editModal{{$br->id_barang}}" tabindex="-1" role="dialog"
+@foreach($alatdanperlengkapan as $key => $br)
+<div class="modal fade" id="editModalPerlengkapan{{$br->id_barang}}" tabindex="-1" role="dialog"
+    aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label for="nama_barang">Nama Barang</label>
+                        <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                            value="{{old('nama_barang', $br->nama_barang)}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="merek">Merek</label>
+                        <input type="text" name="merek" id="merek" class="form-control"
+                            value="{{old('merek', $br->merek)}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kode_barang">Kode Barang</label>
+                        <input type="text" name="kode_barang" id="kode_barang" class="form-control"
+                        value="{{old('kode_barang', $br->kode_barang)}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_barang">Jenis Barang</label>
+                        <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
+                            @foreach($jenisBarang as $key => $jb)
+                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
+                                id_jenis_barang)selected @endif>
+                                {{$jb->nama_jenis_barang}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+@foreach($bahan as $key => $br)
+<div class="modal fade" id="editModalBahan{{$br->id_barang}}" tabindex="-1" role="dialog"
     aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -175,6 +365,53 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('#myTable2').DataTable({
+        "responsive": true,
+        "language": {
+            "paginate": {
+                "previous": "<",
+                "next": ">"
+            }
+        }
+    });
 });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Simpan referensi ke elemen-elemen yang diperlukan
+        const option1 = document.getElementById('option1');
+        const option2 = document.getElementById('option2');
+        const tableAlatPerlengkapan = document.getElementById('tableAlatPerlengkapan');
+        const tableBahanPraktik = document.getElementById('tableBahanPraktik');
+
+        // Tentukan fungsi untuk menampilkan atau menyembunyikan tabel berdasarkan radio button yang dipilih
+        function handleRadioChange() {
+            if (option1.classList.contains('active')) {
+                tableAlatPerlengkapan.style.display = 'block';
+                tableBahanPraktik.style.display = 'none';
+            } else if (option2.classList.contains('active')) {
+                tableAlatPerlengkapan.style.display = 'none';
+                tableBahanPraktik.style.display = 'block';
+            }
+        }
+
+        // Tambahkan kelas active secara langsung dan panggil handleRadioChange
+        option1.classList.add('active');
+        handleRadioChange();
+
+        // Tambahkan event listener untuk perubahan pada radio button
+        option1.addEventListener('click', function() {
+            option1.classList.add('active');
+            option2.classList.remove('active');
+            handleRadioChange();
+        });
+
+        option2.addEventListener('click', function() {
+            option2.classList.add('active');
+            option1.classList.remove('active');
+            handleRadioChange();
+        });
+    });
 </script>
 @endpush

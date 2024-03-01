@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\PemakaianController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PeminjamanController;
@@ -90,14 +91,18 @@ Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Cont
 
 
 Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
-Route::get('/pemakaian/create', [App\Http\Controllers\PemakaianController::class, 'create'])->name('pemakaian.create');
 Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');
-Route::put('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'update'])->name('pemakaian.update');
+Route::get('/pemakaian/create', [App\Http\Controllers\PemakaianController::class, 'create'])->name('pemakaian.create');
+Route::get('/get-pemakaian-data/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'getPemakaianData'])->name('pemakaian.getPemakaianData');
+Route::put('/pemakaian/update', [App\Http\Controllers\PemakaianController::class, 'update'])->name('pemakaian.update');
 Route::delete('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroy'])->name('pemakaian.destroy');
-Route::get('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'showDetail'])->name('pemakaian.showDetail');
-Route::post('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'storeDetail'])->name('pemakaian.storeDetail');
-Route::delete('/pemakaian/delete/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
+
+Route::get('/detailpemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'showDetail'])->name('pemakaian.showDetail');
+Route::post('/pemakaian/detail', [App\Http\Controllers\PemakaianController::class, 'storeDetail'])->name('pemakaian.storeDetail');
+Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
+Route::get('/get-siswa-options', [App\Http\Controllers\PemakaianController::class, 'getSiswaOptions'])->name('pemakaian.getSiswaOptions');
+Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class, 'export'])->name('pemakaian.export');
 
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
@@ -108,6 +113,7 @@ Route::delete('/cart', [App\Http\Controllers\CartController::class, 'ButtonBatal
 Route::resource('/siswa', App\Http\Controllers\SiswaController::class);
 Route::post('/siswa/import', [ App\Http\Controllers\SiswaController::class, 'import'])->name('siswa.import');
 Route::resource('/guru', App\Http\Controllers\GuruController::class);
+Route::post('/guru/import', [App\Http\Controllers\GuruController::class, 'import'])->name('guru.import');
 Route::post('/karyawan/import', [ App\Http\Controllers\KaryawanController::class, 'import'])->name('karyawan.import');
 Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
 });

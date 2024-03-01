@@ -8,10 +8,11 @@ const DOMstrings = {
   stepFormPanelClass: 'multisteps-form__panel',
   stepFormPanels: document.querySelectorAll('.multisteps-form__panel'),
   stepPrevBtnClass: 'js-btn-prev',
+  stepUpdateBtnClass: 'js-btn-update',
   stepNextBtnClass: 'js-btn-next',
   stepPlusBtnClass: 'js-btn-plus',
+  stepSaveBtnClass: 'js-btn-save',
   stepChooseBtnClass: 'js-btn-choose',
-  stepCancelBtnClass: 'js-btn-cancel',
 
 };
 
@@ -55,9 +56,9 @@ const findParent = (elem, parentClass) => {
 };
 
 // Get active button step number
-const getActiveStep = elem => {
-  return Array.from(DOMstrings.stepsBtns).indexOf(elem);
-};
+// const getActiveStep = elem => {
+//   return Array.from(DOMstrings.stepsBtns).indexOf(elem);
+// };
 
 // Set all steps before clicked (and clicked too) to active
 const setActiveStep = activeStepNum => {
@@ -119,7 +120,7 @@ DOMstrings.stepsBar.addEventListener('click', e => {
 DOMstrings.stepsForm.addEventListener('click', e => {
   const eventTarget = e.target;
   if (!(eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`) || 
-  eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepChooseBtnClass}`) || eventTarget.classList.contains(`${DOMstrings.stepCancelBtnClass}`))) {
+  eventTarget.classList.contains(`${DOMstrings.stepPlusBtnClass}`) )) {
     return;
   }
 
@@ -132,26 +133,11 @@ DOMstrings.stepsForm.addEventListener('click', e => {
     setActivePanel(panelTambahIndex);
     return;
   }
-  if (eventTarget.classList.contains(`${DOMstrings.stepChooseBtnClass}`)) {
-          // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
-          const panelOrderList = document.getElementById('panel_order_list');
-          let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
-      
-          setActiveStep(panelOrderListIndex);
-          setActivePanel(panelOrderListIndex);
-          return;
-    }
 
-  if (eventTarget.classList.contains(`${DOMstrings.stepCancelBtnClass}`)) {
-          // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
-          const panelOrderList = document.getElementById('panel_order_list');
-          let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
-      
-          setActiveStep(panelOrderListIndex);
-          setActivePanel(panelOrderListIndex);
-          return;
-    }
+
   
+  // Pastikan $(document).ready() berada di luar blok kondisional
+
 
   
   const activePanel = findParent(eventTarget, `${DOMstrings.stepFormPanelClass}`);

@@ -71,7 +71,7 @@ Detail Pembelian
               </div>
           </div>
         </div>
-        {{-- {{Modal Tambah}} --}}
+        {{-- Modal ambah --}}
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
               <div class="modal-content">
@@ -112,9 +112,9 @@ Detail Pembelian
               </div>
           </div>
       </div>
-      {{-- {{Close}} --}}
+      {{-- Close --}}
 
-      {{-- {{Edit Modal}} --}}
+      {{-- Edit odal --}}
       @foreach($detailPembelian as $key =>$dp)
     
       <div class="modal fade" id="editModal{{$dp->id_detail_pembelian}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$dp->id_detail_pembelian}}" aria-hidden="true">
