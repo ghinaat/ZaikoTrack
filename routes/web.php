@@ -61,6 +61,7 @@ Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\Detai
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
+Route::get('/inventaris/barcode', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
@@ -73,6 +74,8 @@ Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailP
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
+
+Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
 Route::get('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'showDetail'])->name('peminjaman.showDetail');
@@ -85,10 +88,12 @@ Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name(
 Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
 
 
+
+
 Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'destroy'])->name('detailPeminjaman.destroy');
 Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjamanController::class, 'store'])->name('detailPeminjaman.store');
 Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'update'])->name('detailPeminjaman.update');
-
+Route::post('/peminjaman/detailPeminjaman/barcode', [App\Http\Controllers\DetailPeminjamanController::class, 'AddBarcode'])->name('detailPeminjaman.AddBarcode');
 
 Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
 Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');
@@ -103,11 +108,6 @@ Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\P
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
 Route::get('/get-siswa-options', [App\Http\Controllers\PemakaianController::class, 'getSiswaOptions'])->name('pemakaian.getSiswaOptions');
 Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class, 'export'])->name('pemakaian.export');
-
-Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
-Route::post('/cart', [App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
-Route::delete('/cart/{id_cart}', [App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
-Route::delete('/cart', [App\Http\Controllers\CartController::class, 'ButtonBatal'])->name('cart.batal');
 
 
 Route::resource('/siswa', App\Http\Controllers\SiswaController::class);

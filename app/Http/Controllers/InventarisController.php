@@ -100,6 +100,15 @@ class InventarisController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
+    public function barcode()
+    {
+        
+        return view('inventaris.barcode', [
+           
+        ]);
+    }
+
+
     public function showDetail($id_ruangan)
     {
         // Ambil data inventaris berdasarkan ID

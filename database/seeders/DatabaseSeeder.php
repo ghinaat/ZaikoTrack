@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
             'nama_barang' => 'Router',
             'merek' => 'Mikrotik',
             'stok_barang' => null,
-            'kode_barang' => '1038439',
+            'kode_barang' => '9780201379624',
             'id_jenis_barang' => '2',
         ]);
 

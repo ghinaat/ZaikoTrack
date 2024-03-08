@@ -78,6 +78,50 @@ class PeminjamanController extends Controller
             
         ]);
     }
+
+    public function Barcode()
+    {
+      
+        $peminjaman = Peminjaman::all();
+        
+        // Get the maximum id_inventaris for each id_ruangan
+        $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
+            ->groupBy('id_ruangan')
+            ->get();
+    
+        // Get the maximum id_inventaris for each id_barang within the selected id_ruangan
+        $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
+            ->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
+            ->groupBy('id_barang')
+            ->get();
+      
+        $barang = Barang::all();
+        $siswa = Siswa::where('id_siswa', '!=', 1)  
+        ->orderByRaw("LOWER(nama_siswa)")  
+        ->get(); 
+        $guru = Guru::where('id_guru', '!=', 1)  
+        ->orderByRaw("LOWER(nama_guru)")  
+        ->get(); 
+        $karyawan = Karyawan::where('id_karyawan', '!=', 1)  
+        ->orderByRaw("LOWER(nama_karyawan)")  
+        ->get(); 
+        $peminjamans = Peminjaman::with('detailPeminjaman')->get();
+        $idPeminjaman = session('id_peminjaman');
+        
+        
+        return view('peminjaman.barcode', [
+            'peminjaman' => $peminjaman,
+            'peminjamans' => $peminjamans,
+            'siswa' => $siswa,
+            'guru' => $guru,
+            'karyawan' => $karyawan,
+            'ruangan' => $ruangan,
+            'id_barang_options' => $id_barang_options,
+            'barang' => $barang,
+            'idPeminjaman' => $idPeminjaman,
+            
+        ]);
+    }
     
     public function showDetail($id_peminjaman)
     {
@@ -174,6 +218,7 @@ class PeminjamanController extends Controller
     
     }
 
+   
     public function update(Request $request)
     {
 

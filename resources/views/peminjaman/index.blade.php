@@ -46,9 +46,8 @@ Peminjaman
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="{{ route('peminjaman.create') }}" class="btn btn-primary mb-2">
-                                Tambah
-                            </a>
+                            <button class="btn btn-primary mb-2"
+                                onclick="notificationBeforeAdds(event, this)">Tambah</button>
                         </div>
                         <div class="col-md-2 d-flex flex-column  justify-content-md-end">
                             <a href="{{ route('peminjaman.filter', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
@@ -242,6 +241,32 @@ $(document).ready(function() {
         });
     }).draw();
 });
+
+
+function notificationBeforeAdds(event, el, dt) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'Pilihan Tambah Data',
+        text: 'Pilih cara untuk menambahkan data:',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dengan Barcode',
+        cancelButtonText: 'Tanpa Barcode'
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Jika pengguna memilih "Dengan Barcode"
+            window.location.href = '/peminjaman/barcode'; // Ganti dengan URL halaman yang sesuai
+        } else {
+            // Jika pengguna memilih "Tanpa Barcode", tampilkan add modal
+            window.location.href = '/peminjaman/create'; // Ganti dengan URL halaman yang sesuai
+        }
+
+    });
+}
 </script>
 
 
