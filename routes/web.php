@@ -48,6 +48,8 @@ Route::get('/barang', [App\Http\Controllers\BarangController::class, 'index'])->
 Route::post('/barang', [App\Http\Controllers\BarangController::class, 'store'])->name('barang.store');
 Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'update'])->name('barang.update');
 Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
+Route::get('/barang/exportalat', [App\Http\Controllers\BarangController::class, 'exportAlatPerlengkapan'])->name('barang.exportAlatPerlengkapan');
+Route::get('/barang/exportbahan', [App\Http\Controllers\BarangController::class, 'exportBahan'])->name('barang.exportBahan');
 
 Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
 Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'store'])->name('pembelian.store');

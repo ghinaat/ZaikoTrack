@@ -6,10 +6,10 @@
 Pembelian
 @endsection
 @section('content')
-<div class="container">
+<div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
-            <div class="card mb-2">
+            <div class="card mb-4">
                 <div class="card-header pb-0">
                     <h4 class="m-0 text-dark">List Pembelian</h4>
                 </div>
@@ -86,13 +86,19 @@ Pembelian
                         <label for="nama_toko">Nama Toko</label>
                         <input type="text" name="nama_toko" id="nama_toko" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="total_pembelian">Total Pembelian</label>
-                        <input type="text" name="total_pembelian" id="total_pembelian" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control" required>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="total_pembelian">Total Pembelian</label>
+                                <input type="text" name="total_pembelian" id="total_pembelian" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="stok_barang">Stok Barang</label>
+                                <input type="number" name="stok_barang" id="stok_barang" class="form-control" required>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
