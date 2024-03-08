@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0334dae446744ba30d53a5b552733d6a",
+    "content-hash": "5a8bb4cafc33ab04765aea14c5615354",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -891,6 +891,7 @@
             "support": {
                 "issues": "https://github.com/endroid/qr-code/issues",
                 "source": "https://github.com/endroid/qr-code/tree/5.0.6"
+
             },
             "funding": [
                 {
@@ -899,6 +900,7 @@
                 }
             ],
             "time": "2024-03-06T22:34:02+00:00"
+
         },
         {
             "name": "ezyang/htmlpurifier",

@@ -1,9 +1,9 @@
 @extends('layouts.demo')
-@section('title', 'Baru Password')
+@section('title', 'Ubah Password')
 @section('css')
 @endsection
 @section('breadcrumb-name')
-Baru Password
+Ubah Password
 @endsection
 @section('content')
 <div class="container-fluid py-4">

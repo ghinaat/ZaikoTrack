@@ -26,7 +26,13 @@ List Barang
                                 <label for="nama_lengkap" class="show-label ">Nama</label>
                             </div>
                             <div class="show-input">
-                                {{$peminjaman->nama_lengkap}} :
+                                @if ($peminjaman->status === 'guru')
+                                {{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }} :
+                                @elseif ($peminjaman->status === 'karyawan')
+                                {{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }} :
+                                @else
+                                {{ $peminjaman->siswa ? $peminjaman->siswa->nama_siswa : 'N/A' }} :
+                                @endif
                             </div>
                             <div class="show-group">
                                 <label for="nama_lengkap" class="show-label ">Kelas</label>

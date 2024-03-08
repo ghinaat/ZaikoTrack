@@ -219,60 +219,19 @@ Tambah Peminjaman
                         </div>
                         <!-- tambah barang -->
                         <div id="additionalFormContainer" style="display: none;">
-                            <form class="addForm" action="{{ route('detailPeminjaman.store') }}" method="post">
+                            <form class="addForm" action="{{ route('detailPeminjaman.AddBarcode') }}" method="post">
                                 @csrf
 
                                 <div class="form-row mt-3">
                                     <div class="form-group">
-                                        <label for="id_barang">Barang</label>
-                                        <select class="form-select" name="id_barang" id="id_barang" required>
-                                            @foreach($id_barang_options as $key => $b)
-                                            <option value="{{ $b->barang->id_barang }}">
-                                                {{ $b->barang->nama_barang }}
-                                            </option>
-                                            @endforeach
+                                        <label for="ket_barang">Scan</label>
+                                        <video id="previewKamera" style="width: 300px;height: 300px;"></video>
+                                        <br>
+                                        <select id="pilihKamera" style="max-width:400px">
                                         </select>
-                                        @error('id_barang')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-input-group">
-                                            <div class="form-input-text1">
-                                                <label for="id_ruangan">Ruangan</label>
-                                                <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+                                        <br>
+                                        <input type="text" id="hasilscan" name="kode_barang" readonly>
 
-                                                </select>
-                                            </div>
-                                            @error('id_ruangan')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                            <div class="form-input-text">
-                                                <label for="jumlah_barang">Jumlah Barang</label>
-                                                <input type="number" name="jumlah_barang" id="jumlah_barang"
-                                                    class="form-control" required>
-                                                @error('jumlah_barang')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kondisi_barang">Kondisi Barang</label>
-                                        <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
-
-                                        </select>
-                                        @error('kondisi_barang')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
@@ -319,6 +278,10 @@ Tambah Peminjaman
 </form>
 
 <script src="../js/script.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/barcode-scanner.js') }}"></script>
 <script>
 $(document).ready(function() {
     $('#myTable1').DataTable({
@@ -581,6 +544,7 @@ $(document).ready(function() {
         });
     }
 });
+~
 
 
 

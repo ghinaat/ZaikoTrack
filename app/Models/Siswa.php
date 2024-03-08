@@ -12,4 +12,8 @@ class Siswa extends Model
     protected $table = 'siswa';
     protected $guarded = ['id_siswa'];
    
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_siswa', 'id_siswa');
+    }
 }

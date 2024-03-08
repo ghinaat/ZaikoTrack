@@ -12,4 +12,8 @@ class Karyawan extends Model
     protected $table = 'karyawan';
     protected $guarded = ['id_karyawan'];
    
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_karyawan', 'id_karyawan');
+    }
 }
