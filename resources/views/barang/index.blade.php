@@ -5,6 +5,7 @@
 <style>
     .nav-pills {
         height: 50px; /* Sesuaikan tinggi sesuai kebutuhan */
+        color: aqua;
     }
 
     .nav-pills .nav-link {
@@ -24,12 +25,12 @@ Barang
             <div class="card mb-2">
                 <div class="card-header pb-0">
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-md-7 mt-2">
                             <h4 class="text-dark">List Barang</h4>
                         </div>
-                        <div class="col-lg-5 col-md-8 col-sm-12 text-end">
+                        <div class="col-lg-5 col-md-5 col-sm-12 text-end">
                             <ul class="nav nav-pills nav-fill p-1" role="tablist">
-                                <li class="nav-item" id="option1" class="active">
+                                <li class="nav-item" id="option1">
                                     <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
                                         <i class="fa-solid fa-screwdriver-wrench"></i>
                                         <span class="ms-2">Alat & Perlengkapan</span>
@@ -46,9 +47,15 @@ Barang
                     </div>
                 </div>
                 <div id="tableAlatPerlengkapan" class="card-body m-0">
-                        <div class="mb-2">
+                    <div class="mb-2 d-flex justify-content-between">
+                        <div>
                             <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
                         </div>
+                        <div class="text-end">
+                            <a href="{{ route('barang.exportAlatPerlengkapan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
+                        </div>
+                    </div>
+                    
                         <div class="table-responsive ">
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
@@ -56,7 +63,8 @@ Barang
                                         <th>No.</th>
                                         <th>Nama Barang</th>
                                         <th>Merek</th>
-                                        <th>Kode Barang
+                                        <th>Kode Barang</th>
+                                        <th>Barcode</th>
                                         <th style="text-align: center;">
                                             Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
                                         </th>
@@ -71,6 +79,11 @@ Barang
                                         <td>{{$br->nama_barang}}</td>
                                         <td>{{$br->merek}}</td>
                                         <td>{{$br->kode_barang}}</td>
+                                        <td>
+                                            <a href="{{ asset('/storage/barcode/'. $br->barqode_image) }}" download>
+                                                <img  src="{{ asset('/storage/barcode/' . $br->barqode_image) }}">
+                                            </a>
+                                        </td>
                                         <td>
                                             @if($br->inventaris()->exists())
                                             <span class="badge bg-gradient-success">Sudah</span>
@@ -99,17 +112,22 @@ Barang
                         </div>
                 </div> 
                 <div id="tableBahanPraktik" class="card-body m-0">
-                        <div class="mb-2">
-                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
+                    <div class="mb-2 d-flex justify-content-between">
+                        <div>
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
                         </div>
+                        <div class="text-end">
+                            <a href="{{ route('barang.exportBahan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
+                        </div>
+                    </div>
                         <div class="table-responsive ">
                             <table id="myTable2" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
                                         <th>Nama Barang</th>
-                                        <th style="text-align: center;">Total Stok<br>Barang</th>
                                         <th>Merek</th>
+                                        <th style="text-align: center;">Total Stok<br>Barang</th>
                                         <th>Jumlah Barang</th>
                                         <th style="text-align: center;">
                                             Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>

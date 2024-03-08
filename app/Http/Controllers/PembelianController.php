@@ -50,7 +50,7 @@ class PembelianController extends Controller
         }
 
         $pembelian->save();
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
+        return redirect()->route('pembelian.showDetail', ['id_pembelian' => $pembelian->id_pembelian])->with(['success_message' => 'Data telah tersimpan.']);
     }
 
     public function update(Request $request, $id_pembelian){

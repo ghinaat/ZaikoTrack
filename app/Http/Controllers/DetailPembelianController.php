@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\DetailPembelian;
+use App\Models\JenisBarang;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,21 @@ class DetailPembelianController extends Controller
     public function showDetail( $id_pembelian){
         
         $pembelian = Pembelian::findOrFail($id_pembelian);
-        $detailPembelian = DetailPembelian::with('barang')->where('id_pembelian', $id_pembelian)->get();
-        $barangs = Barang::all();
+        $detailPembelian = DetailPembelian::with('barang.jenisbarang')->where('id_pembelian', $id_pembelian)->get();
+         $alatPerlengkapan = Barang::where('id_jenis_barang', '!=', 3)->whereNotExists(function ($query) {
+            $query->select('id_barang')
+                ->from('detail_pembelian')
+                ->whereColumn('barang.id_barang', '=', 'detail_pembelian.id_barang');
+        })
+        ->get();       
+        $bahanPraktik = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::pluck('nama_barang', 'id_barang');
+
+        // dd($alatPerlengkapan);
         return view("pembelian.detail",[
             'pembelian' => $pembelian,
-            'barangs' => $barangs,
+            'alatPerlengkapan' => $alatPerlengkapan,
+            'bahanPraktik' => $bahanPraktik,
             'barang' => $barang,
             'detailPembelian' => $detailPembelian,
         ]);
@@ -27,30 +37,41 @@ class DetailPembelianController extends Controller
         
         // dd($request);
         $request->validate([
-            'id_barang'  => 'required',
             'id_pembelian'  => 'required',
-            'jumlah_barang'  => 'required',
-            'subtotal_pembelian'  => 'required',
-            // 'harga_perbarang'  => 'required',
+            'id_jenis_barang' => 'required',
+            'id_barang_perlengkapan'  => 'nullable',
+            'id_barang_bahan'  => 'nullable',
+            'jumlah_barang'  => 'nullable',
+            'subtotal_pembelian'  => 'nullable',
         ]);
         
         $detailPembelian = new DetailPembelian();
-        $detailPembelian->id_barang = $request->id_barang;
+        
+        if ($request->id_jenis_barang == 3){
+            $detailPembelian->id_barang = $request->id_barang_bahan;
+            $subtotal_pembelian = $request->subtotal_pembelian;
+            $subtotalPembelian = str_replace(".", "",  $subtotal_pembelian);
+            $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
+            $pembelian = Pembelian::findOrFail($id_pembelian);
+            if($subtotalPembelians > ($pembelian->total_pembelian)){
+                return redirect()->back()->with('error', 'Subtotal pembelian melebihi batas total pembelian!');}
+            $detailPembelian->subtotal_pembelian = $subtotalPembelians;
+            $detailPembelian->harga_perbarang = $subtotalPembelians / ($request->jumlah_barang);
+        } else{
+            $detailPembelian->id_barang = $request->id_barang_perlengkapan;
+            $subtotal_pembelian = $request->subtotal_pembelian;
+            $subtotalPembelian = str_replace(".", "",  $subtotal_pembelian);
+            $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
+            $pembelian = Pembelian::findOrFail($id_pembelian);
+            if($subtotalPembelians > ($pembelian->total_pembelian)){
+                return redirect()->back()->with('error', 'Subtotal pembelian melebihi batas total pembelian!');}
+            $detailPembelian->subtotal_pembelian = $subtotalPembelians;
+            $detailPembelian->harga_perbarang = $subtotalPembelians;
+        }
+
         $detailPembelian->id_pembelian = $request->id_pembelian;
         $detailPembelian->jumlah_barang = $request->jumlah_barang;
         
-        $subtotal_pembelian = $request->subtotal_pembelian;
-        $subtotalPembelian = str_replace(".", "",  $subtotal_pembelian);
-        $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
-        $detailPembelian->subtotal_pembelian = $subtotalPembelians;
-
-        $pembelian = Pembelian::findOrFail($id_pembelian);
-        if($subtotalPembelians > ($pembelian->total_pembelian)){
-            return redirect()->back()->with('error', 'Subtotal pembelian melebihi batas total pembelian!');
-        }
-        
-        $hargaPerbarang = $subtotalPembelians / ($request->jumlah_barang);
-        $detailPembelian->harga_perbarang = $hargaPerbarang;
         
         $detailPembelian->save();
         // dd($detailPembelian);

@@ -16,6 +16,7 @@ use App\Models\Guru;
 use App\Models\Karyawan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 
 
@@ -86,22 +87,68 @@ class DatabaseSeeder extends Seeder
             'nama_ruangan' => 'Ruang Penyimpanan',
         ]);
 
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeData = $generator->getBarcode('1038439', $generator::TYPE_EAN_13);
+        $barcodePath = public_path('storage/barcode/');
+        $barcodeFilename = 'barcode_' . '1038439' . '.png';
+        $barcodeFilePath = $barcodePath . $barcodeFilename;
+        file_put_contents($barcodeFilePath, ($barcodeData));
         Barang::create([
             'id_barang' => '1',
             'nama_barang' => 'Router',
             'merek' => 'Mikrotik',
             'stok_barang' => null,
+            'qrcode_image' => $barcodeFilename,
             'kode_barang' => '9780201379624',
             'id_jenis_barang' => '2',
         ]);
 
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeData = $generator->getBarcode('12190291', $generator::TYPE_EAN_13);
+        $barcodePath = public_path('storage/barcode/');
+        $barcodeFilename = 'barcode_' . '12190291' . '.png';
+        $barcodeFilePath = $barcodePath . $barcodeFilename;
+        file_put_contents($barcodeFilePath, ($barcodeData));
         Barang::create([
             'id_barang' => '2',
             'nama_barang' => 'Switch',
             'merek' => 'Cisco',
             'stok_barang' => null,
             'kode_barang' => '12190291',
+            'qrcode_image' => $barcodeFilename,
             'id_jenis_barang' => '2',
+        ]);
+
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeData = $generator->getBarcode('2032018', $generator::TYPE_EAN_13);
+        $barcodePath = public_path('storage/barcode/');
+        $barcodeFilename = 'barcode_' . '2032018' . '.png';
+        $barcodeFilePath = $barcodePath . $barcodeFilename;
+        file_put_contents($barcodeFilePath, ($barcodeData));
+        Barang::create([
+            'id_barang' => '4',
+            'nama_barang' => 'Meja Siswa',
+            'merek' => 'Informa',
+            'stok_barang' => null,
+            'kode_barang' => '2032018',
+            'qrcode_image' => $barcodeFilename,
+            'id_jenis_barang' => '1',
+        ]);
+
+        $generator = new BarcodeGeneratorPNG();
+        $barcodeData = $generator->getBarcode('29103802', $generator::TYPE_EAN_13);
+        $barcodePath = public_path('storage/barcode/');
+        $barcodeFilename = 'barcode_' . '29103802' . '.png';
+        $barcodeFilePath = $barcodePath . $barcodeFilename;
+        file_put_contents($barcodeFilePath, ($barcodeData));
+        Barang::create([
+            'id_barang' => '6',
+            'nama_barang' => 'Connector Fiber Optik',
+            'merek' => 'Netlink',
+            'stok_barang' => '50',
+            'kode_barang' => '29103802',
+            'qrcode_image' => $barcodeFilename,
+            'id_jenis_barang' => '3',
         ]);
 
         Barang::create([
@@ -114,29 +161,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Barang::create([
-            'id_barang' => '4',
-            'nama_barang' => 'Meja Siswa',
-            'merek' => 'Informa',
-            'stok_barang' => null,
-            'kode_barang' => '2032018',
-            'id_jenis_barang' => '1',
-        ]);
-
-        Barang::create([
             'id_barang' => '5',
             'nama_barang' => 'Connector rj45',
             'merek' => 'Belden',
             'stok_barang' => '50',
             'kode_barang' => null,
-            'id_jenis_barang' => '3',
-        ]);
-
-        Barang::create([
-            'id_barang' => '6',
-            'nama_barang' => 'Connector Fiber Optik',
-            'merek' => 'Netlink',
-            'stok_barang' => '50',
-            'kode_barang' => '29103802',
             'id_jenis_barang' => '3',
         ]);
 
@@ -175,8 +204,8 @@ class DatabaseSeeder extends Seeder
             'nama_karyawan' => '-',
         ]);
         
-        \App\Models\Pembelian::factory(10)->create();
-        \App\Models\DetailPembelian::factory(20)->create();
+        \App\Models\Pembelian::factory(5)->create();
+        // \App\Models\DetailPembelian::factory(20)->create();
         \App\Models\Inventaris::factory(10)->create();
         // \App\Models\Peminjaman::factory(10)->create();
         // \App\Models\DetailPeminjaman::factory(10)->create();

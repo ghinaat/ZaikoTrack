@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('id_detail_pembelian');
             $table->unsignedInteger('id_barang');
             $table->unsignedInteger('id_pembelian');
-            $table->integer('jumlah_barang');
-            $table->integer('subtotal_pembelian');
+            $table->integer('jumlah_barang')->nullable();
+            $table->integer('subtotal_pembelian')->nullable();
             $table->integer('harga_perbarang');
             $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');
             $table->foreign('id_pembelian')->references('id_pembelian')->on('pembelian')->onDelete('cascade');

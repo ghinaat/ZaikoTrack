@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\JenisBarang;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Generator as Faker;
 
@@ -17,6 +18,7 @@ class DetailPembelianFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
             'id_barang' => $this->faker->numberBetween(1, 3), // Menggunakan $this->faker
             'id_pembelian' => $this->faker->numberBetween(1, 10), // Menggunakan $this->faker
