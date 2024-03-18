@@ -13,7 +13,7 @@ return new class extends Migration
     {
         DB::unprepared('
         CREATE TRIGGER Update_Jumlah_Barang_Peminjaman
-        AFTER UPDATE ON DETAIL_PEMINJAMAN
+        AFTER UPDATE ON detail_peminjaman
         FOR EACH ROW
         BEGIN
             IF NEW.status = "sudah_dikembalikan" THEN
