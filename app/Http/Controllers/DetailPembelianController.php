@@ -14,19 +14,22 @@ class DetailPembelianController extends Controller
         
         $pembelian = Pembelian::findOrFail($id_pembelian);
         $detailPembelian = DetailPembelian::with('barang.jenisbarang')->where('id_pembelian', $id_pembelian)->get();
-         $alatPerlengkapan = Barang::where('id_jenis_barang', '!=', 3)->whereNotExists(function ($query) {
-            $query->select('id_barang')
-                ->from('detail_pembelian')
-                ->whereColumn('barang.id_barang', '=', 'detail_pembelian.id_barang');
-        })
-        ->get();       
+
+        $alatPerlengkapan = Barang::where('id_jenis_barang', '!=', 3)->pluck('id_barang'); 
+        $barangSudahDibeli = DetailPembelian::pluck('id_barang')->toArray();
+
+        // Mengecualikan barang yang sudah tercantum dalam detail pembelian
+        $selectedalatPerlengkapan = Barang::whereNotIn('id_barang', $barangSudahDibeli)
+        ->whereIn('id_barang', $alatPerlengkapan)
+        ->get();
+
         $bahanPraktik = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::pluck('nama_barang', 'id_barang');
 
-        // dd($alatPerlengkapan);
+        // dd($selectedalatPerlengkapan);
         return view("pembelian.detail",[
             'pembelian' => $pembelian,
-            'alatPerlengkapan' => $alatPerlengkapan,
+            'selectedalatPerlengkapan' => $selectedalatPerlengkapan,
             'bahanPraktik' => $bahanPraktik,
             'barang' => $barang,
             'detailPembelian' => $detailPembelian,

@@ -24,11 +24,11 @@ Barang
         <div class="col-12">
             <div class="card mb-2">
                 <div class="card-header pb-0">
-                    <div class="row">
+                    {{-- <div class="row"> --}}
                         <div class="col-md-7 mt-2">
                             <h4 class="text-dark">List Barang</h4>
                         </div>
-                        <div class="col-lg-5 col-md-5 col-sm-12 text-end">
+                        <div class="nav-wrapper text-end">
                             <ul class="nav nav-pills nav-fill p-1" role="tablist">
                                 <li class="nav-item" id="option1">
                                     <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
@@ -44,7 +44,7 @@ Barang
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    {{-- </div> --}}
                 </div>
                 <div id="tableAlatPerlengkapan" class="card-body m-0">
                     <div class="mb-2 d-flex justify-content-between">
@@ -80,8 +80,8 @@ Barang
                                         <td>{{$br->merek}}</td>
                                         <td>{{$br->kode_barang}}</td>
                                         <td>
-                                            <a href="{{ asset('/storage/barcode/'. $br->barqode_image) }}" download>
-                                                <img  src="{{ asset('/storage/barcode/' . $br->barqode_image) }}">
+                                            <a href="{{ asset('/storage/barcode/'. $br->qrcode_image) }}" download>
+                                                <img  src="{{ asset('/storage/barcode/' . $br->qrcode_image) }}" style="width: 80px;">
                                             </a>
                                         </td>
                                         <td>
@@ -114,7 +114,7 @@ Barang
                 <div id="tableBahanPraktik" class="card-body m-0">
                     <div class="mb-2 d-flex justify-content-between">
                         <div>
-                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
                         </div>
                         <div class="text-end">
                             <a href="{{ route('barang.exportBahan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
@@ -132,7 +132,7 @@ Barang
                                         <th style="text-align: center;">
                                             Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
                                         </th>
-                                        <th>Jenis Barang</th>
+                                        {{-- <th>Jenis Barang</th> --}}
                                         <th style="width:189px;">Opsi</th>
                                     </tr>
                                 </thead>
@@ -145,7 +145,7 @@ Barang
                                         <td>{{$br->stok_barang}}</td>
                                         <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
                                         <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
-                                        <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
+                                        {{-- <td>{{$br->jenisbarang->nama_jenis_barang}}</td> --}}
                                         <td>
                                             <div class="btn-group">
                                                 <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModalBahan{{$br->id_barang}}"
@@ -239,7 +239,7 @@ Barang
                         <label for="stok_barang">Stok Barang</label>
                         <input type="number" name="stok_barang" id="stok_barang" class="form-control">
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="jenis_barang">Jenis Barang</label>
                         <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
                             @foreach($jenisBarang as $key => $jb)
@@ -249,7 +249,7 @@ Barang
                             </option>
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>

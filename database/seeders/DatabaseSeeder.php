@@ -16,7 +16,9 @@ use App\Models\Guru;
 use App\Models\Karyawan;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Picqer\Barcode\BarcodeGeneratorPNG;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 
 
@@ -87,70 +89,6 @@ class DatabaseSeeder extends Seeder
             'nama_ruangan' => 'Ruang Penyimpanan',
         ]);
 
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode('1038439', $generator::TYPE_EAN_13);
-        $barcodePath = public_path('storage/barcode/');
-        $barcodeFilename = 'barcode_' . '1038439' . '.png';
-        $barcodeFilePath = $barcodePath . $barcodeFilename;
-        file_put_contents($barcodeFilePath, ($barcodeData));
-        Barang::create([
-            'id_barang' => '1',
-            'nama_barang' => 'Router',
-            'merek' => 'Mikrotik',
-            'stok_barang' => null,
-            'kode_barang' => '1038439',
-            'qrcode_image' => $barcodeFilename,
-            'id_jenis_barang' => '2',
-        ]);
-
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode('12190291', $generator::TYPE_EAN_13);
-        $barcodePath = public_path('storage/barcode/');
-        $barcodeFilename = 'barcode_' . '12190291' . '.png';
-        $barcodeFilePath = $barcodePath . $barcodeFilename;
-        file_put_contents($barcodeFilePath, ($barcodeData));
-        Barang::create([
-            'id_barang' => '2',
-            'nama_barang' => 'Switch',
-            'merek' => 'Cisco',
-            'stok_barang' => null,
-            'kode_barang' => '12190291',
-            'qrcode_image' => $barcodeFilename,
-            'id_jenis_barang' => '2',
-        ]);
-
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode('2032018', $generator::TYPE_EAN_13);
-        $barcodePath = public_path('storage/barcode/');
-        $barcodeFilename = 'barcode_' . '2032018' . '.png';
-        $barcodeFilePath = $barcodePath . $barcodeFilename;
-        file_put_contents($barcodeFilePath, ($barcodeData));
-        Barang::create([
-            'id_barang' => '4',
-            'nama_barang' => 'Meja Siswa',
-            'merek' => 'Informa',
-            'stok_barang' => null,
-            'kode_barang' => '2032018',
-            'qrcode_image' => $barcodeFilename,
-            'id_jenis_barang' => '1',
-        ]);
-
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode('29103802', $generator::TYPE_EAN_13);
-        $barcodePath = public_path('storage/barcode/');
-        $barcodeFilename = 'barcode_' . '29103802' . '.png';
-        $barcodeFilePath = $barcodePath . $barcodeFilename;
-        file_put_contents($barcodeFilePath, ($barcodeData));
-        Barang::create([
-            'id_barang' => '6',
-            'nama_barang' => 'Connector Fiber Optik',
-            'merek' => 'Netlink',
-            'stok_barang' => '50',
-            'kode_barang' => '29103802',
-            'qrcode_image' => $barcodeFilename,
-            'id_jenis_barang' => '3',
-        ]);
-
         Barang::create([
             'id_barang' => '3',
             'nama_barang' => 'Kabel UTP',
@@ -180,7 +118,7 @@ class DatabaseSeeder extends Seeder
 
         Inventaris::create([
             'id_inventaris' => '12',
-            'id_barang' => '6',
+            'id_barang' => '3',
             'id_ruangan' => '3',
             'jumlah_barang' => '10',
             'kondisi_barang' => 'lengkap',
