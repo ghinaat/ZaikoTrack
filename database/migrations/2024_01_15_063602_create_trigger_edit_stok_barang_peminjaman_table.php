@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
-       CREATE TRIGGER Edit_STOK AFTER UPDATE on DETAIL_PEMINJAMAN FOR EACH ROW
+       CREATE TRIGGER Edit_STOK AFTER UPDATE on detail_peminjaman FOR EACH ROW
             BEGIN
                 UPDATE inventaris SET jumlah_barang = jumlah_barang - NEW.jumlah_barang + old.jumlah_barang
                 WHERE id_inventaris = new.id_inventaris;

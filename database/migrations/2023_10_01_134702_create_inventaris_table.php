@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_inventaris');
             $table->unsignedInteger('id_barang');
             $table->unsignedInteger('id_ruangan');
-            $table->integer('jumlah_barang');
+            $table->integer('jumlah_barang')->nullable();
             $table->enum('kondisi_barang', ['lengkap', 'tidak_lengkap', 'rusak']);
             $table->string('ket_barang')->nullable();
             $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan')->onDelete('cascade');

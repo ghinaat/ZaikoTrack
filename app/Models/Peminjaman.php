@@ -23,6 +23,20 @@ class Peminjaman extends Model
     {
         return $this->hasMany(DetailPeminjaman::class, 'id_peminjaman');
     }
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
+    }
+    
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
+    }
+    
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class, 'id_guru', 'id_guru');
+    }
 
     protected $guarded = ['id_peminjaman'];
 }

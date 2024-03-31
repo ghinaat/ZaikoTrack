@@ -12,7 +12,6 @@ const DOMstrings = {
   stepSimpanBtnClass:'js-btn-simpan',
   btnAdd: document.querySelector('.js-btn-add'),
   btnBack: document.querySelector('.js-btn-back'),
-  btnKembali: document.querySelector('.js-btn-kembali'),
   additionalFormContainer: document.getElementById('additionalFormContainer'),  
   
 };
@@ -138,19 +137,11 @@ DOMstrings.stepsBar.addEventListener('click', e => {
 DOMstrings.stepsForm.addEventListener('click', e => {
   const eventTarget = e.target;
   
-  if(!((eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) ||  eventTarget.classList.contains(`${DOMstrings.stepSimpanBtnClass}`) || (eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`)))) {
+  if(!((eventTarget.classList.contains(`${DOMstrings.stepPrevBtnClass}`)) || (eventTarget.classList.contains(`${DOMstrings.stepNextBtnClass}`)))) {
     return;
   }
-  e.preventDefault();
-  if (eventTarget.classList.contains(`${DOMstrings.stepSimpanBtnClass}`)) {
-    // Setelah berhasil disimpan, lanjutkan dengan berpindah ke panel lain
-    const panelOrderList = document.getElementById('table_id');
-    let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
+  
 
-    setActiveStep(panelOrderListIndex);
-    setActivePanel(panelOrderListIndex);
-    return;
-}
   
   const activePanel = findParent(eventTarget, `${DOMstrings.stepFormPanelClass}`);
   let activePanelNum = Array.from(DOMstrings.stepFormPanels).indexOf(activePanel);
@@ -186,6 +177,13 @@ DOMstrings.btnAdd.addEventListener('click', () => {
 });
 
 DOMstrings.btnBack.addEventListener('click', () => {
+  // Nonaktifkan semua tombol progres kecuali "Barang Dipinjam"
+  
+
+ 
+});
+
+document.querySelector('.js-btn-kembali').addEventListener('click', () => {
   // Nonaktifkan semua tombol progres kecuali "Barang Dipinjam"
   const progressButtons = document.querySelectorAll('.multisteps-form__progress-btn');
   progressButtons.forEach(button => {

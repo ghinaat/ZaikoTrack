@@ -21,9 +21,8 @@ class DetailPeminjaman extends Model
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
     }
     
-    public function detailPeminjaman()
+    public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class, 'id_peminjaman');
+        return $this->belongsTo(Peminjaman::class, 'id_peminjaman', 'id_peminjaman');
     }
-
 }

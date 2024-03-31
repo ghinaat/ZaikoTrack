@@ -65,8 +65,10 @@ class InventarisController extends Controller
         
         $inventaris->save();
 
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',
-        ]);
+        $id_ruangan  = $inventaris->id_ruangan;
+
+        return redirect()->route('inventaris.showDetail', ["id_ruangan" => $id_ruangan])
+        ->with(['success_message' => 'Data telah tersimpan.']);
 
     }
 
@@ -98,6 +100,15 @@ class InventarisController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
+    public function barcode()
+    {
+        
+        return view('inventaris.barcode', [
+           
+        ]);
+    }
+
+
     public function showDetail($id_ruangan)
     {
         // Ambil data inventaris berdasarkan ID
@@ -125,7 +136,7 @@ class InventarisController extends Controller
 
     public function destroy($id_inventaris)
     {
-        // Ambil data inventaris berdasarkan ID
+    
         $inventaris = Inventaris::findOrFail($id_inventaris);
     
         if ($inventaris){

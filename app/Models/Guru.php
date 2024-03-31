@@ -12,4 +12,8 @@ class Guru extends Model
     protected $table = 'guru';
     protected $guarded = ['id_guru'];
     
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_guru', 'id_guru');
+    }
 }
