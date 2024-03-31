@@ -26,7 +26,7 @@ Pembelian
                                     <th>Nama Toko</th>
                                     <th>Total Pembelian</th>
                                     <th>Stok Barang</th>
-                                    <th>Keterangan Anggaran</th>
+                                    <th style="width:0px">Keterangan Anggaran</th>
                                     <th>Nota Pembelian</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
@@ -44,7 +44,7 @@ Pembelian
                                     <td style="text-align: center; ">
                                         @if($pb->nota_pembelian)
                                         <a href="{{ asset('storage/nota_pembelian/' . $pb->nota_pembelian) }}"
-                                            target="_blank" class="btn btn-info btn-xs mx-1">
+                                            download class="btn btn-info btn-xs mx-1">
                                             <i class="ni ni-folder-17"
                                                 style="display: inline-block; line-height: normal; vertical-align: middle;"></i>
                                         </a>
@@ -115,7 +115,7 @@ Pembelian
                         @error('nota_pembelian') <span class="textdanger">{{$message}}</span> @enderror
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="click" class="btn btn-primary js-btn-save">Simpan</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                     </div>
                 </form>
@@ -289,6 +289,40 @@ subtotal_pembelian_inputs.forEach(function(total_pembelian_edit) {
         return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
     }
 });
+
+$("#addForm").on('click', '.js-btn-save', function(e) {
+    e.preventDefault();
+    var form = $(this).closest('form#addForm');
+    var url = form.attr('action');
+    var method = form.attr('method');
+    var data = form.serialize();
+    $.ajax({
+        type: method,
+        url: url,
+        data: data,
+    })
+    .done(function(response) {
+        Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses!',
+                    text: response.message,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/detailpembelian/' + response.id_pembelian;
+                    } else {
+                        window.location.href = '/pembelian';
+                    }
+                });
+    });
+});
+
+
+
 </script>
 
 

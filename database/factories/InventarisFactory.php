@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Factories;
+use App\Models\Barang;
 use Faker\Generator as Faker;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -17,8 +18,9 @@ class InventarisFactory extends Factory
      */
     public function definition(): array
     {
+        $barang = Barang::inRandomOrder()->first();
         return [
-            'id_barang' => $this->faker->numberBetween(1, 3),
+            'id_barang' => $barang->id_barang,
             'id_ruangan' => $this->faker->numberBetween(1, 3),
             'jumlah_barang' =>  $this->faker->numberBetween(1, 100),
             'kondisi_barang' =>  $this->faker->randomElement(['lengkap', 'tidak_lengkap', 'rusak']),

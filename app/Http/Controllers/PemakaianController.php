@@ -54,7 +54,7 @@ class PemakaianController extends Controller
     
 
     public function index(){
-        $groupedPemakaians = Pemakaian::all();
+        $groupedPemakaians = Pemakaian::orderBy('tgl_pakai')->get();
         $siswa = Siswa::all()->except(1);
         $guru = Guru::all()->except(1);
         $karyawan = Karyawan::all()->except(1);
