@@ -63,40 +63,57 @@ class BarangController extends Controller
         $barang->stok_barang = $request->stok_barang;
         $barang->kode_barang = $request->kode_barang;
         $barang->id_jenis_barang = $request->id_jenis_barang;
-        $imageName = $this->generateBarcode($barang->kode_barang);
+        // Generate QR code and get the image name if kode_barang is not empty
+        $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
 
         // Update path QR code pada barang yang baru dibuat
         $barang->qrcode_image = $imageName;
         $barang->save();
-
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
     public function generateBarcode($kode_barang)
     {
-        $qrCode = new QrCode($kode_barang);
-        $imageName = 'qrcode_' . $kode_barang . '.png';
-        $writer = new PngWriter();
-        $qrCodeData = $writer->write($qrCode);
-        $qrPath = public_path('storage/barcode/' . $imageName);
-        file_put_contents($qrPath, $qrCodeData);
-
-        // Save the QR code as a file
-        return $imageName;
+        $ImageName = 'qrcode_' . $kode_barang;
+        
+        if (!empty($kode_barang)) {
+            $qrCode = QrCode::create($kode_barang)->setSize(200)->setMargin(5);
+            $storagePath = public_path('storage/barcode/' . $ImageName . '.png');
+            
+            // Create a PngWriter instance
+            $writer = new PngWriter();
+            $qrCodeData = $writer->write($qrCode)->getString();
+            // dd($qrCodeData);
+    
+            file_put_contents($storagePath, $qrCodeData);
+    
+            // Return the filename (including the extension) for further use if needed
+            return $ImageName . '.png';
+        } else {
+            // Jika kode barang kosong, kembalikan null
+            return null;
+        }
     }
     public function update(Request $request, $id_barang){
         $request->validate([
             'nama_barang' => 'required',
             'merek' => 'required',
-            'stok_barang' => 'required',
-            'id_jenis_barang'  => 'required',
+            'kode_barang' => 'nullable',
+            'stok_barang' => 'nullable',
+            'id_jenis_barang' => 'required',
         ]);
 
         $barang = Barang::find($id_barang);
         $barang->nama_barang = $request->nama_barang;
         $barang->merek = $request->merek;
         $barang->stok_barang = $request->stok_barang;
+        $barang->kode_barang = $request->kode_barang;
         $barang->id_jenis_barang = $request->id_jenis_barang;
+
+        $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
+
+        // Update path QR code pada barang yang baru dibuat
+        $barang->qrcode_image = $imageName;
         $barang->save();
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',
     ]);
