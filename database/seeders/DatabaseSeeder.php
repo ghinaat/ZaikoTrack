@@ -58,6 +58,30 @@ class DatabaseSeeder extends Seeder
             'level' => 'kabeng',
         ]);
 
+        User::create([
+            'id_users' => '4',
+            'name' => 'Siswa',
+            'email' => 'siswa@siswa.com',
+            'password' => '12345678',
+            'level' => 'siswa',
+        ]);
+
+        User::create([
+            'id_users' => '5',
+            'name' => 'Siswa1',
+            'email' => 'siswa1@siswa1.com',
+            'password' => '12345678',
+            'level' => 'siswa',
+        ]);
+
+        User::create([
+            'id_users' => '6',
+            'name' => 'Siswa2',
+            'email' => 'siswa2@siswa2.com',
+            'password' => '12345678',
+            'level' => 'siswa',
+        ]);
+
         JenisBarang::create([
             'id_jenis_barang' => '1',
             'nama_jenis_barang' => 'Perlengkapan Kelas',
