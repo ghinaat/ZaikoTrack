@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
 Route::put('/user/update/{id_users}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+Route::post('/user/import', [ App\Http\Controllers\UserController::class, 'import'])->name('user.import');
 Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
 Route::post('/user/change-password', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
 });
@@ -82,8 +83,8 @@ Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name(
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
 Route::get('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'showDetail'])->name('peminjaman.showDetail');
 Route::post('/peminjaman/create', [App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
-Route::put('/peminjaman/create/update', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
-Route::delete('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
+Route::put('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
+Route::delete('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
 Route::get('/fetch-kondisi-barang/{id_ruangan}/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchKondisiBarang'])->name('peminjaman.fetchKondisiBarang');
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');

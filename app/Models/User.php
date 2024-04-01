@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notifikasi::class, 'id_users', 'id_users');
     }
+
+    public function peminjaman()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_users', 'id_users');
+    }
 }

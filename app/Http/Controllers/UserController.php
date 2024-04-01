@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -70,6 +72,16 @@ class UserController extends Controller
 
         return redirect()->route('user.index')->with([
             'success_message' => 'Data telah tersimpan',
+        ]);
+    }
+
+    public function import(Request $request)
+    {
+        
+        Excel::import(new SiswaImport, $request->file('file')->store('user'));
+
+        return redirect()->back()->with([
+            'success_message' => 'Data telah Tersimpan',
         ]);
     }
 

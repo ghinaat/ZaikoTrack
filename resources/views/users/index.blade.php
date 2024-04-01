@@ -14,8 +14,24 @@ Users
                     <h4 class="m-0 text-dark">List User</h4>
                 </div>
                 <div class="card-body m-0">
-                    <div class="mb-2">
-                        <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModal">Tambah</button>
+                    <div class="d-flex">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-primary mb-2" data-toggle="modal"
+                                data-target="#addModal">Tambah</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <form action="{{ route('user.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="d-md-flex justify-content-md-end">
+                                    <div class="form-group ">
+                                        <input type="file" name="file" id="file" class="form-control">
+                                    </div>
+                                    <div class="mb-2 mb-md-0">
+                                        <button type="submit" class="btn btn-success" id="importButton">Import</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
@@ -79,6 +95,10 @@ Users
                                                             <option value="kabeng" @if($user->level == 'kabeng' ||
                                                                 old('level')=='kabeng' )selected
                                                                 @endif>Kepala Bengkel
+                                                            </option>
+                                                            <option value="siswa" @if($user->level == 'siswa' ||
+                                                                old('level')=='siswa' )selected
+                                                                @endif>Siswa
                                                             </option>
                                                         </select>
                                                         @error('level')
@@ -146,6 +166,8 @@ Users
                             </option>
                             <option value="kabeng" @if( old('level')=='kabeng' )selected @endif>Kepala Bengkel
                             </option>
+                            <option value="siswa" @if( old('level')=='siswa' )selected @endif>Siswa
+                            </option>
                         </select>
                         @error('level')
                         <div class="invalid-feedback">
@@ -180,6 +202,18 @@ Users
     @csrf
 </form>
 <script>
+document.getElementById('importButton').addEventListener('click', function(event) {
+    var fileInput = document.getElementById('file');
+    if (fileInput.files.length === 0) {
+        event.preventDefault(); // Prevent form submission
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Masukkan file import terlebih dahulu!',
+        });
+    }
+});
+
 $(document).ready(function() {
     $('#myTable').DataTable({
         "responsive": true,
