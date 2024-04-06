@@ -9,7 +9,7 @@ Tambah Peminjaman
 @section('content')
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
             <div class="card mb-2">
                 <div class="card-header pb-0">
                     <h1 class="content__title content__title--m-sm">Form Peminjaman</h1>
@@ -28,7 +28,7 @@ Tambah Peminjaman
                                             title="Address">Data
                                             Peminjam</button>
                                         <button class="multisteps-form__progress-btn " type="button"
-                                            title="User Info">Alat & Bahan
+                                            title="User Info">Barang Peminjaman
                                         </button>
 
                                     </div>
@@ -37,13 +37,9 @@ Tambah Peminjaman
                             <!--form panels-->
                             <div class="row">
                                 <div class="multisteps-form__form">
-                                    <form id='formPeminjaman'
-                                        action="{{ $idPeminjaman ? route('peminjaman.update', ['id_peminjaman' => $idPeminjaman]) : route('peminjaman.store') }}"
-                                        method="post">
-                                        @if(isset($idPeminjaman))
-                                        @method('PUT')
-                                        @endif
+                                    <form id='formPeminjaman' action="{{route('peminjaman.store') }}" method="post">
                                         @csrf
+
                                         <div class="multisteps-form__panel js-active" data-animation="scaleIn">
                                             <h4 class="multisteps-form__title">Data Diri</h4>
                                             <div class="multisteps-form__content">
@@ -72,15 +68,17 @@ Tambah Peminjaman
                                                         @enderror
                                                     </div>
                                                     <div class="form-group" id="siswaForm" style="display: block;">
-                                                        <label for="id_siswa">Nama Siswa</label>
-                                                        <select class="form-select" name="id_siswa" id="id_siswa">
-                                                            <option value="" selected disabled>Pilih Nama</option>
-                                                            @foreach($siswa as $key => $s)
-                                                            <option value="{{ $s->id_siswa }}">{{ $s->nama_siswa }}
+                                                        <label for="id_users">Nama Siswa</label>
+                                                        <select class="form-select" name="id_users" id="id_users">
+                                                            <option value="0" selected disabled>Pilih Nama</option>
+                                                            @foreach($users as $user)
+                                                            @if($user->level == 'siswa')
+                                                            <option value="{{ $user->id_users }}">{{ $user->name }}
                                                             </option>
+                                                            @endif
                                                             @endforeach
                                                         </select>
-                                                        @error('id_siswa')
+                                                        @error('id_users')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
                                                         </div>
@@ -156,18 +154,13 @@ Tambah Peminjaman
                                                                 <input type="date" name="tgl_kembali" id="tgl_kembali"
                                                                     class="form-control" required>
                                                             </div>
-
                                                         </div>
                                                     </div>
-
                                                 </div>
 
 
                                                 <div class="button-row d-flex justify-content-end mt-4">
-                                                    <a href="{{route('peminjaman.index' , $idPeminjaman)}}"
-                                                        class="btn btn-danger mybtn">
-                                                        Batal
-                                                    </a>
+                                                    <button class="btn btn-danger mybtn remove">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
                                                         title="Selanjutnya">Selanjutnya</button>
                                                 </div>
@@ -176,7 +169,7 @@ Tambah Peminjaman
                             </div>
                             <div class="multisteps-form__panel  rounded bg-white " data-animation="scaleIn"
                                 id="table_id">
-                                <h4 class="multisteps-form__title">Alat & Bahan</h4>
+                                <h4 class="multisteps-form__title">Barang Peminjaman</h4>
                                 <div class="multisteps-form__content">
                                     <div class="form-row mt-3">
                                         <div id="cart-container">
@@ -193,7 +186,6 @@ Tambah Peminjaman
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
                                                                 <th>Ruangan</th>
-                                                                <th>Jumlah</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -252,27 +244,18 @@ Tambah Peminjaman
                                             </div>
                                             @enderror
                                             <div class="form-input-text">
-                                                <label for="jumlah_barang">Jumlah Barang</label>
-                                                <input type="number" name="jumlah_barang" id="jumlah_barang"
-                                                    class="form-control" required>
-                                                @error('jumlah_barang')
+                                                <label for="kondisi_barang">Kondisi Barang</label>
+                                                <select class="form-select" name="kondisi_barang" id="kondisi_barang"
+                                                    required>
+
+                                                </select>
+                                                @error('kondisi_barang')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kondisi_barang">Kondisi Barang</label>
-                                        <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
-
-                                        </select>
-                                        @error('kondisi_barang')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
@@ -335,9 +318,7 @@ $(document).ready(function() {
 
 });
 $(document).ready(function() {
-    var idPeminjaman; // Variabel untuk menyimpan ID peminjaman
-
-
+    var idPeminjaman;
     $("#formPeminjaman").on('click', '.js-btn-simpan', function(e) {
         e.preventDefault();
 
@@ -353,11 +334,8 @@ $(document).ready(function() {
 
         // Append the CSRF token to the data
         data += '&_token=' + $('meta[name="csrf-token"]').attr('content');
-
-        // Check if idPeminjaman exists
         if (idPeminjaman) {
             data += '&id_peminjaman=' + idPeminjaman;
-            method = 'PUT';
         }
 
         // Kirim data ke server menggunakan AJAX
@@ -369,8 +347,18 @@ $(document).ready(function() {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
             })
+
             .done(function(response) {
+
                 idPeminjaman = response.id_peminjaman;
+
+
+                // Perbarui action form dengan ID peminjaman yang baru jika sudah ada
+                if (idPeminjaman) {
+                    form.attr('action', '/peminjaman/create/' + idPeminjaman);
+                    form.attr('method', 'PUT'); // Set method form menjadi PUT
+                }
+
                 console.log('Form submitted!', response);
                 // form[0].reset();
                 const eventTarget = e.target;
@@ -385,9 +373,7 @@ $(document).ready(function() {
                     setActivePanel(panelOrderListIndex);
                     return;
                 }
-                form.attr('action', '/peminjaman/create/' + idPeminjaman);
 
-                sessionStorage.setItem('id_peminjaman', idPeminjaman);
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 let errorMessage;
@@ -451,7 +437,6 @@ $(document).ready(function() {
                             '<td>' + newRowNumber + '</td>' +
                             '<td>' + response.nama_barang + '</td>' +
                             '<td>' + response.nama_ruangan + '</td>' +
-                            '<td>' + response.jumlah_barang + '</td>' +
                             '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
                             response.id_detail_peminjaman + '">Hapus</button></td>'
                         '</tr>';
@@ -580,6 +565,72 @@ $(document).ready(function() {
             $(this).find('td:first').text(index + 1);
         });
     }
+
+    $('#formPeminjaman').on('click', '.remove', function(e) {
+        e.preventDefault();
+        if (!idPeminjaman) {
+            console.error('Error: idPeminjaman is not defined');
+            return;
+        }
+        let id_peminjaman =
+            idPeminjaman;
+
+        // Ambil token CSRF dari tag meta
+        let token = $('meta[name="csrf-token"]').attr('content');
+
+        // Tambahkan id_peminjaman ke dalam data yang akan dikirimkan
+        let data = {
+            id_peminjaman: id_peminjaman,
+            _token: token
+        };
+        $(this).prop('disabled', true);
+
+        Swal.fire({
+            title: 'Apa kamu yakin?',
+            text: "Data akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/peminjaman/create/${id_peminjaman}`,
+                    type: "DELETE",
+                    cache: false,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            console.log('Response id_peminjaman:', response
+                                .id_peminjaman);
+                            console.log('Successfully deleted data.');
+                            window.location.href =
+                                "{{ route('peminjaman.index') }}";
+
+                        } else {
+                            console.log('Gagal menghapus data.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        let errorMessage = xhr.responseJSON && xhr.responseJSON
+                            .message ? xhr.responseJSON.message :
+                            'An error occurred.';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                        });
+                    },
+                });
+            } else {
+                // Re-enable the button if the user cancels the action
+                $('.remove').prop('disabled', false);
+            }
+        });
+    });
 });
 
 

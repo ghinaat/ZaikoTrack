@@ -23,9 +23,9 @@ class Peminjaman extends Model
     {
         return $this->hasMany(DetailPeminjaman::class, 'id_peminjaman');
     }
-    public function siswa()
+    public function users()
     {
-        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
+        return $this->belongsTo(User::class, 'id_users', 'id_users');
     }
     
     public function karyawan()

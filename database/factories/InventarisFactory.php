@@ -29,4 +29,19 @@ class InventarisFactory extends Factory
             'updated_at' => now(),
         ];
     }
+    public function uniqueIdBarang()
+    {
+        return $this->state(function (array $attributes) {
+            $barang = Barang::where('status', '!=', 'bahan praktik')->inRandomOrder()->first();
+            $existingPeminjamanCount = Peminjaman::where('id_barang', $barang->id_barang)->count();
+            
+            // If the selected barang has been used in a peminjaman, find another one until unique.
+            while ($existingPeminjamanCount > 0) {
+                $barang = Barang::where('status', '!=', 'bahan praktik')->inRandomOrder()->first();
+                $existingPeminjamanCount = Peminjaman::where('id_barang', $barang->id_barang)->count();
+            }
+            
+            return ['id_barang' => $barang->id_barang];
+        });
+    }
 }

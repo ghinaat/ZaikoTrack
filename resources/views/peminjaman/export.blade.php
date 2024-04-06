@@ -6,7 +6,7 @@
             <th>Jurusan</th>
             <th>Tanggal Pinjam</th>
             <th>Nama Barang</th>
-            <th>Terlambat Mengembalikan</th>
+            <th>Tanggal Mengambalikan</th>
         </tr>
     </thead>
     <tbody>

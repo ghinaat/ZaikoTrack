@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventaris;
 use App\Models\Barang;
 use App\Models\Ruangan;
+use App\Models\DetailPeminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,11 +14,7 @@ class InventarisController extends Controller
     public function index(){
 
         
-        $inventaris = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as id_inventaris'))
-        ->groupBy('id_ruangan')
-        ->with(['ruangan'])
-        ->get();
-    
+        $inventaris = Ruangan::all();
 
         return view('inventaris.index',[
             'inventaris' => $inventaris,
@@ -33,7 +30,7 @@ class InventarisController extends Controller
         $request->validate([
             'id_barang' => 'required',
             'id_ruangan' => 'required',
-            'jumlah_barang' => 'required',
+            'jumlah_barang' => 'nullable',
             'kondisi_barang' => 'required',
             'ket_barang' => 'nullable'
         ]);
@@ -77,7 +74,7 @@ class InventarisController extends Controller
         $request->validate([
             'id_barang' => 'required',
             'id_ruangan' => 'required',
-            'jumlah_barang' => 'required',
+            'jumlah_barang' => 'nullable',
             'kondisi_barang' => 'required',
             'ket_barang' => 'nullable'
         ]);
@@ -102,35 +99,95 @@ class InventarisController extends Controller
 
     public function barcode()
     {
-        
-        return view('inventaris.barcode', [
-           
-        ]);
+
+    
+        $id_ruangan = Ruangan::all();
+        // dd($id_ruangan);
+
+      
+        return view('inventaris.barcode', [ 'id_ruangan'   => $id_ruangan]);
     }
 
+ 
+    public function AddBarcode(Request $request)
+    {
+
+        // dd($request);
+            $request->validate([
+                'kode_barang' => 'required',
+                'kondisi_barang' => 'required',
+                'ket_barang' => 'nullable',
+               'id_ruangan' => 'required',
+            ]);
+    
+            // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
+            $id_barang = Barang::where('kode_barang', $request->kode_barang)->first();
+            // Pastikan Inventaris ditemukan sebelum melanjutkan
+            if (!$id_barang) {
+                return response()->json(['error' => 'Data tidak tersimpan.',
+            ], 400);
+            }    
+            
+            $inventaris = new Inventaris();
+                $inventaris->id_barang = $id_barang->id_barang;
+                $inventaris->id_ruangan = $request->id_ruangan;
+                $inventaris->kondisi_barang = $request->kondisi_barang;
+                $inventaris->ket_barang = $request->ket_barang; 
+                $inventaris ->save();
+            
+          
+                $id_ruangan  = $inventaris->id_ruangan;
+
+                return redirect()->route('inventaris.showDetail', ["id_ruangan" => $id_ruangan])
+                ->with(['success_message' => 'Data telah tersimpan.']);
+    
+    }
 
     public function showDetail($id_ruangan)
     {
-        // Ambil data inventaris berdasarkan ID
+        
         $ruangan = Ruangan::findOrFail($id_ruangan);
     
       
         // Ambil semua barang yang terkait dengan inventaris melalui ruangan
         $barangsInRuangan = $ruangan->barang;
-        $barangs = Barang::all();
+    
         $barangEdit = Barang::orderByRaw("LOWER(nama_barang)")->pluck('nama_barang', 'id_barang');
         
         $inventariss = Inventaris::all();
         $inventaris = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
             $query->where('id_ruangan', $id_ruangan);
         })->get();
+
+        $inventarisAlat = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+            $query->where('id_ruangan', $id_ruangan)
+                ->where('id_jenis_barang', '!=', 3); 
+        })->get();
+    
+        $inventarisBahan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+            $query->where('id_ruangan', $id_ruangan)
+                ->where('id_jenis_barang', 3); 
+        })->get();
+
+        $BarangAlat = Barang::where('id_jenis_barang', '!=', 3)->get();
+        $Barangbahan = Barang::where('id_jenis_barang',  3)->get();
+
+        $inventarisAlat->each(function ($item) {
+            $item->status_pinjam = DetailPeminjaman::where('id_inventaris', $item->id_inventaris)
+                                               ->where('status', 'dipinjam')
+                                               ->exists();
+        });
+        
         return view('inventaris.show', [
             'inventaris' => $inventaris,
             'inventariss' => $inventariss,
             'ruangan' => $ruangan,
             'barangsInRuangan' => $barangsInRuangan,
-            'barangs' => $barangs,
-            'barangEdit' => $barangEdit
+            'barangEdit' => $barangEdit,
+            'inventarisAlat' => $inventarisAlat,
+            'inventarisBahan' => $inventarisBahan,
+            'BarangAlat' => $BarangAlat,
+            'Barangbahan' => $Barangbahan
         ]);
     }
 

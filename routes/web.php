@@ -66,6 +66,7 @@ Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\De
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
 Route::get('/inventaris/barcode', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
+Route::post('/inventaris/barcode', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');

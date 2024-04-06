@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->increments('id_peminjaman');
-            $table->unsignedInteger('id_siswa');
+            $table->unsignedInteger('id_users');
             $table->unsignedInteger('id_guru');
             $table->unsignedInteger('id_karyawan');
             $table->string('kelas', 50)->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['siswa', 'guru', 'karyawan']);
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
-            $table->foreign('id_siswa')->references('id_siswa')->on('siswa')->onDelete('cascade');
+            $table->foreign('id_users')->references('id_users')->on('users')->onDelete('cascade');
             $table->foreign('id_guru')->references('id_guru')->on('guru')->onDelete('cascade');
             $table->foreign('id_karyawan')->references('id_karyawan')->on('karyawan')->onDelete('cascade');
             $table->timestamps();

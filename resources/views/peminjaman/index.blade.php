@@ -16,44 +16,40 @@ Peminjaman
                 </div>
                 <div class="card-body m-0">
                     <div class="row align-items-end">
-                        <!-- Adjusted to align items at the bottom -->
                         <div class="col-md-10">
-                            <form action="{{ route('peminjaman.filter') }}" method="GET" class="form-inline mb-3">
-                                <div class="form-group mb-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="tglawal" class="my-label mr-2">Tanggal
-                                                Awal:&nbsp;&nbsp;</label>&nbsp;&nbsp;
-                                            <input type="date" id="tglawal" name="tglawal" required class="form-control"
-                                                value="{{request()->input('tglawal')}}">&nbsp;&nbsp;
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="tglakhir" class="form-label">Tanggal
-                                                Akhir:</label>&nbsp;&nbsp;
-                                            <input type="date" id="tglakhir" name="tglakhir" required
-                                                class="form-control"
-                                                value="{{request()->input('tglakhir')}}">&nbsp;&nbsp;
-                                        </div>
-                                        <div class="col-md-2 mb-3 ml-md-auto">
-                                            <button type="submit"
-                                                class="btn btn-primary align-bottom">Tampilkan</button>
-                                            <!-- Added align-bottom -->
-                                        </div>
-                                    </div>
+                            <form action="{{ route('peminjaman.filter') }}" method="GET" class="row align-items-end">
+                                <div class="col-md-6">
+                                    <label for="tglawal" class="form-label">Tanggal Awal:</label>
+                                    <input type="date" id="tglawal" name="tglawal" required class="form-control"
+                                        value="{{ request()->input('tglawal') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tglakhir" class="form-label">Tanggal Akhir:</label>
+                                    <input type="date" id="tglakhir" name="tglakhir" required class="form-control"
+                                        value="{{ request()->input('tglakhir') }}">
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <button type="submit" class="btn btn-primary">Tampilkan</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <button class="btn btn-primary mb-2"
-                                onclick="notificationBeforeAdds(event, this)">Tambah</button>
+                        <div class="d-flex">
+                            <div class="col-4 col-md-6 mb-2">
+                                <button class="btn btn-primary mb-2"
+                                    onclick="notificationBeforeAdds(event, this)">Tambah</button>
+                            </div>
+                            <div class="col-8 col-md-6 mb-2">
+                                <div class="d-flex justify-content-md-end">
+                                    <a href="{{ route('peminjaman.filter', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
+                                        class="btn btn-danger">Export Data</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-2 d-flex flex-column  justify-content-md-end">
-                            <a href="{{ route('peminjaman.filter', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
-                                class="btn btn-danger">Export Data</a>
-                        </div>
+
                     </div>
+
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                             <thead>
@@ -75,13 +71,13 @@ Peminjaman
                                 <tr>
                                     <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>
-                                    @if ($peminjaman->status === 'guru')
+                                    @if ($peminjaman->status == 'guru')
                                     <td>{{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }}</td>
-                                    @elseif ($peminjaman->status === 'karyawan')
+                                    @elseif ($peminjaman->status == 'karyawan')
                                     <td>{{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }}
                                     </td>
                                     @else
-                                    <td>{{ $peminjaman->siswa ? $peminjaman->siswa->nama_siswa : 'N/A' }}</td>
+                                    <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
                                     @if($peminjaman->kelas == null && $peminjaman->jurusan == null)
                                     <td>
@@ -128,15 +124,92 @@ Peminjaman
                                                         method="post">
                                                         @csrf
                                                         @method('PUT')
-                                                        <div class="form-group mt-2">
-                                                            <label for="nama_lengkap">Nama</label>
-                                                            <input type="text" name="nama_lengkap" id="nama_lengkap"
-                                                                class="form-control"
-                                                                value="{{$peminjaman->nama_lengkap ?? old('nama_lengkap')}}"
-                                                                required>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputstatus">Status</label>
+                                                            <select
+                                                                class="form-select @error('status') is-invalid @enderror selectpicker"
+                                                                data-live-search="true" id="exampleInputstatus"
+                                                                name="status">
+                                                                <option value="siswa" @if($peminjaman->status == 'siswa'
+                                                                    ||
+                                                                    old('status')=='siswa'
+                                                                    )selected @endif>Siswa
+                                                                </option>
+                                                                <option value="guru" @if($peminjaman->status == 'guru'
+                                                                    ||
+                                                                    old('status')=='guru'
+                                                                    )selected @endif>Guru
+                                                                </option>
+                                                                <option value="karyawan" @if($peminjaman->status ==
+                                                                    'karyawan'
+                                                                    ||
+                                                                    old('status')=='karyawan'
+                                                                    )selected @endif>Karyawan</option>
+                                                            </select>
+                                                            @error('status')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group" id="siswaForm" style="display: block;">
+                                                            <label for="id_users">Nama Siswa</label>
+                                                            <select class="form-select" name="id_users" id="id_users">
+                                                                <option value="" selected disabled>Pilih Nama</option>
+                                                                @foreach($users as $user)
+                                                                @if($user->level == 'siswa')
+                                                                <option value="{{ $user->id_users }}"
+                                                                    @if(old('id_users', $peminjaman->id_users ?? '') ==
+                                                                    $user->id_users) selected @endif>{{ $user->name }}
+                                                                </option>
+                                                                @endif
+                                                                @endforeach
+                                                            </select>
+
+                                                            @error('id_users')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group" id="guruForm" style="display: none;">
+                                                            <label for="id_guru">Nama Guru</label>
+                                                            <select class="form-select" name="id_guru" id="id_guru">
+                                                                <option value="" selected disabled>Pilih Nama</option>
+                                                                @foreach($guru as $g)
+                                                                <option value="{{ $g->id_guru }}" @if(old('id_guru',
+                                                                    $peminjaman->id_guru ?? '') == $g->id_guru) selected
+                                                                    @endif>{{ $g->nama_guru }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('id_guru')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
                                                         </div>
 
-                                                        <div class="form-group mt-2">
+                                                        <div class="form-group" id="karyawanForm"
+                                                            style="display: none;">
+                                                            <label for="id_karyawan">Nama Karyawan</label>
+                                                            <select class="form-select" name="id_karyawan"
+                                                                id="id_karyawan">
+                                                                <option value="" selected disabled>Pilih Nama</option>
+                                                                @foreach($karyawan as $k)
+                                                                <option value="{{ $k->id_karyawan }}"
+                                                                    @if(old('id_karyawan', $peminjaman->id_karyawan ??
+                                                                    '') == $k->id_karyawan) selected
+                                                                    @endif>{{ $k->nama_karyawan }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('id_karyawan')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="form-group">
                                                             <div class="form-input-group">
                                                                 <div class="form-input-text1">
                                                                     <label for="kelas" class="form-label">Kelas</label>
@@ -149,19 +222,13 @@ Peminjaman
                                                                     <label for="jurusan"
                                                                         class="form-label">Jurusan</label>
                                                                     <input type="text" name="jurusan" id="jurusan"
+                                                                        class="form-control"
                                                                         value="{{$peminjaman->jurusan ?? old('jurusan')}}"
-                                                                        class="form-control" required>
+                                                                        required>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="keterangan_pemakaian">Keterangan
-                                                                Pemakaian</label>
-                                                            <input type="text" name="keterangan_pemakaian"
-                                                                id="keterangan_pemakaian" class="form-control"
-                                                                value="{{$peminjaman->keterangan_pemakaian ?? old('keterangan_pemakaian')}}"
-                                                                required>
-                                                        </div>
+
                                                         <div class="form-input-group">
                                                             <div class="form-input-text1">
                                                                 <label for="tgl_pinjam" class="form-label">Tanggal
@@ -267,6 +334,47 @@ function notificationBeforeAdds(event, el, dt) {
 
     });
 }
+
+document.getElementById('exampleInputstatus').addEventListener('click', function() {
+    const selectedStatus = this.value;
+    const siswaElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#siswaForm');
+    const guruElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#guruForm');
+    const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#karyawanForm');
+
+    const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#kelas');
+    const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
+        '#jurusan');
+
+    // Hide all forms
+    siswaElement.style.display = 'block';
+    guruElement.style.display = 'none';
+    karyawanElement.style.display = 'none';
+    // NamaElement.style.display = 'block';
+    jurusanElement.removeAttribute('readonly');
+    kelasElement.removeAttribute('readonly');
+
+
+    // Show the selected form
+    if (selectedStatus === 'siswa') {
+        siswaElement.style.display = 'block';
+        // siswaElement.style.display = 'none';
+
+    } else if (selectedStatus === 'guru') {
+        guruElement.style.display = 'block';
+        siswaElement.style.display = 'none';
+        kelasElement.setAttribute('readonly', 'true');
+    } else if (selectedStatus === 'karyawan') {
+        karyawanElement.style.display = 'block';
+        siswaElement.style.display = 'none';
+        kelasElement.setAttribute('readonly', 'true');
+        jurusanElement.setAttribute('readonly', 'true');
+
+    }
+});
 </script>
 
 

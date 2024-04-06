@@ -32,14 +32,7 @@ class DetailPeminjamanController extends Controller
             if (!$inventaris) {
                 return response()->json(['error' => 'Data tidak tersimpan.',
             ], 400);
-            }
-    
-            $stokBarang = Inventaris::where('id_barang', $request->id_barang)->first();
-    
-            if (!$stokBarang || $stokBarang->jumlah_barang < $request->jumlah_barang) {
-                return response()->json(['error' => 'Stok barang tidak mencukupi.'], 400);
-            }
-    
+            }    
          
             $detailPeminjaman = new DetailPeminjaman([
                 'id_peminjaman' => $request->id_peminjaman,
@@ -79,7 +72,6 @@ class DetailPeminjamanController extends Controller
             'id_barang' => 'required',
             'kondisi_barang' => 'required',
             'ket_tidak_lengkap_awal' => 'nullable',
-            'jumlah_barang' => 'required',
         ]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 400);
@@ -109,7 +101,6 @@ class DetailPeminjamanController extends Controller
         $detailPeminjaman = new DetailPeminjaman([
             'id_peminjaman' => $request->id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
-            'jumlah_barang' => $request->jumlah_barang,
             'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
             'status' => 'dipinjam'
            

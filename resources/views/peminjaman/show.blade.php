@@ -8,7 +8,7 @@
 </style>
 @endsection
 @section('breadcrumb-name')
-List Barang
+Peminjaman / List Barang
 @endsection
 @section('content')
 <div class="container-fluid py-4">
@@ -31,7 +31,7 @@ List Barang
                                 @elseif ($peminjaman->status === 'karyawan')
                                 {{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }} :
                                 @else
-                                {{ $peminjaman->siswa ? $peminjaman->siswa->nama_siswa : 'N/A' }} :
+                                {{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}
                                 @endif
                             </div>
                             <div class="show-group">

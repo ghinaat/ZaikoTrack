@@ -8,7 +8,7 @@ Ubah Password
 @section('content')
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
             <div class="card mb-4">
                 <div class="card-header">
                     <h2 class="m-0 text-dark text-center fs-3">Ubah Password</h1>
@@ -54,13 +54,16 @@ Ubah Password
                             @enderror
                         </div>
                         <div class="row">
-                            <div class="col-md-8"></div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-200"
-                                    onclick="notificationBeforeSubmit(event, this)">Simpan</button>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="{{ route('Home') }}" class="btn btn-danger w-100">Batal</a>
+                            <div class="d-flex">
+                                <div class="col-6 col-md-2">
+                                    <button type="submit" class="btn btn-primary w-200"
+                                        onclick="notificationBeforeSubmit(event, this)">Simpan</button>
+                                </div>
+                                <div class="col-6 col-md-2">
+                                    <div class="d-flex justify-content-md-end">
+                                        <a href="{{ route('Home') }}" class="btn btn-danger w-100">Batal</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
