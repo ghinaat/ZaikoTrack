@@ -178,8 +178,7 @@ class PeminjamanController extends Controller
 
     public function fetchKondisiBarang($id_ruangan, $id_barang)
     {
-        $kondisiBarangOptions = Inventaris::where('id_ruangan', $id_ruangan)
-            ->where('id_barang', $id_barang)
+        $kondisiBarangOptions = Inventaris::where('id_barang', $id_barang)->where('id_ruangan', $id_ruangan)
             ->select('id_inventaris', 'kondisi_barang', 'ket_barang') // Select both columns
             ->distinct()
             ->get();
