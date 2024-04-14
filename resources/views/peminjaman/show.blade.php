@@ -75,15 +75,15 @@ Peminjaman / List Barang
                     <div class="table-container">
                         <div class="table-responsive">
                             <div class="mb-2">
-                                <button class="btn btn-primary mb-2" data-toggle="modal"
-                                    data-target="#addModal">Tambah</button>
+                                <!-- <button class="btn btn-primary mb-2" data-toggle="modal"
+                                    data-target="#addModal">Tambah</button> -->
                             </div>
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
                                     <tr>
                                         <th class="center-th">No.</th>
                                         <th class="center-th">Nama<br>Barang</th>
-                                        <th class="center-th">Stok</th>
+                                        <th class="center-th">Status</th>
                                         <th class="center-th">Kondisi<br>Awal</th>
                                         <th class="center-th">Kondisi<br>Akhir</th>
                                         <th class="center-th">Opsi</th>
@@ -94,7 +94,13 @@ Peminjaman / List Barang
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$barang->inventaris->barang->nama_barang}}</td>
-                                        <td>{{$barang->jumlah_barang}}</td>
+                                        <td>
+                                            @if($barang->status == 'dipinjam')
+                                            <span class="badge bg-gradient-danger">Dipinjam</span>
+                                            @elseif($barang->status == 'sudah_dikembalikan')
+                                            <span class="badge bg-gradient-success">Sudah Dikembalikan</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @if($barang->inventaris->kondisi_barang == 'rusak')
                                             <span class="badge bg-gradient-danger">Rusak</span>
