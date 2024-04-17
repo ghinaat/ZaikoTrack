@@ -28,8 +28,19 @@ Peminjaman
                                     <input type="date" id="tglakhir" name="tglakhir" required class="form-control"
                                         value="{{ request()->input('tglakhir') }}">
                                 </div>
-                                <div class="col-md-12 mt-2">
-                                    <button type="submit" class="btn btn-primary">Tampilkan</button>
+                                
+                                <div class="col-md-8 mt-3 mb-3" >
+                                    <label for="id_barang" class="form-label">Pilih Barang:</label>
+                                    <select id="id_barang" name="id_barang" class="form-select">
+                                        <option value="">--Pilih Barang--</option>
+                                        @foreach($barang as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_barang }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-4 mt-3 ">
+                                    <button type="submit" class="btn btn-primary mt-4">Tampilkan</button>
                                 </div>
                             </form>
                         </div>
@@ -42,7 +53,7 @@ Peminjaman
                             </div>
                             <div class="col-8 col-md-6 mb-2">
                                 <div class="d-flex justify-content-md-end">
-                                    <a href="{{ route('peminjaman.filter', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
+                                    <a href="{{ route('peminjaman.export', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
                                         class="btn btn-danger">Export Data</a>
                                 </div>
                             </div>

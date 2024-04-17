@@ -10,17 +10,27 @@ use App\Models\User;
 use App\Models\Guru;
 use App\Models\Karyawan;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\PeminjamanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PeminjamanController extends Controller
 {
     
     public function index(){
     
-        $peminjaman = Peminjaman::all();
-
-        $barang = Barang::all();
+        $user = Auth::user();
+        if ($user->level == 'siswa' ) {
+            $peminjaman = Peminjaman::where('id_users', auth()->user()->id_users)->orderBy('id_peminjaman','desc')
+            ->get();
+        } else {
+            $peminjaman = Peminjaman::orderBy('id_peminjaman','desc')
+            ->get();
+        }
+        
+        $barang =  Barang::where('id_jenis_barang', '!=', 3)->get();
 
         $detailPeminjaman = DetailPeminjaman::all();
         $users = User::where('id_users', '!=', 1)  
@@ -56,14 +66,19 @@ class PeminjamanController extends Controller
         $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_ruangan')
             ->get();
-    
-        $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
+
+          $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
             ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
-            ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude inventaris where id_jenis_barang is 3
+            ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
+            ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude specific jenis_barang
+            ->where(function($query) {
+                $query->whereNull('detail_peminjaman.status') // Include cases with no status (not borrowed)
+                    ->orWhere('detail_peminjaman.status', '!=', 'dipinjam'); // Exclude borrowed status
+            })
             ->select('inventaris.id_barang', DB::raw('MAX(inventaris.id_inventaris) as max_id_inventaris'))
             ->groupBy('inventaris.id_barang')
             ->get();
-            
+        
         $barang =  Barang::where('id_jenis_barang', '!=', 3)->get();
     
         $users = User::where('level', 'siswa')
@@ -109,8 +124,6 @@ class PeminjamanController extends Controller
             ->groupBy('id_barang')
             ->get();
       
-        $barang =  Barang::where('id_jenis_barang', '!=', 3)->get();
-    
         $users = User::where('id_users', '!=', 1)  
         ->orderByRaw("LOWER(name)")  
         ->get(); 
@@ -132,7 +145,6 @@ class PeminjamanController extends Controller
             'karyawan' => $karyawan,
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
-            'barang' => $barang,
             'idPeminjaman' => $idPeminjaman,
             
         ]);
@@ -147,7 +159,12 @@ class PeminjamanController extends Controller
         ->get();
         $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
         ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
-        ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude inventaris where id_jenis_barang is 3
+        ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
+        ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude specific jenis_barang
+        ->where(function($query) {
+            $query->whereNull('detail_peminjaman.status') // Include cases with no status (not borrowed)
+                ->orWhere('detail_peminjaman.status', '!=', 'dipinjam'); // Exclude borrowed status
+        })
         ->select('inventaris.id_barang', DB::raw('MAX(inventaris.id_inventaris) as max_id_inventaris'))
         ->groupBy('inventaris.id_barang')
         ->get();
@@ -165,6 +182,8 @@ class PeminjamanController extends Controller
            
         ]);
     }
+
+   
 
     public function fetchIdBarang($id_barang) {
         $id_ruangan_option = Inventaris::where('id_barang', $id_barang)
@@ -287,56 +306,75 @@ class PeminjamanController extends Controller
 
     public function export(Request $request)
     {
-        $peminjaman = [];
-    
+        // Ambil tanggal awal dan akhir dari permintaan
         $defaultStartDate = '2023-01-01';
         $defaultEndDate = '2023-12-31';
-    
+        
         $tglawal = $request->input('tglawal', $defaultStartDate);
         $tglakhir = $request->input('tglakhir', $defaultEndDate);
-    
-        // Get peminjaman data within the date range
-        $peminjamanData = Peminjaman::whereBetween('tgl_pinjam', [$tglawal, $tglakhir])->get();
-    
-        // Fetch details for each peminjaman
-        foreach ($peminjamanData as $peminjamanItem) {
-            $details = DetailPeminjaman::where('id_peminjaman', $peminjamanItem->id_peminjaman)->get();
-            foreach ($details as $detail) {
-                $inventaris = Inventaris::findOrFail($detail->id_inventaris);
-                $detail->nama_barang = $inventaris->nama_barang;
-            }
-            $peminjamanItem->details = $details;
+        
+        // Ambil id_barang dari permintaan
+        $id_barang = $request->input('id_barang');
+        
+        // Ambil data peminjaman yang difilter berdasarkan rentang tanggal dan id_barang dengan eager loading
+        $query = Peminjaman::whereBetween('tgl_pinjam', [$tglawal, $tglakhir])
+            ->with('detailPeminjaman.inventaris.barang'); // Eager loading untuk relasi detailPeminjaman dan inventaris
+        
+       
+        if ($id_barang) {
+            $query->whereHas('detailPeminjaman.inventaris', function ($q) use ($id_barang) {
+                $q->where('id_barang', $id_barang);
+            });
         }
-    
-        $peminjaman['data'] = $peminjamanData;
-        $peminjaman['tglawal'] = $tglawal;
-        $peminjaman['tglakhir'] = $tglakhir;
-    
-        // Download the report
+        
+        $peminjamanData = $query->get();
+        
+        // Atur peminjaman untuk digunakan dalam ekspor
+        $peminjaman = [
+            'data' => $peminjamanData,
+            'tglawal' => $tglawal,
+            'tglakhir' => $tglakhir,
+        ];
+        
+        // Download laporan menggunakan data yang telah diatur
         return Excel::download(new PeminjamanExport($peminjaman), 'peminjaman.xlsx');
     }
-
+    
     public function filter(Request $request)
     {
-
-        $peminjaman = [];
-
-        $defaultStartDate = '2023-01-01';
-        $defaultEndDate = '2023-12-31';
-
-        $tglawal = $request->input('tglawal', $defaultStartDate);
-        $tglakhir = $request->input('tglakhir', $defaultEndDate);
-
-        $peminjaman['data'] = Peminjaman::whereBetween('tgl_pinjam', [$tglawal, $tglakhir])->get();
-
-        $peminjaman['tglawal'] = $tglawal;
-        $peminjaman['tglakhir'] = $tglakhir;
-
-        return view('peminjaman.filter', [
-            'peminjaman' => $peminjaman,
-        ]);
-
-    }
+            // Ambil tanggal awal dan akhir dari permintaan
+            $tglawal = $request->input('tglawal');
+            $tglakhir = $request->input('tglakhir');
+        
+            // Ambil id_barang dari permintaan
+            $id_barang = $request->input('id_barang');
+        
+            // Bangun query untuk memfilter peminjaman
+            $query = Peminjaman::query();
+        
+            // Filter berdasarkan rentang tanggal tgl_pinjam
+            if ($tglawal && $tglakhir) {
+                $query->whereBetween('tgl_pinjam', [$tglawal, $tglakhir]);
+            }
+        
+            // Filter berdasarkan id_barang
+            if ($id_barang) {
+                // Filter berdasarkan id_barang di detailPeminjaman
+                $query->whereHas('detailPeminjaman.inventaris.barang', function ($q) use ($id_barang) {
+                    $q->where('id', $id_barang);
+                });
+            }
+        
+            // Dapatkan data peminjaman yang difilter
+            $peminjaman = $query->get();
+       
+        
+            // Kembalikan hasil filter ke tampilan
+            return view('peminjaman.index', [
+                'peminjaman' => $peminjaman,
+               
+            ]);
+        }
 
   
  
@@ -345,13 +383,11 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::find($id_peminjaman);
 
-        if ($peminjaman) {
-            DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->delete();
-            $peminjaman->delete();
-            return response()->json(['success' => true, 'message' => 'Data telah terhapus.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Peminjaman not found'], 404);
-        }
+     
+        DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->delete();
+        $peminjaman->delete();
+        return response()->json(['success' => true, 'message' => 'Data telah terhapus.']);
+      
     
         
 

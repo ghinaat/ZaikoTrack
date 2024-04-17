@@ -311,7 +311,7 @@ $(document).ready(function() {
         }
     });
 });
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change', function() {
+document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
     const idRuanganSelect = this.closest('.form-group').nextElementSibling.querySelector(
         'select[name=id_ruangan]');

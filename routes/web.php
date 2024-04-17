@@ -92,10 +92,10 @@ Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name(
 Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
 
 
-
-
-Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'destroy'])->name('detailPeminjaman.destroy');
+Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');
 Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjamanController::class, 'store'])->name('detailPeminjaman.store');
+Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'destroy'])->name('detailPeminjaman.destroy');
+Route::put('/peminjaman/detailPeminjaman/returnBarcode/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'returnBarcode'])->name('detailPeminjaman.returnBarcode');
 Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'update'])->name('detailPeminjaman.update');
 Route::post('/peminjaman/detailPeminjaman/barcode', [App\Http\Controllers\DetailPeminjamanController::class, 'AddBarcode'])->name('detailPeminjaman.AddBarcode');
 

@@ -6,14 +6,10 @@
 <script>
 $(document).ready(function() {
     // Ambil pesan sukses dari session (jika ada) dan tampilkan menggunakan SweetAlert2
-    var successMessage = '{{ session('
-    success_message ') }}';
-    var successChanged = '{{ session('
-    success_changed ') }}';
-    var successDeleted = '{{ session('
-    success_deleted ') }}';
-    var errorMessage = '{{ session('
-    error ') }}';
+    var successMessage = '{{ session('success_message') }}';
+    var successChanged = '{{ session('success_changed') }}';
+    var successDeleted = '{{ session('success_deleted') }}';
+    var errorMessage = '{{ session('error') }}';
     if (successMessage) {
         Swal.fire({
             icon: 'success',

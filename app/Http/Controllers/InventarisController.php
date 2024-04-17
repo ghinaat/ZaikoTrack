@@ -169,7 +169,11 @@ class InventarisController extends Controller
                 ->where('id_jenis_barang', 3); 
         })->get();
 
-        $BarangAlat = Barang::where('id_jenis_barang', '!=', 3)->get();
+        $used_ids = Inventaris::pluck('id_barang');
+
+        $BarangAlat = Barang::where('id_jenis_barang', '!=', 3)
+         ->whereNotIn('id_barang', $used_ids)
+        ->get();
         $Barangbahan = Barang::where('id_jenis_barang',  3)->get();
 
         $inventarisAlat->each(function ($item) {
@@ -187,7 +191,8 @@ class InventarisController extends Controller
             'inventarisAlat' => $inventarisAlat,
             'inventarisBahan' => $inventarisBahan,
             'BarangAlat' => $BarangAlat,
-            'Barangbahan' => $Barangbahan
+            'Barangbahan' => $Barangbahan,
+            'used_ids' => $used_ids
         ]);
     }
 

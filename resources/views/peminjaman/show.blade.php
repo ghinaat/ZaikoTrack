@@ -4,7 +4,9 @@
 <link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
 <link rel="stylesheet" href="{{asset('css\show.css')}}">
 <style>
-
+.border-divider {
+    border-bottom: 0.3vh solid #e5e5e5;
+}
 </style>
 @endsection
 @section('breadcrumb-name')
@@ -12,62 +14,115 @@ Peminjaman / List Barang
 @endsection
 @section('content')
 <div class="container-fluid py-4">
-    <div class="row ">
-        <div class="col-12 col-sm-4 mb-4">
-            <!-- <div class="col-4"> -->
-            <div class="card mb-4">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-12">
-                            <h5 class="mb-3 text-dark">
-                                <i class="fa-solid fa-boxes-stacked"></i> &nbsp;Peminjaman
-                            </h5>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Nama</label>
-                            </div>
-                            <div class="show-input">
-                                @if ($peminjaman->status === 'guru')
-                                {{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }} :
-                                @elseif ($peminjaman->status === 'karyawan')
-                                {{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }} :
-                                @else
-                                {{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}
-                                @endif
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Kelas</label>
-                            </div>
-                            <div class="show-input">
-                                {{$peminjaman->kelas}} {{$peminjaman->jurusan}} :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Tanggal
-                                    Peminjaman</label>
-                            </div>
-                            <div class="show-input">
-                                {{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d M Y') ?? old('tgl_pinjam')}}
-                                :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Tanggal
-                                    Pengembalian</label>
-                            </div>
-                            <div class="show-input">
-                                {{ \Carbon\Carbon::parse($peminjaman->tgl_selesai)->format('d M Y') ?? old('tgl_selesai')}}
-                                :
-                            </div>
-                            <div class="show-group">
-                                <label for="nama_lengkap" class="show-label ">Keterangan
-                                    Pemakaian</label>
-                            </div>
-                            <div class="show-input">
-                                {{$peminjaman->keterangan_pemakaian}} :
-                            </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
+        <div class="card h-30 mb-4">
+          <div class="card-header pb-0 px-3">
+            <div class="row">
+              <div class="d-flex align-items-center">
+                <div class="">
+                  <i class="fa-solid fa-boxes-stacked fa-lg"></i>
+                </div>
+                <div class="d-flex flex-column  ms-3">
+                  <h5 class="mb-0">Peminjaman</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-4 p-3">
+            <ul class="list-group">
+              <li class=" d-flex mb-2 border-divider">
+                <div class="col-12">
+                  <div class="d-flex flex-column">
+                    <h6 class="mt-2 text-secondary text-xs">Nama Lengkap</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
+                        @if ($peminjaman->status === 'guru')
+                        {{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }} 
+                        @elseif ($peminjaman->status === 'karyawan')
+                        {{ $peminjaman->karyawan ? $peminjaman->karyawan->nama_karyawan : 'N/A' }} 
+                        @else
+                        {{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}
+                        @endif
+                  </div>
+                  
+                  </div>
+                </div>
+              </li>
+              <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
+                <div class="col-12">
+                  <div class="d-flex flex-column">
+                    @if($peminjaman->id_siswa != 1)
+                    <h6 class="mt-2 text-secondary text-xs">Kelas</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
+                      {{ $peminjaman->kelas ?? '' }} {{ $peminjaman->jurusan ?? '' }}
+                    </div>
+                    @elseif($peminjaman->id_guru != 1)
+                    <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
+                      {{ $peminjaman->jurusan ?? '' }}
+                    </div>
+                    @endif              
+                  </div>
+                </div>
+              </li>
+              <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
+                <div class="col-12">
+                  <div class="d-flex flex-column">
+                    <h6 class="mt-2 text-secondary text-xs">Tanggal peminjaman</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
+                      {{\Carbon\Carbon::parse($peminjaman->tgl_pakai)->format('d F Y') ?? '' }}
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="d-flex justify-content-between border-radius-lg mb-2 border-divider">
+                <div class="col-12">
+                    <div class="d-flex flex-column">
+                        <h6 class="mt-2 text-secondary text-xs">Tanggal Pengembalian</h6>
+                        <div class="col-12 text-dark font-weight-bold mb-3">
+                            @php
+                                $tglKembali = \Carbon\Carbon::parse($peminjaman->tgl_kembali);
+                                $currentDate = \Carbon\Carbon::now();
+                                $daysRemaining = $tglKembali->diffInDays($currentDate, false);
+    
+                                $badgeClass = '';
+                                if ($daysRemaining <= 0) {
+                                    
+                                    $badgeClass = 'badge bg-gradient-danger'; 
+                                } elseif ($daysRemaining <= 3) {
+                                  
+                                    $badgeClass = 'badge bg-gradient-warning'; 
+                                }
+                            @endphp
+                            
+                           
+                            <span class="{{ $badgeClass }}">
+                                {{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') ?? '' }}
+                            </span>
                         </div>
                     </div>
                 </div>
-            </div>
+            </li>
+            
+              <li class="border-0 d-flex justify-content-between ps-0  border-radius-lg mb-2">
+                <div class="col-6">
+                  <div class="d-flex flex-column">
+                    <h6 class="mt-2 text-secondary text-xs">Keterangan</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-2">
+                      @if($peminjaman->keterangan_pemakaian)
+                        {{ $peminjaman->keterangan_pemakaian ?? '' }}
+                      @else
+                        -
+                      @endif
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+    
         <div class="col-12 col-sm-8">
             <div class="card mb-4">
 
@@ -75,8 +130,8 @@ Peminjaman / List Barang
                     <div class="table-container">
                         <div class="table-responsive">
                             <div class="mb-2">
-                                <!-- <button class="btn btn-primary mb-2" data-toggle="modal"
-                                    data-target="#addModal">Tambah</button> -->
+                                <button class="btn btn-primary mb-2" data-toggle="modal"
+                                    data-target="#addModal">Tambah</button>
                             </div>
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
@@ -125,16 +180,22 @@ Peminjaman / List Barang
                                         </td>
                                         <td>
                                             @if($barang->status == "dipinjam")
-                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
+                                            <button class="btn btn-primary btn-xs mb-2"
+                                            data-id-detail-peminjaman="{{ $barang->id_detail_peminjaman }}"
+                                            onclick="notificationBeforeReturn(event, this)">
+                                             <i class="fa fa-undo"></i>
+                                             </button>
+                                    
+                                            {{-- <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
                                                 data-target="#editModal{{$barang->id_detail_peminjaman}}"
                                                 data-id="{{$barang->id_detail_peminjaman}}">
                                                 <i class="fa fa-undo"></i>
-                                            </a>
-                                            <a href="{{ route('detailPeminjaman.destroy', $barang->id_detail_peminjaman) }}"
+                                            </a> --}}
+                                            {{-- <a href="{{ route('detailPeminjaman.destroy', $barang->id_detail_peminjaman) }}"
                                                 onclick="notificationBeforeDelete(event, this, {{$key+1}})"
                                                 class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa fa-trash"></i>
-                                            </a>
+                                            </a> --}}
                                             @else
                                             <div style='display: flex; justify-content: center;'>
                                                 <span> <i class="fas fa-check-circle  fa-2x"
@@ -309,8 +370,8 @@ Peminjaman / List Barang
             <div class=" modal-body">
                 <form class="addForm" action="{{ route('detailPeminjaman.store') }}" method="post">
                     @csrf
+                    <input type="hidden" name="id_peminjaman" value="{{ $peminjaman->id_peminjaman }}">
                     <div class="form-row mt-3">
-                        <input type="hidden" name="id_peminjaman" value="{{ $peminjaman->id_peminjaman }}">
                         <div class="form-group">
                             <label for="id_barang">Barang</label>
                             <select class="form-select" name="id_barang" id="id_barang" required>
@@ -327,26 +388,19 @@ Peminjaman / List Barang
                             @enderror
                         </div>
                         <div class="form-group">
-                            <div class="form-input-group">
-                                <div class="form-input-text1">
-                                    <label for="id_ruangan">Ruangan</label>
-                                    <select class="form-select" name="id_ruangan" id="id_ruangan" required>
 
-                                    </select>
-                                </div>
-                                @error('id_ruangan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                                <div class="form-input-text">
-                                    <label for="jumlah_barang">Jumlah Barang</label>
-                                    <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
-                                        required>
-                                </div>
-                            </div>
+                            <label for="id_ruangan">Ruangan</label>
+                            <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+
+                            </select>
                         </div>
-                        <div class="form-group">
+                        @error('id_ruangan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+
+                        <div class="form-group mt-2">
                             <label for="kondisi_barang">Kondisi Barang</label>
                             <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
 
@@ -407,77 +461,101 @@ $(document).ready(function() {
     });
 });
 
+function notificationBeforeReturn(event, el, dt) {
+    event.preventDefault();
+    var idDetailPeminjaman = el.getAttribute('data-id-detail-peminjaman');
 
+    Swal.fire({
+        title: 'Pilihan Pengembalian Barang',
+        text: 'Pilih cara untuk pengembalian barang:',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dengan Barcode',
+        cancelButtonText: 'Tanpa Barcode'
 
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
-    function() {
-        if (this.closest('#addModal')) {
-            const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
-                'select[name=id_ruangan]');
-            const selectedIdRuangan = this.value;
-
-            // Fetch id_barang options for the selected id_ruangan
-            fetch(`/fetch-id-barang/${selectedIdRuangan}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing options
-                    id_barangSelect.innerHTML = '';
-
-                    // Populate options based on the received data
-                    data.forEach(option => {
-                        const newOption = document.createElement('option');
-                        newOption.value = option.ruangan.id_ruangan;
-                        newOption.text =
-                            option.ruangan.nama_ruangan;
-                        id_barangSelect.add(newOption);
-                    });
-
-                    // Show or hide the id_barang select based on whether options are available
-                    id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
-                    id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
-
-                    const event = new Event('change');
-                    id_barangSelect.dispatchEvent(event);
-                })
-                .catch(error => console.error('Error:', error));
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Jika pengguna memilih "Dengan Barcode"
+window.location.href = `/detailPeminjaman/return/${idDetailPeminjaman}`;            // Jika pengguna memilih "Tanpa Barcode", tampilkan add modal
+            showeditModal();
         }
-    }));
-document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').forEach(select => select
-    .addEventListener(
-        'change',
-        function() {
-            const id_ruanganSelect = document.querySelector('select[name=id_ruangan]');
-            const id_barangSelect = document.querySelector('select[name=id_barang]');
+        $('#editModal').modal('hide');
+    });
+}
 
-            const selectedIdRuangan = id_ruanganSelect.value;
-            const selectedIdBarang = id_barangSelect.value;
-            const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector(
-                'select[name=kondisi_barang]');
+function showAddModal() {
 
+    $('#editModal').modal('show');
+}
+
+function addData() {
+
+    $('#editModal').modal('hide');
+}
+
+document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
+    const selectedIdBarang = this.value;
+    const idRuanganSelect = this.closest('.form-group').nextElementSibling.querySelector(
+        'select[name=id_ruangan]');
+    const kondisiSelect = this.closest('.form-group').nextElementSibling.nextElementSibling
+        .querySelector(
+            'select[name=kondisi_barang]');
+    let selectedIdRuangan; // Variabel untuk menyimpan nilai id_ruangan
+
+    // Fetch id_ruangan options for the selected id_barang
+    fetch(`/fetch-id-barang/${selectedIdBarang}`)
+        .then(response => response.json())
+        .then(data => {
+            // Clear existing options
+            idRuanganSelect.innerHTML = '';
+
+            // Populate options based on the received data
+            data.forEach(option => {
+                const newOption = document.createElement('option');
+                newOption.value = option.ruangan.id_ruangan;
+                newOption.text = option.ruangan.nama_ruangan;
+                idRuanganSelect.add(newOption);
+            });
+
+            // Show or hide the id_ruangan select based on whether options are available
+            idRuanganSelect.style.display = data.length > 0 ? 'block' : 'none';
+            idRuanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+            // Assign selectedIdRuangan after fetching options
+            selectedIdRuangan = idRuanganSelect.value;
+
+            // Trigger change event on id_ruanganSelect to fetch kondisi_barang
+            const event = new Event('change');
+            idRuanganSelect.dispatchEvent(event);
+        })
+
+        .then(() => {
             // Fetch kondisi barang for the selected id_ruangan and id_barang
             fetch(`/fetch-kondisi-barang/${selectedIdRuangan}/${selectedIdBarang}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Clear existing options
+                   
                     kondisiSelect.innerHTML = '';
 
                     // Populate options based on the received data
                     data.forEach(option => {
                         const newOption = document.createElement('option');
                         newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + (option.ket_barang ? ' - ' + option
-                            .ket_barang : '');
+                        newOption.text = option.kondisi_barang + (option.ket_barang ?
+                            ' - ' + option.ket_barang : '');
                         kondisiSelect.add(newOption);
                     });
 
                     // Show or hide the kondisi_barang select based on whether options are available
                     kondisiSelect.style.display = data.length > 0 ? 'block' : 'none';
                     kondisiSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
-
-
                 })
-                .catch(error => console.error('Error:', error));
-        }));
+                .catch(error => console.error('Error fetching kondisi_barang options:', error));
+        })
+        .catch(error => console.error('Error fetching id_ruangan options:', error));
+}));
 </script>
 
 @endpush
