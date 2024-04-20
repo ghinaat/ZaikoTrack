@@ -109,12 +109,14 @@ Route::get('/get-pemakaian-data/{id_pemakaian}', [App\Http\Controllers\Pemakaian
 Route::put('/pemakaian/update', [App\Http\Controllers\PemakaianController::class, 'update'])->name('pemakaian.update');
 Route::delete('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroy'])->name('pemakaian.destroy');
 
+
 Route::get('/detailpemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'showDetail'])->name('pemakaian.showDetail');
 Route::post('/pemakaian/detail', [App\Http\Controllers\PemakaianController::class, 'storeDetail'])->name('pemakaian.storeDetail');
 Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
 Route::get('/get-siswa-options', [App\Http\Controllers\PemakaianController::class, 'getSiswaOptions'])->name('pemakaian.getSiswaOptions');
 Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class, 'export'])->name('pemakaian.export');
+Route::get('/pemakaian/filter', [App\Http\Controllers\PemakaianController::class, 'filter'])->name('pemakaian.filter');
 
 
 Route::resource('/siswa', App\Http\Controllers\SiswaController::class);

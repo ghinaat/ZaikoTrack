@@ -22,9 +22,9 @@ class Pemakaian extends Model
     {
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
     }
-    public function siswa()
+    public function users()
     {
-        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
+        return $this->belongsTo(User::class, 'id_users', 'id_users');
     }
     public function guru()
     {

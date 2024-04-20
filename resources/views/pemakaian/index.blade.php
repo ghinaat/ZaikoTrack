@@ -1,6 +1,26 @@
 @extends('layouts.demo')
 @section('title', 'List Pemakaian')
 @section('css')
+<style>
+   @media (min-width: 768px) {
+    /* CSS untuk perangkat dengan lebar layar minimum 768px (tablet, laptop, dan monitor) */
+    .input-date{
+        width: 105%
+    }
+   }
+    @media (max-width: 576px) {
+    /* CSS untuk perangkat dengan lebar layar minimum 768px (tablet, laptop, dan monitor) */
+    .no-padding-co{
+       padding-left: 5px;
+       padding-right: 5px;
+       padding-bottom: 0;
+    }
+
+    /* .button-filter{
+        justify-content: end;
+    } */
+}
+</style>
 @endsection
 @section('breadcrumb-name')
 Pemakaian
@@ -14,28 +34,38 @@ Pemakaian
                     <h4 class="m-0 text-dark">List Pemakaian</h4>
                 </div>
                 <div class="card-body m-0">
-                    <form method="get" action="{{ route('pemakaian.export', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}">
+                    <form method="get" action="{{ route('pemakaian.index')}}" class=" mb-2">
                         <div class="row">
-                            <div class="col-6 col-md-3">
-                                <label for="start_date">Tanggal Awal:</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ request()->input('start_date') }}">
+                            <div class="col-12 col-md-6">
+                                <div class="row">
+                                    <div class="col-6 col-md-6 no-padding-co">
+                                        <div class="form-group">
+                                            <label for="start_date">Tanggal Awal</label>
+                                            <input type="date" class="form-control input-date"  id="start_date" name="start_date" value="{{ request()->input('start_date') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-6 no-padding-co">
+                                        <div class="form-group">
+                                            <label for="end_date">Tanggal Akhir</label>
+                                            <input type="date" class="form-control input-date" id="end_date" name="end_date" value="{{ request()->input('end_date') }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <label for="end_date">Tanggal Akhir:</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ request()->input('end_date') }}">
-                            </div>
-                        </div>
-                        <div class="d-flex mt-4">
-                            <div class=" mr-3" style="margin-right: 7px;">
-                                <a class="btn btn-primary mb-2" href="{{ route('pemakaian.create') }}">Tambah</a>
-                            </div>
-                            <div class=" ml-2">
-                                <button type="submit" class="btn btn-danger">Unduh Excel</button>
+                            <div class="col-10 col-md-4 d-flex align-items-end mt-0">
+                                <button type="submit" class="btn btn-primary" style="margin-right: 10px">Tampilkan</button>
+                                <a href="{{ route('pemakaian.export', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}" class="btn btn-danger">Export Data</a>
                             </div>
                         </div>
                         
+
                     </form>
                     
+                    
+                    
+                    <div class=" mt-3" style="margin-right: 7px;">
+                        <a class="btn btn-primary mb-2" href="{{ route('pemakaian.create') }}">Tambah</a>
+                    </div>
                     
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
@@ -55,16 +85,20 @@ Pemakaian
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pakai->tgl_pakai)->format('d F Y')}}</td>
                                     <td>
-                                        @if($pakai->id_guru == '1' && $pakai->id_karyawan == '1')
-                                            {{$pakai->siswa->nama_siswa}}
-                                        @elseif($pakai->id_siswa == '1' && $pakai->id_karyawan == '1')
+                                        @if($pakai->status == 'siswa')
+                                            {{$pakai->users->name}}
+                                        @elseif($pakai->status == 'guru')
                                             {{$pakai->guru->nama_guru}}
-                                        @elseif($pakai->id_siswa == '1' && $pakai->id_guru == '1')
+                                        @elseif($pakai->status == 'karyawan')
                                             {{$pakai->karyawan->nama_karyawan}}
                                         @endif
                                     </td>
                                     <td>
-                                        {{$pakai->kelas}} {{$pakai->jurusan}}
+                                        @if ($pakai->kelas == null && $pakai->jurusan == null)
+                                            -
+                                        @else
+                                            {{$pakai->kelas}} {{$pakai->jurusan}}
+                                        @endif
                                     </td>
                                     <td>
                                         <a href="{{ route('pemakaian.showDetail', $pakai->id_pemakaian) }}"
@@ -101,8 +135,8 @@ Pemakaian
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Pemakaian</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -113,7 +147,7 @@ Pemakaian
                     <input type="hidden" name="id_pemakaian" value="{{$pakai->id_pemakaian}}">
                     <div class="form-group">
                         <label for="status">Status</label>
-                            <select class="form-select" id="status_upd{{$pakai->id_pemakaian}}">
+                            <select class="form-select" name="status" id="status_upd{{$pakai->id_pemakaian}}">
                                     <option value="siswa">Siswa</option>
                                     <option value="guru">Guru</option>
                                     <option value="karyawan">Karyawan</option>
@@ -121,11 +155,11 @@ Pemakaian
                     </div>
                     <div class="form-group" style="display: none;" id="id_siswa_update{{$pakai->id_pemakaian}}">
                         <label for="id_siswa">Nama Lengkap</label>
-                            <select class="form-select" data-live-search="true" name="id_siswa" id="id_siswa_upd{{$pakai->id_pemakaian}}" >
+                            <select class="form-select" data-live-search="true" name="id_users" id="id_siswa_upd{{$pakai->id_pemakaian}}" >
                                 <option value="" selected hidden>-- Pilih Nama --</option>
                                 @foreach($siswa as $key => $sw)
-                                <option value="{{$sw->id_siswa}}" @if( old('id_siswa')==$sw->id_siswa)selected @endif>
-                                    {{$sw->nama_siswa}}
+                                <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
+                                    {{$sw->name}}
                                 </option>
                                 @endforeach
                             </select>                                
@@ -168,7 +202,7 @@ Pemakaian
                     </div>
                     <div class="form-group">
                         <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                        <textarea rows="3" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control" >{{old('keterangan_pemakaian', $pakai->keterangan_pemakaian)}}
+                        <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control" >{{old('keterangan_pemakaian', $pakai->keterangan_pemakaian)}}
                         </textarea>
                     </div>
                     <div class="form-group">
@@ -241,11 +275,14 @@ $(document).ready(function() {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'block';
                     namaKaryawanElement.style.display = 'none';
+                    kelasElement.value = null;
                     readonlyValue = true;
                 } else if (this.value === 'karyawan') {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
                     namaKaryawanElement.style.display = 'block';
+                    kelasElement.value = null; // Atur nilai input kelas menjadi null
+                    jurusanElement.value = null;
                     readonlyValue = true;
                 }
 
@@ -257,14 +294,14 @@ $(document).ready(function() {
             
             }));
 
-                if (response.id_siswa !== 1) {
+                if (response.id_users !== 1) {
                     namaSiswaElement.style.display = 'block';
                     var selectSiswa = document.getElementById('id_siswa_upd' + IdPemakaian);
                     var statusSiswa = document.getElementById('status_upd' + IdPemakaian);
                     $('#status_upd' + IdPemakaian).val('siswa');
 
                     for (var i = 0; i < selectSiswa.options.length; i++) {
-                        if (selectSiswa.options[i].value == response.id_siswa) {
+                        if (selectSiswa.options[i].value == response.id_users) {
                             selectSiswa.selectedIndex = i;
                             break;
                         }

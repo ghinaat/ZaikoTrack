@@ -36,9 +36,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-
         User::create([
             'id_users' => '1',
+            'name' => '-',
+            'email' => '-',
+            'password' => '12345678',
+            'level' => 'siswa',
+        ]);
+        
+        User::create([
+            'id_users' => '2',
             'name' => 'Kepala Program',
             'email' => 'kaprog@kaprog.com',
             'password' => '12345678',
@@ -46,7 +53,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'id_users' => '2',
+            'id_users' => '3',
             'name' => 'Teknisi',
             'email' => 'teknisi@teknisi.com',
             'password' => '12345678',
@@ -54,7 +61,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'id_users' => '3',
+            'id_users' => '4',
             'name' => 'Kepala Bengkel',
             'email' => 'kabeng@kabeng.com',
             'password' => '12345678',
@@ -62,7 +69,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'id_users' => '4',
+            'id_users' => '5',
             'name' => 'Siswa',
             'email' => 'siswa@siswa.com',
             'password' => '12345678',
@@ -70,7 +77,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'id_users' => '5',
+            'id_users' => '6',
             'name' => 'Siswa1',
             'email' => 'siswa1@siswa1.com',
             'password' => '12345678',
@@ -78,7 +85,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'id_users' => '6',
+            'id_users' => '7',
             'name' => 'Siswa2',
             'email' => 'siswa2@siswa2.com',
             'password' => '12345678',
@@ -114,70 +121,6 @@ class DatabaseSeeder extends Seeder
             'nama_ruangan' => 'Ruang Penyimpanan',
         ]);
 
-//         $generator = new BarcodeGeneratorPNG();
-//         $barcodeData = $generator->getBarcode('1038439', $generator::TYPE_EAN_13);
-//         $barcodePath = public_path('storage/barcode/');
-//         $barcodeFilename = 'barcode_' . '1038439' . '.png';
-//         $barcodeFilePath = $barcodePath . $barcodeFilename;
-//         file_put_contents($barcodeFilePath, ($barcodeData));
-//         Barang::create([
-//             'id_barang' => '1',
-//             'nama_barang' => 'Router',
-//             'merek' => 'Mikrotik',
-//             'stok_barang' => null,
-//             'qrcode_image' => $barcodeFilename,
-//             'kode_barang' => '9780201379624',
-//             'id_jenis_barang' => '2',
-//         ]);
-
-//         $generator = new BarcodeGeneratorPNG();
-//         $barcodeData = $generator->getBarcode('12190291', $generator::TYPE_EAN_13);
-//         $barcodePath = public_path('storage/barcode/');
-//         $barcodeFilename = 'barcode_' . '12190291' . '.png';
-//         $barcodeFilePath = $barcodePath . $barcodeFilename;
-//         file_put_contents($barcodeFilePath, ($barcodeData));
-//         Barang::create([
-//             'id_barang' => '2',
-//             'nama_barang' => 'Switch',
-//             'merek' => 'Cisco',
-//             'stok_barang' => null,
-//             'kode_barang' => '12190291',
-//             'qrcode_image' => $barcodeFilename,
-//             'id_jenis_barang' => '2',
-//         ]);
-
-//         $generator = new BarcodeGeneratorPNG();
-//         $barcodeData = $generator->getBarcode('2032018', $generator::TYPE_EAN_13);
-//         $barcodePath = public_path('storage/barcode/');
-//         $barcodeFilename = 'barcode_' . '2032018' . '.png';
-//         $barcodeFilePath = $barcodePath . $barcodeFilename;
-//         file_put_contents($barcodeFilePath, ($barcodeData));
-//         Barang::create([
-//             'id_barang' => '4',
-//             'nama_barang' => 'Meja Siswa',
-//             'merek' => 'Informa',
-//             'stok_barang' => null,
-//             'kode_barang' => '2032018',
-//             'qrcode_image' => $barcodeFilename,
-//             'id_jenis_barang' => '1',
-//         ]);
-
-//         $generator = new BarcodeGeneratorPNG();
-//         $barcodeData = $generator->getBarcode('29103802', $generator::TYPE_EAN_13);
-//         $barcodePath = public_path('storage/barcode/');
-//         $barcodeFilename = 'barcode_' . '29103802' . '.png';
-//         $barcodeFilePath = $barcodePath . $barcodeFilename;
-//         file_put_contents($barcodeFilePath, ($barcodeData));
-//         Barang::create([
-//             'id_barang' => '6',
-//             'nama_barang' => 'Connector Fiber Optik',
-//             'merek' => 'Netlink',
-//             'stok_barang' => '50',
-//             'kode_barang' => '29103802',
-//             'qrcode_image' => $barcodeFilename,
-//             'id_jenis_barang' => '3',
-//         ]);
-
         Barang::create([
             'id_barang' => '3',
             'nama_barang' => 'Kabel UTP',
@@ -194,6 +137,24 @@ class DatabaseSeeder extends Seeder
             'stok_barang' => '50',
             'kode_barang' => null,
             'id_jenis_barang' => '3',
+        ]);
+
+        Barang::create([
+            'id_barang' => '6',
+            'nama_barang' => 'Accsess Point',
+            'merek' => 'Mikrotik',
+            'stok_barang' => null,
+            'kode_barang' => 'AP-313892023',
+            'id_jenis_barang' => '2',
+        ]);
+
+        Inventaris::create([
+            'id_inventaris' => '13',
+            'id_barang' => '6',
+            'id_ruangan' => '1',
+            'jumlah_barang' => null,
+            'kondisi_barang' => 'lengkap',
+            'ket_barang' => ''
         ]);
 
         Inventaris::create([
@@ -230,6 +191,7 @@ class DatabaseSeeder extends Seeder
             'id_karyawan' => '1',
             'nama_karyawan' => '-',
         ]);
+
         
         \App\Models\Pembelian::factory(5)->create();
         // \App\Models\DetailPembelian::factory(20)->create();
@@ -239,8 +201,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Siswa::factory(10)->create();
         \App\Models\Karyawan::factory(10)->create();
         \App\Models\Guru::factory(10)->create();
-        \App\Models\Pemakaian::factory(10)->create();
-        \App\Models\DetailPemakaian::factory(20)->create();
 
         EmailConfiguration::create([
             'protocol' => 'smtp', // 'smtp', 'sendmail', 'mail', 'qmail
@@ -251,6 +211,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'ghinaathaya13@gmail.com',
             'password' => 'kcao bfcy ubon mbfc',
         ]);
+
+        // \App\Models\Pemakaian::factory(10)->create();
+        // \App\Models\DetailPemakaian::factory(20)->create();
+
     }
 
 }

@@ -23,8 +23,9 @@ class BarangController extends Controller
 {
     public function index(){
 
-        $alatdanperlengkapan = Barang::where('id_jenis_barang', '!=', 3)->get();
-        $bahan = Barang::where('id_jenis_barang',  3)->get();
+        $alatdanperlengkapan = Barang::with('inventaris')->where('id_jenis_barang', '!=', 3)->get();
+
+            $bahan = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::all();
         $inventaris = Inventaris::all();
         $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
@@ -69,6 +70,10 @@ class BarangController extends Controller
 
         // Update path QR code pada barang yang baru dibuat
         $barang->qrcode_image = $imageName;
+
+        if($request->id_jenis_barang !== '3' && $request->kode_barang == null){
+        return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
+        }else{
         $barang->save();
 
         $pengguna = auth()->user();

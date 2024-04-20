@@ -45,11 +45,11 @@ Tambah Pemakaian
                                                                 </div>
                                                                 <div class="form-group " style="display: none;" id="id_siswa">
                                                                     <label for="id_siswa">Nama Lengkap</label>
-                                                                        <select class="form-select" data-live-search="true" name="id_siswa" id="id_siswa" >
+                                                                        <select class="form-select" data-live-search="true" name="id_users" id="id_siswa" >
                                                                             <option value="" selected hidden>-- Pilih Nama --</option>
                                                                             @foreach($siswa as $key => $sw)
-                                                                            <option value="{{$sw->id_siswa}}" @if( old('id_siswa')==$sw->id_siswa)selected @endif>
-                                                                                {{$sw->nama_siswa}}
+                                                                            <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
+                                                                                {{$sw->name}}
                                                                             </option>
                                                                             @endforeach
                                                                         </select>                                
@@ -92,7 +92,7 @@ Tambah Pemakaian
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                    <textarea rows="3" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control"  ></textarea>
+                                                                    <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control"  ></textarea>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="tgl_pakai">Tanggal Pakai</label>
@@ -195,11 +195,11 @@ Tambah Pemakaian
                                                             </div>
                                                             <div class="form-group " style="display: none;" id="id_siswa_update">
                                                                 <label for="id_siswa">Nama Lengkap</label>
-                                                                    <select class="form-select" data-live-search="true" name="id_siswa" id="id_siswa_upd" >
+                                                                    <select class="form-select" data-live-search="true" name="id_users" id="id_siswa_upd" >
                                                                         <option value="" selected hidden>-- Pilih Nama --</option>
                                                                         @foreach($siswa as $key => $sw)
-                                                                        <option value="{{$sw->id_siswa}}" @if( old('id_siswa')==$sw->id_siswa)selected @endif>
-                                                                            {{$sw->nama_siswa}}
+                                                                        <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
+                                                                            {{$sw->name}}
                                                                         </option>
                                                                         @endforeach
                                                                     </select>                                
@@ -340,13 +340,19 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
         namaSiswaElement.style.display = 'block';
     } else if (this.value === 'guru') {
         namaGuruElement.style.display = 'block';
+        kelasElement.value = null;
         // Set readonlyValue menjadi true jika guru dipilih
         readonlyValue = true;
     } else if (this.value === 'karyawan') {
         namaKaryawanElement.style.display = 'block';
+        kelasElement.value = null; // Atur nilai input kelas menjadi null
+        jurusanElement.value = null;
         // Set readonlyValue menjadi true jika karyawan dipilih
         readonlyValue = true;
     }
+
+   
+
 
     // Atur atribut readonly untuk elemen kelas
     kelasElement.readOnly = readonlyValue;
@@ -561,11 +567,14 @@ $(document).ready(function() {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'block';
                     namaKaryawanElement.style.display = 'none';
+                    kelasElement.value = null;
                     readonlyValue = true;
                 } else if (this.value === 'karyawan') {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
                     namaKaryawanElement.style.display = 'block';
+                    kelasElement.value = null; // Atur nilai input kelas menjadi null
+                    jurusanElement.value = null;
                     readonlyValue = true;
                 }
 
@@ -577,14 +586,14 @@ $(document).ready(function() {
             
             }));
 
-                if (response.id_siswa !== 1) {
+                if (response.id_users !== 1) {
                     namaSiswaElement.style.display = 'block';
                     var selectSiswa = document.getElementById('id_siswa_upd');
                     var statusSiswa = document.getElementById('status_upd');
                     $('#status_upd').val('siswa');
 
                     for (var i = 0; i < selectSiswa.options.length; i++) {
-                        if (selectSiswa.options[i].value == response.id_siswa) {
+                        if (selectSiswa.options[i].value == response.id_users) {
                             selectSiswa.selectedIndex = i;
                             break;
                         }

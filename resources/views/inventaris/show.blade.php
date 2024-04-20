@@ -211,7 +211,7 @@ Inventaris / List Barang
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Pegawai
+                <h5 class="modal-title" id="editModalLabel">Edit Inventaris
                 </h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
