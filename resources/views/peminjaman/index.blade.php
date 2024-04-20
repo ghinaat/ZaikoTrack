@@ -17,7 +17,7 @@ Peminjaman
                 <div class="card-body m-0">
                     <div class="row align-items-end">
                         <div class="col-md-10">
-                            <form action="{{ route('peminjaman.filter') }}" method="GET" class="row align-items-end">
+                            <form action="{{ route('peminjaman.index') }}" method="GET" class="row align-items-end">
                                 <div class="col-md-6">
                                     <label for="tglawal" class="form-label">Tanggal Awal:</label>
                                     <input type="date" id="tglawal" name="tglawal" required class="form-control"
@@ -70,7 +70,7 @@ Peminjaman
                                 $sortedPeminjaman = $peminjaman->sortByDesc('id_peminjaman');
 
                                 @endphp
-                                @foreach($peminjaman as $peminjaman)
+                                @foreach($sortedPeminjaman as $key => $peminjaman)
                                 <tr>
                                     <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>
@@ -98,8 +98,7 @@ Peminjaman
                                     </td>
                                     <td>
                                         @if ($detailPeminjaman)
-                                        @include('components.action-buttons', ['id' =>
-                                        $peminjaman->id_peminjaman, 'key'
+                                        @include('components.action-buttons', ['id' =>  $peminjaman->id_peminjaman, 'key'
                                         => $key, 'route' => 'peminjaman'])
                                         @else
                                         <div style='display: flex; justify-content: center;'>
