@@ -1,0 +1,13 @@
+.responsive-video-wrapper {
+    display: flex;
+    justify-content: center; /* Meletakkan video di tengah kontainer secara horizontal */
+    align-items: center; /* Meletakkan video di tengah kontainer secara vertikal */
+    max-width: 400px; /* Batasi lebar maksimum pembungkus */
+    margin: 0 auto; /* Pusatkan pembungkus di dalam elemen induk */
+}
+
+/* Gaya untuk elemen video */
+#previewKamera {
+    width: 100%; /* Membuat video selebar kontainernya */
+    height: auto; /* Membuat tinggi video mengikuti rasio aspek */
+}

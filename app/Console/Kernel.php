@@ -4,24 +4,46 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\Peminjaman;
 
 class Kernel extends ConsoleKernel
 {
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-         // Clear routes cache every day at midnight
-        $schedule->command('route:cache')->dailyAt('0:00');
-
-        // Clear config cache every day at midnight
-        $schedule->command('config:cache')->dailyAt('0:00');
-
-        // Clear view cache every day at midnight
-        $schedule->command('view:clear')->dailyAt('0:00');
+        // Schedule the checkOverdueItems job to run daily at a specified time
+        $schedule->call(function () {
+            $this->checkOverdueItems();
+        })->daily();
     }
+    
+    /**
+     * Check for overdue items and notify the technician if necessary.
+     */
+    protected function checkOverdueItems()
+    {
+        // Get current date
+        $currentDate = now();
+        
+        // Find all borrowed items that are overdue
+        $overdueItems = Peminjaman::where('tgl_kembali', '<', $currentDate)
+                                 ->where('status', '!=', 'sudah_dikembalikan') // Not yet returned
+                                 ->get();
+    
+        // Notify the technician for each overdue item
+        foreach ($overdueItems as $item) {
+            // Get the technician to notify (you may need to adjust this logic according to your app's data model)
+            $teknisi = User::where('role', 'teknisi')->first();
+    
+            if ($teknisi) {
+                // Send the notification to the technician
+                $teknisi->notify(new OverdueNotification($item));
+            }
+        }
+    }
+    
 
     /**
      * Register the commands for the application.

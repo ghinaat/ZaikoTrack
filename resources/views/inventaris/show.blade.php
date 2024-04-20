@@ -1,6 +1,8 @@
 @extends('layouts.demo')
 @section('title', 'List Barang')
 @section('css')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 <link rel="stylesheet" href="{{asset('fontawesome-free-6.4.2-web\css\all.min.css')}}">
 <style>
 
@@ -12,7 +14,7 @@ Inventaris / List Barang
 @section('content')
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-10">
+        <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <div class="row">
@@ -48,8 +50,7 @@ Inventaris / List Barang
                         <div class="table-responsive">
                             @can('isTeknisi')
                             <div class="mb-2">
-                                <button class="btn btn-primary mb-2"
-                                    onclick="notificationBeforeAdd(event, this)">Tambah</button>
+                                <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
                             @endcan
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
@@ -201,11 +202,7 @@ Inventaris / List Barang
 
 
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
+
 
 <!-- Modal Edit Pegawai -->
 @foreach($inventarisAlat as $key => $barang)
@@ -227,14 +224,12 @@ Inventaris / List Barang
                     <input type="hidden" name="id_ruangan" id="id_ruangan" class="form-control"
                         value="{{ $ruangan->id_ruangan }}">
                     <div class="form-group">
-                        <label for="id_barang">Nama Barang</label>
+                        <label for="id_barang">Kode Barang</label>
                         <select class="form-select" name="id_barang" id="id_barang" required>
-                            @foreach($BarangAlat->all() as $id_barang =>
-                            $nama_barang)
-                            <option value="{{ $id_barang }}" @if($barang->
-                                id_barang
-                                == $id_barang) selected @endif>
-                                {{ $nama_barang }}</option>
+                            @foreach($BarangAlat as $b)
+                            <option value="{{ $b ->id_barang }}" @if($b->id_barang ==
+                             old('id_barang', $b->id_barang) ) selected @endif>
+                                {{ $b ->kode_barang }}</option>
                             @endforeach
                         </select>
                         @error('id_barang')
@@ -243,17 +238,17 @@ Inventaris / List Barang
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group" id="stokBarangField">
-                        <!-- Add an ID to the form group for easy reference -->
-                        <label for="jumlah_barang">Stok Barang</label>
-                        <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
-                            value="{{old('jumlah_barang', $barang->jumlah_barang)}}">
-                        @error('jumlah_barang')
+
+                    <div class="form-group">
+                        <label for="id_barang">Nama Barang</label>
+                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                        @error('id_barang')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                         @enderror
                     </div>
+                  
                     <div class="form-group">
                         <label for="exampleInputkondisi_barang">Kondisi
                             Barang</label>
@@ -290,6 +285,7 @@ Inventaris / List Barang
                         </div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <label for="ket_barang">Ketarangan Barang</label>
                         <input type="text" name="ket_barang" id="ket_barang" class="form-control"
@@ -435,16 +431,25 @@ Inventaris / List Barang
                     @csrf
                     <input type="hidden" name="id_ruangan" id="id_ruangan" class="form-control"
                         value="{{ $ruangan->id_ruangan }}">
+                        <div class="form-group">
+                            <label for="id_barang">Kode Barang</label>
+                            <select class="form-select" name="id_barang" id="id_barang" required>
+                                @foreach($BarangAlat as $key => $br)
+                                <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected
+                                    @endif>
+                                    {{$br->kode_barang}}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('id_barang')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                     <div class="form-group">
                         <label for="id_barang">Nama Barang</label>
-                        <select class="form-select" name="id_barang" id="id_barang" required>
-                            @foreach($BarangAlat as $key => $br)
-                            <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected
-                                @endif>
-                                {{$br->nama_barang}}
-                            </option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
                         @error('id_barang')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -613,6 +618,43 @@ function showAddModal() {
     console.log("Menampilkan modal tambah");
 }
 
+document.querySelectorAll('select[name=id_barang]').forEach(select => {
+    select.addEventListener('change', function() {
+        const selectedIdBarang = this.value;
+        
+        // Check if the input for nama_barang exists
+        const namaBarangInput = document.querySelector('input[name=nama_barang]');
+        if (!namaBarangInput) {
+            console.error('Input element for nama_barang not found.');
+            return;
+        }
+
+        // Fetch data based on selected id_barang
+        fetch(`/inventaris/fetch-id-barang/${selectedIdBarang}`)
+            .then(response => response.json())
+            .then(data => {
+                // Debug: Check the data received
+                console.log('Data received:', data);
+
+                // Check if data.barang and data.barang.nama_barang are present
+                if (data  && data.nama_barang) {
+                    // Display the corresponding nama_barang in the input element
+                    namaBarangInput.value = data.nama_barang;
+                } else {
+                    // Clear the input if data is missing or incomplete
+                    namaBarangInput.value = '';
+                    console.warn('Received data is missing or incomplete.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Clear the input and possibly display an error message to the user
+                namaBarangInput.value = '';
+            });
+    });
+});
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Simpan referensi ke elemen-elemen yang diperlukan
     const option1 = document.getElementById('option1');
@@ -669,6 +711,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
+
 </script>
 
 @endpush

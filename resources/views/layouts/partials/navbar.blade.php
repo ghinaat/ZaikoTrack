@@ -47,11 +47,11 @@
                                         <div class="my-auto">
                                             <i class="ni ni-settings me-3 "> </i>
                                         </div>
-                                        <!-- <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-bold-black mb-1"> -->
-                                        Ubah Password
-                                        <!-- </h6>
-                                        </div> -->
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h5 class="text-sm font-weight-normal mb-1"> 
+                                        Setting Profile
+                                        </h5s>
+                                        </div> 
                                     </div>
                                 </a>
                             </li>
@@ -81,33 +81,11 @@
                     <li class="nav-item dropdown px-3 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bell cursor-pointer"></i>
+                            <i class="fa fa-bell cursor-pointer"> <span class="badge bg-danger" id="notificationCount" style="display: none;"></span></i>
                         </a>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
+                        <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" id="notificationDropdown"
                             aria-labelledby="dropdownMenuButton">
-                            <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="my-auto">
-                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                New message Laur
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                13 minutes ago
-                                            </p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <!-- "See All" Link -->
-                            <li class="mb-0">
-                                <a class="dropdown-item border-radius-md " href="#">See
-                                    All Notifications</a>
-                            </li>
+                            <!-- Notification items will be dynamically added here via AJAX -->
                         </ul>
                     </li>
                     <li class="nav-item dropdown pe-2 d-flex align-items-center">
@@ -120,3 +98,4 @@
         </div>
     </nav>
     </div>
+    

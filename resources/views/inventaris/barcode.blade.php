@@ -1,6 +1,16 @@
 @extends('layouts.demo')
 @section('title', 'Tambah Barang')
 @section('css')
+<link rel="stylesheet" href="{{asset('css\kamera.css')}}">
+<style>
+.btn-secondary{
+  margin-right: 10px;
+}
+
+.btn-danger{
+  margin-right: 10px;
+}
+</style>
 @endsection
 @section('breadcrumb-name')
 Tambah Barang
@@ -8,41 +18,28 @@ Tambah Barang
 @section('content')
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
             <div class="card mb-4">
                 <div class="card-header">
                     <h2 class="m-0 text-dark text-center fs-3">Scan Barcode
                     </h2>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('inventaris.addBarcode')}}">
+                    <form method="POST" action="{{ route('inventaris.addBarcode', ['id_ruangan' => $id_ruangan->id_ruangan]) }}">
                         @csrf
-
+                        @method('PUT') 
                         <div class="form-group">
-                            <label for="ket_barang">Scan</label>
-                            <video id="previewKamera" style="width: 300px;height: 300px;"></video>
-                            <br>
-                            <select id="pilihKamera" style="max-width:400px">
-                            </select>
-                            <br>
-                            <input type="text" id="hasilscan" name="kode_barang" readonly>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="id_ruangan">Ruangan</label>
-                            <select class="form-select" name="id_ruangan" id="id_ruangan" required>
-                                @foreach($id_ruangan as $key => $r)
-                                <option value="{{ $r->id_ruangan }}">
-                                    {{ $r->nama_ruangan }}
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('id_ruangan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                            <div class="responsive-video-wrapper">
+                                <video id="previewKamera" style="width: 100%; height: auto;"></video>
                             </div>
-                            @enderror
+                            <br>
+                            <select id="pilihKamera" class="form-select">
+                            </select>
+                            <br>
+                            <label for="ket_barang">Kode Barang</label>
+                            <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                         </div>
+                       
                         <div class="form-group">
                             <label for="exampleInputkondisi_barang">Kondisi Barang</label>
                             <select class="form-select @error('kondisi_barang') is-invalid @enderror"

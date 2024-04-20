@@ -14,6 +14,7 @@ use App\Models\Ruangan;
 use App\Models\Siswa;
 use App\Models\Guru;
 use App\Models\Karyawan;
+use App\Models\EmailConfiguration;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Endroid\QrCode\QrCode;
@@ -240,5 +241,16 @@ class DatabaseSeeder extends Seeder
         \App\Models\Guru::factory(10)->create();
         \App\Models\Pemakaian::factory(10)->create();
         \App\Models\DetailPemakaian::factory(20)->create();
+
+        EmailConfiguration::create([
+            'protocol' => 'smtp', // 'smtp', 'sendmail', 'mail', 'qmail
+            'host' => 'smtp.gmail.com',
+            'port' => '465',
+            'timeout' => '30',
+            'username' => 'ghinaathaya13@gmail.com',
+            'email' => 'ghinaathaya13@gmail.com',
+            'password' => 'kcao bfcy ubon mbfc',
+        ]);
     }
+
 }

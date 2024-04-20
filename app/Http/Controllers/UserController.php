@@ -97,29 +97,47 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
-        return view('users.change-pass');
+        // Get the authenticated user
+        $user = User::where('id_users', auth()->user()->id_users)->first();
+
+        // Pass the user's email to the view
+        return view('users.change-pass', [  'user' => $user,]);
     }
 
-    public function saveChangePassword(Request $request)
+
+    public function saveChangePassword(Request $request, $id_users)
     {
-        $request->validate([
-            'old_password' => 'required',
-            'password' => 'required|string|confirmed',
-        ]);
+        $rules = [
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'nullable',
+            'old_password' => 'nullable|required_with:password|string',
+            // 'level' => 'required',
+        ];
 
-        // Get the authenticated user
-        $user = auth()->user();
+       
 
-        // Check if the current password matches the user's password in the database
-        if (! Hash::check($request->input('old_password'), $user->password)) {
-            return back()->withErrors(['old_password' => 'The current password is incorrect.']);
+        $request->validate($rules);
+
+        $user = User::find($id_users);
+        if ($request->filled('old_password')) {
+            if (!Hash::check($request->old_password, $user->password)) {
+                return back()->withErrors(['old_password' => 'The current password is incorrect.']);
+            }
+    
+            $user->password = Hash::make($request->password);
+        }       
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = bcrypt($request->password);
         }
-
-        // Update the user's password
-        $user->password = Hash::make($request->input('password'));
+      
         $user->save();
 
-        return redirect()->route('user.changePassword')->with('success', 'Password changed successfully.');
+       
+
+        return redirect()->route('user.changePassword')->with('success', 'Profile Berhasil Disimpan.');
     }
 
 }

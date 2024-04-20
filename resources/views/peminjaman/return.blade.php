@@ -1,6 +1,16 @@
 @extends('layouts.demo')
 @section('title', 'Pengembalian Barang')
 @section('css')
+<link rel="stylesheet" href="{{asset('css\kamera.css')}}">
+<style>
+.btn-secondary{
+  margin-right: 10px;
+}
+
+.btn-danger{
+  margin-right: 10px;
+}
+</style>
 @endsection
 @section('breadcrumb-name')
 Pengembalian Barang
@@ -19,15 +29,17 @@ Pengembalian Barang
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label for="ket_barang">Scan</label>
-                            <video id="previewKamera" style="width: 300px;height: 300px;"></video>
+                            <div class="responsive-video-wrapper">
+                                <video id="previewKamera" style="width: 100%; height: auto;"></video>
+                            </div>
                             <br>
-                            <select id="pilihKamera" style="max-width:400px">
+                            <select id="pilihKamera" class="form-select">
                             </select>
                             <br>
-                            <input type="text" id="hasilscan" name="kode_barang" readonly>
-
+                            <label for="ket_barang">Kode Barang</label>
+                            <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                         </div>
+                       
                         <div class="form-group">
                             <label for="id_ruangan">Ruangan</label>
                             <select class="form-select" name="id_ruangan" id="id_ruangan" required>
@@ -64,17 +76,17 @@ Pengembalian Barang
                         </div>
                         <div class="form-group">
                             <label for="ket_tidak_lengkap_akhir
-ket_tidak_lengkap_akhir">Ketarangan Barang</label>
-                            <input type="text" name="ket_tidak_lengkap_akhir
-ket_tidak_lengkap_akhir" id="ket_tidak_lengkap_akhir
-ket_tidak_lengkap_akhir" class="form-control"
-                                value="{{old('ket_tidak_lengkap_akhir
-ket_tidak_lengkap_akhir')}}">
-                            <small class="form-text text-muted">*wajib diisi
-                                ketika
-                                barang tidak lengkap/rusak. </small>
-                            @error('ket_tidak_lengkap_akhir
-ket_tidak_lengkap_akhir')
+                            ket_tidak_lengkap_akhir">Ketarangan Barang</label>
+                                                        <input type="text" name="ket_tidak_lengkap_akhir
+                            ket_tidak_lengkap_akhir" id="ket_tidak_lengkap_akhir
+                            ket_tidak_lengkap_akhir" class="form-control"
+                                                            value="{{old('ket_tidak_lengkap_akhir
+                            ket_tidak_lengkap_akhir')}}">
+                                                        <small class="form-text text-muted">*wajib diisi
+                                                            ketika
+                                                            barang tidak lengkap/rusak. </small>
+                                                        @error('ket_tidak_lengkap_akhir
+                            ket_tidak_lengkap_akhir')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

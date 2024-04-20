@@ -216,11 +216,11 @@ Tambah Peminjaman
 
                                 <div class="form-row mt-3">
                                     <div class="form-group">
-                                        <label for="id_barang">Barang</label>
+                                        <label for="id_barang">Kode Barang</label>
                                         <select class="form-select" name="id_barang" id="id_barang" required>
                                             @foreach($id_barang_options as $key => $b)
                                             <option value="{{ $b->barang->id_barang }}">
-                                                {{ $b->barang->nama_barang }}
+                                                {{ $b->barang->kode_barang }}
                                             </option>
                                             @endforeach
                                         </select>
@@ -230,10 +230,21 @@ Tambah Peminjaman
                                         </div>
                                         @enderror
                                     </div>
+                                    <div class="form-group mt-2">
+                                        <label for="kondisi_barang">Nama Barang</label>
+                                        <select class="form-select" name="kondisi_barang" id="kondisi_barang" readonly>
+
+                                        </select>
+                                        @error('kondisi_barang')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
                                     <div class="form-group">
 
                                         <label for="id_ruangan">Ruangan</label>
-                                        <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+                                        <select class="form-select" name="id_ruangan" id="id_ruangan" readonly>
 
                                         </select>
                                     </div>
@@ -243,17 +254,7 @@ Tambah Peminjaman
                                     </div>
                                     @enderror
 
-                                    <div class="form-group mt-2">
-                                        <label for="kondisi_barang">Kondisi Barang</label>
-                                        <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
-
-                                        </select>
-                                        @error('kondisi_barang')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                        @enderror
-                                    </div>
+                                    
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
                                         <input type="text" name="ket_barang" id="ket_barang" class="form-control">
@@ -313,11 +314,9 @@ $(document).ready(function() {
 });
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
-    const idRuanganSelect = this.closest('.form-group').nextElementSibling.querySelector(
+    const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector('select[name=kondisi_barang]');
+    const idRuanganSelect = this.closest('.form-group').nextElementSibling.nextElementSibling.querySelector(
         'select[name=id_ruangan]');
-    const kondisiSelect = this.closest('.form-group').nextElementSibling.nextElementSibling
-        .querySelector(
-            'select[name=kondisi_barang]');
     let selectedIdRuangan; // Variabel untuk menyimpan nilai id_ruangan
 
     // Fetch id_ruangan options for the selected id_barang
@@ -339,17 +338,12 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
             idRuanganSelect.style.display = data.length > 0 ? 'block' : 'none';
             idRuanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
 
-            // Assign selectedIdRuangan after fetching options
-            selectedIdRuangan = idRuanganSelect.value;
-
-            // Trigger change event on id_ruanganSelect to fetch kondisi_barang
-            const event = new Event('change');
-            idRuanganSelect.dispatchEvent(event);
+          
         })
 
         .then(() => {
             // Fetch kondisi barang for the selected id_ruangan and id_barang
-            fetch(`/fetch-kondisi-barang/${selectedIdRuangan}/${selectedIdBarang}`)
+            fetch(`/fetch-nama-barang/${selectedIdBarang}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -359,9 +353,8 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
                     // Populate options based on the received data
                     data.forEach(option => {
                         const newOption = document.createElement('option');
-                        newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + (option.ket_barang ?
-                            ' - ' + option.ket_barang : '');
+                        newOption.value = option.barang.id_barang;
+                        newOption.text = option.barang.nama_barang;
                         kondisiSelect.add(newOption);
                     });
 

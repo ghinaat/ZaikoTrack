@@ -14,7 +14,7 @@ class Notifikasi extends Model
 
     public function users()
     {
-        return $this->belongsTo(Inventaris::class, 'id_users', 'id_users');
+        return $this->belongsTo(User::class, 'id_users', 'id_users');
     }
 
     protected $guarded = ['id_notifikasi'];

@@ -2,6 +2,7 @@
 @section('title', 'Tambah Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('css\style.css')}}">
+<link rel="stylesheet" href="{{asset('css\kamera.css')}}">
 @endsection
 @section('breadcrumb-name')
 Tambah Peminjaman
@@ -216,15 +217,17 @@ Tambah Peminjaman
 
                                 <div class="form-row mt-3">
                                     <div class="form-group">
-                                        <label for="ket_barang">Scan</label>
-                                        <video id="previewKamera" style="width: 300px;height: 300px;"></video>
+                                        <div class="responsive-video-wrapper">
+                                            <video id="previewKamera" style="width: 100%; height: auto;"></video>
+                                        </div>
                                         <br>
-                                        <select id="pilihKamera" style="max-width:400px">
+                                        <select id="pilihKamera" class="form-select">
                                         </select>
                                         <br>
-                                        <input type="text" id="hasilscan" name="kode_barang" readonly>
-
+                                        <label for="ket_barang">Kode Barang</label>
+                                        <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                                     </div>
+                                   
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
                                         <input type="text" name="ket_barang" id="ket_barang" class="form-control">

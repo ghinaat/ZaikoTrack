@@ -195,14 +195,15 @@ class PeminjamanController extends Controller
         return response()->json($id_ruangan_option);
     }
 
-    public function fetchKondisiBarang($id_ruangan, $id_barang)
+    public function fetchNamaBarang($id_barang)
     {
-        $kondisiBarangOptions = Inventaris::where('id_barang', $id_barang)->where('id_ruangan', $id_ruangan)
-            ->select('id_inventaris', 'kondisi_barang', 'ket_barang') // Select both columns
+        $namaBarangOptions = Inventaris::where('id_barang', $id_barang)
+            ->select('id_barang') // Select both columns
             ->distinct()
+            ->with(['barang:id_barang,nama_barang']) 
             ->get();
     
-        return response()->json($kondisiBarangOptions);
+        return response()->json($namaBarangOptions);
     }
 
   
@@ -342,40 +343,24 @@ class PeminjamanController extends Controller
     
     public function filter(Request $request)
     {
-            // Ambil tanggal awal dan akhir dari permintaan
-            $tglawal = $request->input('tglawal');
-            $tglakhir = $request->input('tglakhir');
-        
-            // Ambil id_barang dari permintaan
-            $id_barang = $request->input('id_barang');
-        
-            // Bangun query untuk memfilter peminjaman
-            $query = Peminjaman::query();
-        
-            // Filter berdasarkan rentang tanggal tgl_pinjam
-            if ($tglawal && $tglakhir) {
-                $query->whereBetween('tgl_pinjam', [$tglawal, $tglakhir]);
-            }
-        
-            // Filter berdasarkan id_barang
-            if ($id_barang) {
-                // Filter berdasarkan id_barang di detailPeminjaman
-                $query->whereHas('detailPeminjaman.inventaris.barang', function ($q) use ($id_barang) {
-                    $q->where('id', $id_barang);
-                });
-            }
-        
-            // Dapatkan data peminjaman yang difilter
-            $peminjaman = $query->get();
-       
-        
-            // Kembalikan hasil filter ke tampilan
-            return view('peminjaman.index', [
-                'peminjaman' => $peminjaman,
-               
-            ]);
+        $tanggal_awal = $request->input('tanggal_awal');
+        $tanggal_akhir = $request->input('tanggal_akhir');
+        $barang_id = $request->input('barang_id');
+    
+        // Query to filter Peminjaman records
+        $peminjamanQuery = Peminjaman::whereBetween('tgl_pinjam', [$tanggal_awal, $tanggal_akhir]);
+    
+        // If barang_id is provided, add condition to filter by barang_id
+        if ($barang_id) {
+            $peminjamanQuery->where('id_barang', $barang_id);
         }
-
+    
+        // Fetch filtered Peminjaman records
+        $filteredPeminjaman = $peminjamanQuery->get();
+    
+        // Return the filtered Peminjaman records as JSON response or to a view
+        return view('peminjaman.index', compact('peminjaman'));
+    } 
   
  
 
