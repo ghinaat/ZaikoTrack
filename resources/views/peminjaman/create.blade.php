@@ -225,7 +225,7 @@ Tambah Peminjaman
                                             @endforeach
                                         </select>
                                         @error('id_barang')
-                                        <div class="invalid-feedback">
+                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror

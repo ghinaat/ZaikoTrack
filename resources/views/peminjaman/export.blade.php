@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($peminjaman['peminjamanData'] as $key => $peminjaman)
+        @foreach($peminjaman['peminjaman'] as $key => $peminjaman)
         <tr>
             <td>{{$key + 1}}</td>
             <td> 

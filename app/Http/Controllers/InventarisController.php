@@ -94,7 +94,19 @@ class InventarisController extends Controller
         if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang) {
             return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
         }
-       
+
+        $barang = Barang::find($request->id_barang);
+        $existingInventaris = Inventaris::where('id_inventaris', '!=', $id_inventaris)
+        ->whereHas('barang', function($query) use ($barang) {
+            $query->where('kode_barang', $barang->kode_barang);
+        })
+        ->first();
+
+    // Check if an existing inventaris item is found
+    if ($existingInventaris) {
+        return redirect()->back()->with(['error' => 'An inventaris item with the same Kode Barang already exists.']);
+    }
+            
         $inventaris->id_barang = $request->id_barang;
         $inventaris->id_ruangan = $request->id_ruangan;
         $inventaris->jumlah_barang = $request->jumlah_barang;
@@ -121,7 +133,7 @@ class InventarisController extends Controller
 
         // dd($request);
             $request->validate([
-                'kode_barang' => 'required',
+                'kode_barang' => 'required|unique:inventaris,kode_barang', // Ensure kode_barang is unique in the inventaris table
                 'kondisi_barang' => 'required',
                 'ket_barang' => 'nullable',
             ]);
@@ -130,8 +142,7 @@ class InventarisController extends Controller
             $id_barang = Barang::where('kode_barang', $request->kode_barang)->first();
             // Pastikan Inventaris ditemukan sebelum melanjutkan
             if (!$id_barang) {
-                return response()->json(['error' => 'Data tidak tersimpan.',
-            ], 400);
+                return redirect()->back()->with(['error' => 'Data barang sudah diinventarisasikan.']);
             }    
             
             $inventaris = new Inventaris();
@@ -180,6 +191,26 @@ class InventarisController extends Controller
         $BarangAlat = Barang::where('id_jenis_barang', '!=', 3)
          ->whereNotIn('id_barang', $used_ids)
         ->get();
+
+        $barangEdit = collect();
+
+        // Loop through each inventaris item
+        foreach ($inventarisAlat as $inventarisItem) {
+            // Fetch all used id_barang values except for the one selected in the current inventaris item
+            $used_ids_except_current = Inventaris::where('id_inventaris', '!=', $inventarisItem->id_inventaris)->pluck('id_barang');
+        
+            // Fetch all Barang objects
+            $barangEditForItem = Barang::where('id_jenis_barang', '!=', 3)
+                ->whereNotIn('id_barang', $used_ids_except_current->isEmpty() ? [0] : $used_ids_except_current->toArray()) // Handle empty $used_ids_except_current array
+                ->get();
+        
+            // Merge the Barang objects into the main collection
+            $barangEdit = $barangEdit->merge($barangEditForItem);
+        }
+        
+
+        $Barangbahan = Barang::where('id_jenis_barang',  3)->get();
+        
         $Barangbahan = Barang::where('id_jenis_barang',  3)->get();
 
         $inventarisAlat->each(function ($item) {
@@ -197,6 +228,7 @@ class InventarisController extends Controller
             'inventarisAlat' => $inventarisAlat,
             'inventarisBahan' => $inventarisBahan,
             'BarangAlat' => $BarangAlat,
+            'barangEdit' => $barangEdit,
             'Barangbahan' => $Barangbahan,
             'used_ids' => $used_ids
         ]);

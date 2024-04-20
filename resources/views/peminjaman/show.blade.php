@@ -133,8 +133,10 @@ Peminjaman / List Barang
                     <div class="table-container">
                         <div class="table-responsive">
                             <div class="mb-2">
-                                <button class="btn btn-primary mb-2" data-toggle="modal"
-                                    data-target="#addModal">Tambah</button>
+                              <a href="{{ route('peminjaman.Qrcode', $peminjaman->id_peminjaman) }}"
+                                                class="btn btn-primary mx-1">
+                                                Tambah
+                                            </a> 
                             </div>
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>

@@ -68,7 +68,7 @@ Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\De
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
 Route::get('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
-Route::post('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
+Route::put('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
@@ -81,7 +81,7 @@ Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailP
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
-
+Route::get('/peminjaman/qrcode/{id_peminjaman}', [PeminjamanController::class, 'Qrcode'])->name('peminjaman.Qrcode');
 Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
@@ -101,6 +101,8 @@ Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPemi
 Route::put('/peminjaman/detailPeminjaman/returnBarcode/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'returnBarcode'])->name('detailPeminjaman.returnBarcode');
 Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'update'])->name('detailPeminjaman.update');
 Route::post('/peminjaman/detailPeminjaman/barcode', [App\Http\Controllers\DetailPeminjamanController::class, 'AddBarcode'])->name('detailPeminjaman.AddBarcode');
+Route::post('/peminjaman/detailPeminjaman/qrcode/{id_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'AddQrcode'])->name('detailPeminjaman.AddQrcode');
+
 
 Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
 Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');

@@ -40,6 +40,7 @@ Users
                                     <th>No.</th>
                                     <th>Nama User</th>
                                     <th>Email</th>
+                                    <th>level</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>
@@ -49,6 +50,7 @@ Users
                                     <td>{{$key+1}}</td>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>
+                                    <td>{{$user->level}}</td>
                                     <td>
                                         @include('components.action-buttons', ['id' => $user->id_users, 'key' => $key,
                                         'route' => 'user'])
@@ -106,6 +108,11 @@ Users
                                                             {{ $message }}
                                                         </div>
                                                         @enderror
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nis">NIS</label>
+                                                        <input type="text" name="nis"
+                                                            id="exampleInputPassword" class="form-control"   value="{{ old('nis', $user->nis) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword">Password</label>
@@ -174,6 +181,11 @@ Users
                             {{ $message }}
                         </div>
                         @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="nis">NIS</label>
+                        <input type="text" name="nis" id="nis"
+                            class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword">Password</label>
