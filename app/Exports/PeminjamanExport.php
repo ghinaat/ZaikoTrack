@@ -18,10 +18,10 @@ class PeminjamanExport implements FromView
 
     public function view(): View
     {
-        dd($this->peminjaman['peminjamanData']);
+        // dd($this->peminjaman['peminjamanData']);
 
-        return view('peminjaman.index', [
-            'peminjaman' => $this->peminjamanData,
+        return view('peminjaman.export', [
+            'peminjaman' => $this->peminjaman,
         ]);
     }
 }

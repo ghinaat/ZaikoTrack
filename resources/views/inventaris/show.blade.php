@@ -48,7 +48,7 @@ Inventaris / List Barang
                 <div id="tableAlatPerlengkapan" class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">
-                            @can('isTeknisi')
+                            @can('isTeknisi', 'isKabeng')
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
@@ -62,7 +62,7 @@ Inventaris / List Barang
                                         <th>Kondisi</th>
                                         <th>Status</th>
                                         <th style="width:130px;">Keterangan</th>
-                                        @can('isTeknisi')
+                                        @can('isTeknisi', 'isKabeng')
                                         <th>Opsi</th>
                                         @endcan
                                     </tr>
@@ -99,7 +99,7 @@ Inventaris / List Barang
                                             </div>
                                             @endif
                                         </td>
-                                        @can('isTeknisi')
+                                        @can('isTeknisi', 'isKabeng')
                                         <td>
                                             @include('components.action-buttons', ['id' =>
                                             $barang->id_inventaris,
@@ -124,7 +124,7 @@ Inventaris / List Barang
                 <div id="tableBahanPraktik" class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">
-                            @can('isTeknisi')
+                            @can('isTeknisi', 'isKabeng')
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" data-toggle="modal"
                                     data-target="#addModalBahan">Tambah</button>
@@ -138,7 +138,7 @@ Inventaris / List Barang
                                         <th>Stok</th>
                                         <th>Kondisi</th>
                                         <th style="width:130px;">Keterangan</th>
-                                        @can('isTeknisi')
+                                        @can('isTeknisi', 'isKabeng')
                                         <th>Opsi</th>
                                         @endcan
                                     </tr>
@@ -168,7 +168,7 @@ Inventaris / List Barang
                                             </div>
                                             @endif
                                         </td>
-                                        @can('isTeknisi')
+                                        @can('isTeknisi', 'isKabeng')
                                         <td>
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
                                                 data-target="#editModalBahan{{$barang->id_inventaris}}"
@@ -226,7 +226,7 @@ Inventaris / List Barang
                     <div class="form-group">
                         <label for="id_barang">Kode Barang</label>
                         <select class="form-select" name="id_barang" id="id_barang" required>
-                            @foreach($BarangAlat as $b)
+                            @foreach($barangEdit as $b)
                             <option value="{{ $b ->id_barang }}" @if($b->id_barang ==
                              old('id_barang', $b->id_barang) ) selected @endif>
                                 {{ $b ->kode_barang }}</option>
@@ -434,12 +434,16 @@ Inventaris / List Barang
                         <div class="form-group">
                             <label for="id_barang">Kode Barang</label>
                             <select class="form-select" name="id_barang" id="id_barang" required>
-                                @foreach($BarangAlat as $key => $br)
-                                <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected
-                                    @endif>
-                                    {{$br->kode_barang}}
-                                </option>
-                                @endforeach
+                                @if($BarangAlat->isEmpty())
+                                    <option value="" disabled selected>No data available</option>
+
+                                @else
+                                    @foreach($BarangAlat as $key => $br)
+                                        <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                            {{$br->kode_barang}}
+                                        </option>
+                                    @endforeach
+                                @endif
                             </select>
                             @error('id_barang')
                             <div class="invalid-feedback">
@@ -619,7 +623,7 @@ function showAddModal() {
 }
 
 document.querySelectorAll('select[name=id_barang]').forEach(select => {
-    select.addEventListener('change', function() {
+    select.addEventListener('click', function() {
         const selectedIdBarang = this.value;
         
         // Check if the input for nama_barang exists
