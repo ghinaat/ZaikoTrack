@@ -171,6 +171,8 @@
   <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
   <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
   <script src="{{ asset('assets/DataTables/datatables.js') }}"></script>
+  <script src="{{ asset('js/notification.js') }}"></script>
+  
   
   <!-- Argon Dashboard -->
   <script src="{{ asset('assets/js/argon-dashboard.min.js?v=2.0.4') }}"></script>

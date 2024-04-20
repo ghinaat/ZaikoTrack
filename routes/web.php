@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
+use App\Http\Controllers\NotifikasiController;
+use App\Http\Controllers\EmailConfigurationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +37,7 @@ Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, '
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
 Route::post('/user/import', [ App\Http\Controllers\UserController::class, 'import'])->name('user.import');
 Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
-Route::post('/user/change-password', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
+Route::put('/user/change-password/{id_users}', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
 });
 
 Route::group(['middleware' => ['auth']], function () {
@@ -64,14 +66,15 @@ Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\Detai
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
-Route::get('/inventaris/barcode', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
+Route::get('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
-Route::post('/inventaris/barcode', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
+Route::post('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
 Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
-    
+Route::get('/inventaris/fetch-id-barang/{id_barang}', [App\Http\Controllers\InventarisController::class, 'fetchIdBarang'])->name('inventaris.fetchIdBarang');
+
 
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
@@ -87,9 +90,9 @@ Route::post('/peminjaman/create', [App\Http\Controllers\PeminjamanController::cl
 Route::put('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
 Route::delete('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
-Route::get('/fetch-kondisi-barang/{id_ruangan}/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchKondisiBarang'])->name('peminjaman.fetchKondisiBarang');
+Route::get('/fetch-nama-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchNamaBarang'])->name('peminjaman.fetchNamaBarang');
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
-Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
+Route::get('/peminjaman', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
 
 
 Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');
@@ -124,20 +127,10 @@ Route::post('/karyawan/import', [ App\Http\Controllers\KaryawanController::class
 Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
 });
 
-//Clear route cache:
-Route::get('/route-cache', function() {
-	Artisan::call('route:cache');
-    return 'Routes cache has been cleared';
-});
 
-//Clear config cache:
-Route::get('/config-cache', function() {
- 	Artisan::call('config:cache');
- 	return 'Config cache has been cleared';
-}); 
-    
-// Clear view cache:
-Route::get('/view-clear', function() {
-    Artisan::call('view:clear');
-    return 'View cache has been cleared';
-});
+Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+Route::get('/notifikasi/fetch', [NotifikasiController::class, 'fetch'])->name('notifikasi.fetch');
+Route::get('/notifikasi/{id_notifikasi}/detail', [NotifikasiController::class, 'detail'])->name('notifikasi.detail');
+
+Route::get('/email-configuration', [EmailConfigurationController::class, 'show'])->name('emailConfiguration.show');
+Route::post('/email-configuration', [EmailConfigurationController::class, 'update'])->name('emailConfiguration.update');

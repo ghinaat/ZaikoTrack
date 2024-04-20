@@ -69,6 +69,14 @@ class InventarisController extends Controller
 
     }
 
+    public function fetchIdBarang($id_barang) {
+        $barang = Barang::where('id_barang', $id_barang)
+        ->select('nama_barang')
+        ->first();
+    
+        return response()->json($barang);
+    }
+
     public function update(Request $request, $id_inventaris){
         
         $request->validate([
@@ -97,11 +105,11 @@ class InventarisController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
-    public function barcode()
+    public function barcode($id_ruangan)
     {
 
     
-        $id_ruangan = Ruangan::all();
+        $id_ruangan = Ruangan::find($id_ruangan);
         // dd($id_ruangan);
 
       
@@ -109,17 +117,15 @@ class InventarisController extends Controller
     }
 
  
-    public function AddBarcode(Request $request)
-    {
+    public function AddBarcode(Request $request , $id_ruangan)   {
 
         // dd($request);
             $request->validate([
                 'kode_barang' => 'required',
                 'kondisi_barang' => 'required',
                 'ket_barang' => 'nullable',
-               'id_ruangan' => 'required',
             ]);
-    
+            
             // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
             $id_barang = Barang::where('kode_barang', $request->kode_barang)->first();
             // Pastikan Inventaris ditemukan sebelum melanjutkan
@@ -130,7 +136,7 @@ class InventarisController extends Controller
             
             $inventaris = new Inventaris();
                 $inventaris->id_barang = $id_barang->id_barang;
-                $inventaris->id_ruangan = $request->id_ruangan;
+                $inventaris->id_ruangan = $id_ruangan;
                 $inventaris->kondisi_barang = $request->kondisi_barang;
                 $inventaris->ket_barang = $request->ket_barang; 
                 $inventaris ->save();

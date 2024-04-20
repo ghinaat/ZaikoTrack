@@ -62,6 +62,11 @@ function notificationBeforeDelete(event, el, dt) {
 function notificationBeforeAdd(event, el, dt) {
     event.preventDefault();
 
+    // Get the id_ruangan from the data-id-ruangan attribute of the button element
+    const idRuangan = el.getAttribute('data-id-ruangan');
+
+    console.log('id_ruangan:', idRuangan);
+
     Swal.fire({
         title: 'Pilihan Tambah Data',
         text: 'Pilih cara untuk menambahkan data:',
@@ -71,15 +76,15 @@ function notificationBeforeAdd(event, el, dt) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Dengan Barcode',
         cancelButtonText: 'Tanpa Barcode'
-
     }).then((result) => {
         if (result.isConfirmed) {
-            // Jika pengguna memilih "Dengan Barcode"
-            window.location.href = '/inventaris/barcode'; // Ganti dengan URL halaman yang sesuai
+            // If the user chooses "Dengan Barcode"
+            window.location.href = `/inventaris/barcode/${idRuangan}`; // Navigate to the URL with the id_ruangan
         } else {
-            // Jika pengguna memilih "Tanpa Barcode", tampilkan add modal
+            // If the user chooses "Tanpa Barcode", display the add modal
             showAddModal();
         }
+        // Hide the addModal (if applicable)
         $('#addModal').modal('hide');
     });
 }

@@ -29,15 +29,7 @@ Peminjaman
                                         value="{{ request()->input('tglakhir') }}">
                                 </div>
                                 
-                                <div class="col-md-8 mt-3 mb-3" >
-                                    <label for="id_barang" class="form-label">Pilih Barang:</label>
-                                    <select id="id_barang" name="id_barang" class="form-select">
-                                        <option value="">--Pilih Barang--</option>
-                                        @foreach($barang as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nama_barang }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                               
                                 
                                 <div class="col-md-4 mt-3 ">
                                     <button type="submit" class="btn btn-primary mt-4">Tampilkan</button>
@@ -78,7 +70,7 @@ Peminjaman
                                 $sortedPeminjaman = $peminjaman->sortByDesc('id_peminjaman');
 
                                 @endphp
-                                @foreach($sortedPeminjaman as $key => $peminjaman)
+                                @foreach($peminjaman as $peminjaman)
                                 <tr>
                                     <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>

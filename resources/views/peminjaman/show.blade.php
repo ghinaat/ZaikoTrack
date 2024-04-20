@@ -51,16 +51,20 @@ Peminjaman / List Barang
               <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
                 <div class="col-12">
                   <div class="d-flex flex-column">
-                    @if($peminjaman->id_siswa != 1)
+                    @if($peminjaman->status == 'siswa' )
                     <h6 class="mt-2 text-secondary text-xs">Kelas</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $peminjaman->kelas ?? '' }} {{ $peminjaman->jurusan ?? '' }}
                     </div>
-                    @elseif($peminjaman->id_guru != 1)
+                    @elseif($peminjaman->status == 'guru' )
                     <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $peminjaman->jurusan ?? '' }}
                     </div>
+                    @else
+                    <h6 class="mt-2 text-secondary text-xs">Status</h6>
+                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
+                      {{ $peminjaman->status ?? '' }}
                     @endif              
                   </div>
                 </div>
@@ -125,7 +129,6 @@ Peminjaman / List Barang
     
         <div class="col-12 col-sm-8">
             <div class="card mb-4">
-
                 <div class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">

@@ -20,7 +20,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        try {
+            if (\Schema::hasTable('email_configuration')) {
+                $mailsetting = EmailConfiguration::first();
+                if ($mailsetting) {
 
+                    config(['mail.default' => $mailsetting->protocol]);
+                    config(['mail.mailers.smtp.host' => $mailsetting->host]);
+                    config(['mail.mailers.smtp.port' => $mailsetting->port]);
+                    config(['mail.mailers.smtp.encryption' => $mailsetting->tls]);
+                    config(['mail.mailers.smtp.username' => $mailsetting->username]);
+                    config(['mail.mailers.smtp.password' => $mailsetting->password]);
+                    config(['mail.mailers.form.address' => $mailsetting->email]);
+                    config(['mail.mailers.form.name' => 'si-mase']);
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+
+        
         Gate::define('isTeknisi', function (User $user) {
             return $user->level === 'teknisi';
         });

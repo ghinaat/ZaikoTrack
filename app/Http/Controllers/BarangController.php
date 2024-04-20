@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use App\Models\JenisBarang;
+use App\Models\Notifikasi;
 use App\Models\Inventaris;
 use Endroid\QrCode\QrCode;
 use PDF;
@@ -74,8 +75,21 @@ class BarangController extends Controller
         return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
         }else{
         $barang->save();
+
+        $pengguna = auth()->user();
+
+        $notifikasi = new Notifikasi();
+        $notifikasi->judul = 'Data Barang';
+        $notifikasi->pesan = 'Barang Baru Telah Berhasil Ditambahkan';
+        $notifikasi->is_dibaca = 'tidak_dibaca';
+        $notifikasi->send_email = 'yes';
+        $notifikasi->label = 'info';
+        $notifikasi->link = '/Barang';
+        $notifikasi->id_users = $pengguna->id_users;
+        $notifikasi->save();
+
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
-        }
+
     }
 
     public function generateBarcode($kode_barang)
@@ -99,6 +113,7 @@ class BarangController extends Controller
             // Jika kode barang kosong, kembalikan null
             return null;
         }
+
     }
     public function update(Request $request, $id_barang){
         $request->validate([
