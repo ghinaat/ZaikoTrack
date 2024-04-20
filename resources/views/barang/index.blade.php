@@ -24,11 +24,11 @@ Barang
         <div class="col-12">
             <div class="card mb-2">
                 <div class="card-header pb-0">
-                    {{-- <div class="row"> --}}
+                    <div class="row">
                         <div class="col-md-7 mt-2">
                             <h4 class="text-dark">List Barang</h4>
                         </div>
-                        <div class="nav-wrapper text-end">
+                        <div class="col-lg-5 col-md-5 col-sm-12 text-end">                            
                             <ul class="nav nav-pills nav-fill p-1" role="tablist">
                                 <li class="nav-item" id="option1">
                                     <a class="nav-link mb-0 px-0 py-1 d-flex align-items-center justify-content-center active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
@@ -44,7 +44,7 @@ Barang
                                 </li>
                             </ul>
                         </div>
-                    {{-- </div> --}}
+                    </div>
                 </div>
                 <div id="tableAlatPerlengkapan" class="card-body m-0">
                     <div class="mb-2 d-flex justify-content-between">
@@ -84,12 +84,12 @@ Barang
                                                 <img  src="{{ asset('/storage/barcode/' . $br->qrcode_image) }}" style="width: 80px;">
                                             </a>
                                         </td>
-                                        <td>
-                                            @if($br->inventaris()->exists())
-                                            <span class="badge bg-gradient-success">Sudah</span>
+                                        <td style="text-align: center">
+                                            @if($br->inventaris->isNotEmpty())
+                                                <span class="badge bg-gradient-success">Sudah</span>
                                             @else
-                                            <span class="badge bg-gradient-secondary">Belum</span>                                            
-                                            @endif                                        
+                                                <span class="badge bg-gradient-secondary">Belum</span>
+                                            @endif                                     
                                         </td>
                                         <td>{{$br->jenisbarang->nama_jenis_barang}}</td>
                                         
@@ -375,6 +375,7 @@ Barang
 <script>
 $(document).ready(function() {
     $('#myTable').DataTable({
+        "fixedHeader": true,
         "responsive": true,
         "language": {
             "paginate": {

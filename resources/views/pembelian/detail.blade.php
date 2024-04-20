@@ -89,8 +89,8 @@ Detail Pembelian
               <div class="modal-content">
                   <div class="modal-header">
                       <h5 class="modal-title" id="editModalLabel">Tambah Detail Pemelian</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color: black;"></i>
                       </button>
                   </div>
                   <div class="modal-body">
@@ -160,9 +160,9 @@ Detail Pembelian
               <div class="modal-content">
                   <div class="modal-header">
                       <h5 class="modal-title" id="editModalLabel">Edit Detail Pembelian</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">×</span>
-                      </button>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color: black;"></i>
+                    </button>
                   </div>
                   <div class="modal-body">
                       <form id="addForm" action="{{route('detailpembelian.update',$dp->id_detail_pembelian)}}" method="POST" enctype="multipart/form-data">

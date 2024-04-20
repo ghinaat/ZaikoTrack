@@ -27,6 +27,6 @@ class Barang extends Model
     }
 
     public function inventaris(){
-        return $this->hasMany(Inventaris::class, 'id_inventaris', 'id_inventaris' );
+        return $this->hasMany(Inventaris::class, 'id_barang', 'id_barang' );
     }
 }
