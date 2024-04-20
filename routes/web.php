@@ -92,7 +92,7 @@ Route::delete('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\Peminj
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
 Route::get('/fetch-nama-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchNamaBarang'])->name('peminjaman.fetchNamaBarang');
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
-Route::get('/peminjaman', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
+Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
 
 
 Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');

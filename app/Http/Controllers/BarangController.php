@@ -91,6 +91,7 @@ class BarangController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
 
     }
+}
 
     public function generateBarcode($kode_barang)
     {
