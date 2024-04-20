@@ -27,8 +27,8 @@
                     <tr>
                         <td>{{ $nomorUrut++ }}</td>
                         <td>
-                            @if($pemakaian->id_siswa !== 1) 
-                            {{ $pemakaian->siswa->nama_siswa}}
+                            @if($pemakaian->id_users !== 1) 
+                            {{ $pemakaian->users->name}}
                             @elseif($pemakaian->id_guru !== 1) 
                             {{ $pemakaian->guru->nama_guru}}
                             @elseif($pemakaian->id_karyawan !== 1) 

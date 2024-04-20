@@ -36,11 +36,11 @@ Detail Pemakaian
                   <div class="d-flex flex-column">
                     <h6 class="mt-2 text-secondary text-xs">Nama Lengkap</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
-                      @if($pemakaian->id_siswa != 1)
-                          {{ $pemakaian->siswa->nama_siswa ?? '' }}
-                      @elseif($pemakaian->id_guru != 1)
+                      @if($pemakaian->status == 'siswa')
+                          {{ $pemakaian->users->name ?? '' }}
+                      @elseif($pemakaian->status == 'guru')
                           {{ $pemakaian->guru->nama_guru ?? '' }}
-                      @elseif($pemakaian->id_karyawan != 1)
+                      @elseif($pemakaian->status == 'karyawan')
                           {{ $pemakaian->karyawan->nama_karyawan ?? '' }}
                       @endif
                   </div>
@@ -48,15 +48,16 @@ Detail Pemakaian
                   </div>
                 </div>
               </li>
+              @if($pemakaian->status == 'siswa' && $pemakaian->status == 'guru')
               <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
                 <div class="col-12">
                   <div class="d-flex flex-column">
-                    @if($pemakaian->id_siswa != 1)
+                    @if($pemakaian->status == 'siswa')
                     <h6 class="mt-2 text-secondary text-xs">Kelas</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $pemakaian->kelas ?? '' }} {{ $pemakaian->jurusan ?? '' }}
                     </div>
-                    @elseif($pemakaian->id_guru != 1)
+                    @elseif($pemakaian->status == 'guru')
                     <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $pemakaian->jurusan ?? '' }}
@@ -65,6 +66,7 @@ Detail Pemakaian
                   </div>
                 </div>
               </li>
+              @endif
               <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
                 <div class="col-12">
                   <div class="d-flex flex-column">
@@ -156,9 +158,9 @@ Detail Pemakaian
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Tambah barang pemakaian</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                      <i class="fa fa-close" style="color: black;"></i>
+                  </button>
                 </div>
                 <div class="modal-body">
                   <form id="addFormCart" action="{{route('pemakaian.storeDetail',  ['id_pemakaian' => $pemakaian->id_pemakaian])}}" method="post">
@@ -170,6 +172,7 @@ Detail Pemakaian
                                     <div class="form-group">
                                         <label for="id_barang">Nama Barang</label>
                                         <select class="form-select" name="id_barang" id="id_barang">
+                                          <option value="" selected hidden>-- Pilih Barang --</option>
                                             @foreach($barang as $key => $br)
                                             <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
                                                 {{$br->barang->nama_barang}}
@@ -186,17 +189,20 @@ Detail Pemakaian
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="jumlah_barang">Jumlah Barang</label>
-                                            <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control">
-                                        </div>
+                                      <div class="form-group">
+                                        <label for="id_ruangan">Ruangan</label>
+                                        <select class="form-select" name="id_ruangan" id="id_ruangan">
+                                        </select>
+                                        <small id="stok_info" style="display: none;">Stok: <span id="stok_value"></span></small>
+                                    </div>
+                                    
                                     </div>
                                 </div>
                                 
                             </div>
-                            <div class="form-group mt-2" style="text-align: right;">
+                            <div class="modal-footer mt-2" style="text-align: right;">
                               <button class="btn btn-primary " type="submit" title="Next">Pilih</button>
-                              <button class="btn btn-secondary js-btn-prev" type="button" title="Prev">Batal</button>
+                              <button class="btn btn-danger js-btn-prev" type="button" title="Prev">Batal</button>
                             </div>
                         </div>
                     </div>
@@ -232,10 +238,13 @@ $(document).ready(function() {
     });
 });
 
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
+document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change',
     function() {
         const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
             'select[name=id_ruangan]');
+        const stokInfo = this.closest('.form-group').querySelector('small#stok_info');
+        const stokValue = stokInfo.querySelector('span#stok_value');
+
         const selectedIdRuangan = this.value;
 
         // Fetch id_barang options for the selected id_ruangan
@@ -250,17 +259,25 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
                 data.forEach(option => {
                     const newOption = document.createElement('option');
                     newOption.value = option.ruangan.id_ruangan;
-                    newOption.text =
-                        option.ruangan.nama_ruangan;
+                    newOption.text = option.ruangan.nama_ruangan;
                     id_barangSelect.add(newOption);
                 });
 
                 // Show or hide the id_barang select based on whether options are available
                 id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
                 id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+                // Set the stock information
+                if (data.length > 0) {
+                    stokValue.textContent = data[0].jumlah_barang;
+                    stokInfo.style.display = 'block'; // Show the stock info
+                } else {
+                    stokInfo.style.display = 'none'; // Hide the stock info
+                }
             })
             .catch(error => console.error('Error:', error));
     }));
+
 </script>
 
 

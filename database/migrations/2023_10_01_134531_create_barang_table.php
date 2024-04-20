@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_barang');
             $table->string('merek', 100);
             $table->integer('stok_barang')->nullable();
-            $table->string('kode_barang')->nullable();
+            $table->string('kode_barang')->nullable()->unique();
             $table->string('qrcode_image')->nullable();
             $table->unsignedInteger('id_jenis_barang');
             $table->foreign('id_jenis_barang')->references('id_jenis_barang')->on('jenis_barang')->onDelete('cascade');

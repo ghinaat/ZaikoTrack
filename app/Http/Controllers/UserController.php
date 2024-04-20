@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = User::all();
+        $user = User::all()->except('1');
 
         return view('users.index', [
             'user' => $user,
