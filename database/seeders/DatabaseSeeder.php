@@ -148,32 +148,7 @@ class DatabaseSeeder extends Seeder
             'id_jenis_barang' => '2',
         ]);
 
-        // Inventaris::create([
-        //     'id_inventaris' => '13',
-        //     'id_barang' => '6',
-        //     'id_ruangan' => '1',
-        //     'jumlah_barang' => null,
-        //     'kondisi_barang' => 'lengkap',
-        //     'ket_barang' => ''
-        // ]);
-
-        // // Inventaris::create([
-        //     'id_inventaris' => '11',
-        //     'id_barang' => '5',
-        //     'id_ruangan' => '1',
-        //     'jumlah_barang' => '10',
-        //     'kondisi_barang' => 'lengkap',
-        //     'ket_barang' => ''
-        // ]);
-
-        // Inventaris::create([
-        //     'id_inventaris' => '12',
-        //     'id_barang' => '3',
-        //     'id_ruangan' => '3',
-        //     'jumlah_barang' => '10',
-        //     'kondisi_barang' => 'lengkap',
-        //     'ket_barang' => ''
-        // ]);
+        
         Guru::create([
             'id_guru' => '1',
             'nip' => '0',

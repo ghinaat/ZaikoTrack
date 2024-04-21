@@ -9,8 +9,8 @@ Tambah Pemakaian
 @endsection
 @section('content')
 <div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
             <div class="card mb-2">
                 <div class="card-body m-0">
                     <div class="content">
@@ -34,7 +34,7 @@ Tambah Pemakaian
                                                     <div class="multisteps-form__panel  js-active first" data-animation="scaleIn">
                                                         <h4 class="multisteps-form__title">Data Diri</h4>
                                                         <div class="multisteps-form__content">
-                                                            <div class="form-row mt-2">
+                                                            <div class="form-row mt-3">
                                                                 <div class="form-group">
                                                                     <label for="status">Status</label>
                                                                         <select class="form-select" name="status" id="status">
@@ -42,8 +42,8 @@ Tambah Pemakaian
                                                                                 <option value="guru">Guru</option>
                                                                                 <option value="karyawan">Karyawan</option>
                                                                         </select>                                
-                                                                </div>
-                                                                <div class="form-group " style="display: none;" id="id_siswa">
+                                                                </div>  
+                                                                <div class="form-group " style="display: block;" id="id_siswa">
                                                                     <label for="id_siswa">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_users" id="id_siswa" >
                                                                             <option value="" selected hidden>-- Pilih Nama --</option>
@@ -65,7 +65,7 @@ Tambah Pemakaian
                                                                             @endforeach
                                                                         </select>                                
                                                                 </div>
-                                                                <div class="form-group " tyle="display: none;" id="id_karyawan">
+                                                                <div class="form-group " style="display: none;" id="id_karyawan">
                                                                     <label for="id_karyawan">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan" >
                                                                             <option value="" selected hidden>-- Pilih Nama --</option>
@@ -77,13 +77,13 @@ Tambah Pemakaian
                                                                         </select>                                
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-6 col-sm-6">
+                                                                    <div class="col-6 col-md-6 kelas">
                                                                         <div class="form-group">
                                                                             <label for="kelas" class="mb-0">Kelas</label>
                                                                             <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas" required>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6 col-sm-6">
+                                                                    <div class="col-6 col-md-6 jurusan">
                                                                         <div class="form-group">
                                                                             <label for="jurusan" class="mb-0">Jurusan</label>
                                                                             <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan" required>
@@ -99,7 +99,7 @@ Tambah Pemakaian
                                                                     <input type="date" name="tgl_pakai" id="tgl_pakai" class="multisteps-form__input form-control" ></input>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group mt-2" style="text-align: right;">
+                                                            <div class="form-group mb-0 mt-3" style="text-align: right;">
                                                                 <button class="btn btn-danger js-btn-cancel" type="click" title="Prev">Batal</button>
                                                                 <button class="btn btn-primary js-btn-save" type="click" title="Next">Selnjutnya</button>
                                                             </div>
@@ -215,7 +215,7 @@ Tambah Pemakaian
                                                                         @endforeach
                                                                     </select>                                
                                                             </div>
-                                                            <div class="form-group " tyle="display: none;" id="id_karyawan_update">
+                                                            <div class="form-group " style="display: none;" id="id_karyawan_update">
                                                                 <label for="id_karyawan">Nama Lengkap</label>
                                                                     <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan_upd" >
                                                                         <option value="" selected hidden>-- Pilih Nama --</option>
@@ -227,13 +227,13 @@ Tambah Pemakaian
                                                                     </select>                                
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col-md-6 col-sm-6">
+                                                                <div class="col-6 col-md-6 kelas">
                                                                     <div class="form-group">
                                                                         <label for="kelas" class="mb-0">Kelas</label>
                                                                         <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas_update" required >
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6 col-sm-6">
+                                                                <div class="col-6 col-md-6 jurusan">
                                                                     <div class="form-group">
                                                                         <label for="jurusan" class="mb-0">Jurusan</label>
                                                                         <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan_update" required>
@@ -321,7 +321,7 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
             .catch(error => console.error('Error:', error));
     }));
 
-//untuk select nama berdasarkan status
+// untuk select nama berdasarkan status
     document.querySelectorAll('select[id=status]').forEach(select => select.addEventListener('click', function() {
     const namaSiswaElement = document.querySelector('#id_siswa');
     const namaGuruElement = document.querySelector('#id_guru');
@@ -360,6 +360,48 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
     // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
     jurusanElement.readOnly = (this.value === 'karyawan');
 }));
+
+
+// document.getElementById('status').addEventListener('click', function() {
+//     const selectedStatus = this.value;
+//     const siswaElement = this.parentNode.parentNode.parentNode.querySelector(
+//         '#id_siswa');
+//     const guruElement = this.parentNode.parentNode.parentNode.querySelector(
+//         '#id_guru');
+//     const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
+//         '#id_karyawan');
+
+//     const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
+//         '#kelas');
+//     const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
+//         '#jurusan');
+
+//     // Hide all forms
+//     siswaElement.style.display = 'block';
+//     guruElement.style.display = 'none';
+//     karyawanElement.style.display = 'none';
+//     // NamaElement.style.display = 'block';
+//     jurusanElement.removeAttribute('readonly');
+//     kelasElement.removeAttribute('readonly');
+
+
+//     // Show the selected form
+//     if (selectedStatus === 'siswa') {
+//         siswaElement.style.display = 'block';
+//         // siswaElement.style.display = 'none';
+
+//     } else if (selectedStatus === 'guru') {
+//         guruElement.style.display = 'block';
+//         siswaElement.style.display = 'none';
+//         kelasElement.setAttribute('readonly', 'true');
+//     } else if (selectedStatus === 'karyawan') {
+//         karyawanElement.style.display = 'block';
+//         siswaElement.style.display = 'none';
+//         kelasElement.setAttribute('readonly', 'true');
+//         jurusanElement.setAttribute('readonly', 'true');
+
+//     }
+// });
 
 $(document).ready(function() {
 

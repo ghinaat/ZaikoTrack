@@ -63,7 +63,7 @@ Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianContro
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
-Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
+// Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
 Route::get('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'barcode'])->name('inventaris.barcode');
@@ -114,6 +114,7 @@ Route::delete('/pemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianContro
 
 Route::get('/detailpemakaian/{id_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'showDetail'])->name('pemakaian.showDetail');
 Route::post('/pemakaian/detail', [App\Http\Controllers\PemakaianController::class, 'storeDetail'])->name('pemakaian.storeDetail');
+Route::put('/pemakaian/detail/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'updateDetail'])->name('pemakaian.updateDetail');
 Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
 Route::get('/get-stok-options/{id_ruangan}', [App\Http\Controllers\PemakaianController::class, 'getStokOptions'])->name('pemakaian.getStokOptions');
