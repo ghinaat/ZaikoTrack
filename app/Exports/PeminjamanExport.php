@@ -2,26 +2,61 @@
 
 namespace App\Exports;
 
-use App\Models\Peminjaman;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
 class PeminjamanExport implements FromView
 {
-    protected $peminjaman;
+    protected $peminjamans;
+    protected $id_barang;
+    protected $dataDetail;
+    protected $start_date;
+    protected $end_date;
 
-    public function __construct($peminjaman)
+    public function setPeminjamans($peminjamans)
     {
-        $this->peminjaman = $peminjaman;
+        $this->peminjamans = $peminjamans;
+
+        return $this;
+    }
+
+    
+    public function setBarang($id_barang)
+    {
+        $this->id_barang = $id_barang;
+
+        return $this;
+    }
+
+    public function setDataDetail($dataDetail)
+    {
+        $this->dataDetail = $dataDetail;
+
+        return $this;
+    }
+
+    public function setStartDate($start_date)
+    {
+        $this->start_date = $start_date;
+
+        return $this;
+    }
+
+    public function setEndDate($end_date)
+    {
+        $this->end_date = $end_date;
+
+        return $this;
     }
 
     public function view(): View
     {
-        // dd($this->peminjaman['peminjamanData']);
-
         return view('peminjaman.export', [
-            'peminjaman' => $this->peminjaman,
+            'peminjamans' => $this->peminjamans,
+            'id_barang' => $this->id_barang,
+            'dataDetail' => $this->dataDetail,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
         ]);
     }
 }

@@ -52,7 +52,7 @@ class DetailPeminjamanController extends Controller
             'id_inventaris' => $inventaris->id_inventaris,
             'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
             'status' => 'dipinjam',
-            'tgl_kembali' => $peminjaman->tgl_kembali,
+         
         ]);
         $detailPeminjaman->save();
     
@@ -200,7 +200,7 @@ class DetailPeminjamanController extends Controller
     {
 
         $request->validate([
-            'id_ruangan' => 'required',
+            'id_barang' => 'required',
             'status' => 'required',
             'kondisi_barang_akhir' => 'required',
             'ket_tidak_lengkap_akhir' => 'nullable',
@@ -208,20 +208,15 @@ class DetailPeminjamanController extends Controller
 
         $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
         // dd($detailPeminjaman);
-        $inventaris = Inventaris::where('id_ruangan', $request->input('id_ruangan'))
-        ->where('id_barang', $detailPeminjaman->inventaris->id_barang) ->where('kondisi_barang', $request->input('kondisi_barang_akhir'))
+        $inventaris = Inventaris::where('id_barang', $request->id_barang) 
         ->first();
-
-        
-        if (!$inventaris) {
-            $inventaris = new Inventaris([
-                'id_barang' => $detailPeminjaman->inventaris->id_barang,
-                'id_ruangan' => $request->id_ruangan,
-                'kondisi_barang' => $request->kondisi_barang_akhir,
-                'jumlah_barang' => $detailPeminjaman->jumlah_barang,
-                'ket_barang' => $request->ket_tidak_lengkap_akhir,
-            ]);
-            $inventaris ->save();
+        $existingInventaris = DetailPeminjaman::where('id_detail_peminjaman', '!=', $id_detail_peminjaman)
+        ->whereHas('inventaris', function($query) use ($inventaris) {
+            $query->where('id_inventaris', $inventaris->id_inventaris);
+        })
+        ->first();
+        if ($existingInventaris) {
+            return redirect()->back()->with(['error' => 'An inventaris item with the same Kode Barang already exists.']);
         }
         
         $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
@@ -274,6 +269,8 @@ class DetailPeminjamanController extends Controller
               return redirect()->back()->with('error', 'Kode barang tidak sesuai dengan yang ada di detail peminjaman');
             }
 
+            $peminjaman = Peminjaman::findOrFail($detailPeminjaman->id_peminjaman);
+  
             // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
             $inventaris = Inventaris::whereHas('barang', function ($query) use ($request) {
                 $query->where('kode_barang', $request->kode_barang);
@@ -285,6 +282,7 @@ class DetailPeminjamanController extends Controller
                     'id_ruangan' => $request->id_ruangan,
                     'kondisi_barang' => $request->kondisi_barang_akhir,
                     'ket_barang' => $request->ket_tidak_lengkap_akhir,
+                    
                 ]);
                 $inventaris ->save();
             }
@@ -293,7 +291,8 @@ class DetailPeminjamanController extends Controller
             $detailPeminjaman-> status = 'sudah_dikembalikan';
             $detailPeminjaman->kondisi_barang_akhir = $request->kondisi_barang_akhir;
             $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
-    
+            $detailPeminjaman-> tgl_kembali = $peminjaman ->tgl_kembali;
+
             $detailPeminjaman ->save();
 
                 return redirect()->route('peminjaman.showDetail', ["id_peminjaman" => $id_peminjaman])->with(['success_message' => 'Data telah tersimpan.'
