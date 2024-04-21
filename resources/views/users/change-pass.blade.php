@@ -55,6 +55,18 @@ Profile
                             </span>
                             @enderror
                         </div>
+                         @can('isSiswa')
+                        <div class="mb-3">
+                            <label for="email" class="form-label">NIS</label>
+                            <input type="text" class="form-control @error('nis') is-invalid @enderror"
+                                id="nis" name="nis" value="{{$user->nis}}" >
+                            @error('nis')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        @endcan
                         <div class="mb-3">
                             <label for="old_password" class="form-label">Password Lama</label>
                             <input type="password" class="form-control @error('old_password') is-invalid @enderror"

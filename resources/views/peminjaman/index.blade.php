@@ -1,7 +1,29 @@
 @extends('layouts.demo')
 @section('title', 'List Peminjaan')
 @section('css')
+<style>
+    .form-group {
+  display: flex;
+  flex-direction: column;
+}
 
+.form-label {
+  margin-bottom: 8px;
+}
+
+.form-input-group {
+  display: flex;
+}
+
+.form-input-text1{
+  width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+  margin-right: 16px;
+}
+.form-input-text{
+  width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+}
+
+</style>
 @endsection
 @section('breadcrumb-name')
 Peminjaman
@@ -16,27 +38,42 @@ Peminjaman
                 </div>
                 <div class="card-body m-0">
                     <div class="row align-items-end">
-                        <div class="col-md-10">
+                      
                             <form action="{{ route('peminjaman.index') }}" method="GET" class="row align-items-end">
-                                <div class="col-md-6">
+                               <div class="form-group">
+                                    <label for="id_barang" class="form-label">Barang:</label>
+                                    <select id="id_barang" name="id_barang"
+                                        class="form-select @error('id_barang') is-invalid @enderror">
+                                        <option value="0" @if(session('selected_id_barang', 0)==0) selected @endif>All
+                                        </option>
+                                        @foreach ($barang as $barang)
+                                        <option value="{{ $barang->id_barang }}" @if($barang->id_barang ==
+                                            session('selected_id_barang')) selected @endif>{{ $barang->nama_barang }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 col-lg-3">
+                                    <div class="form-group">
                                     <label for="tglawal" class="form-label">Tanggal Awal:</label>
-                                    <input type="date" id="tglawal" name="tglawal" required class="form-control"
+                                    <input type="date" id="tglawal" name="tglawal" class="form-control"
                                         value="{{ request()->input('tglawal') }}">
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4 col-lg-3">
+                                    <div class="form-group">
                                     <label for="tglakhir" class="form-label">Tanggal Akhir:</label>
-                                    <input type="date" id="tglakhir" name="tglakhir" required class="form-control"
+                                    <input type="date" id="tglakhir" name="tglakhir" class="form-control"
                                         value="{{ request()->input('tglakhir') }}">
+                                        </div>
                                 </div>
-                                
-                               
-                                
-                                <div class="col-md-4 mt-3 ">
-                                    <button type="submit" class="btn btn-primary mt-4">Tampilkan</button>
+                
+                                <div class="col-md-4 col-lg-3 mt-md-0 mt-3">
+                                    <button type="submit" class="btn btn-primary mt-md-4">Tampilkan</button>
                                 </div>
                             </form>
-                        </div>
+                        
                     </div>
+                
                     <div class="row">
                         <div class="d-flex">
                             <div class="col-4 col-md-6 mb-2">
@@ -45,8 +82,10 @@ Peminjaman
                             </div>
                             <div class="col-8 col-md-6 mb-2">
                                 <div class="d-flex justify-content-md-end">
-                                    <a href="{{ route('peminjaman.export', ['tglawal' => request()->input('tglawal'), 'tglakhir' => request()->input('tglakhir')]) }}"
-                                        class="btn btn-danger">Export Data</a>
+                                    <a href="{{ route('peminjaman.export', [
+                                        'tglawal' => request()->input('tglawal'),
+                                        'tglakhir' => request()->input('tglakhir'),
+                                        'id_barang' => request()->input('id_barang') ]) }}" class="btn btn-danger">Export Data</a>
                                 </div>
                             </div>
                         </div>
@@ -66,11 +105,8 @@ Peminjaman
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                $sortedPeminjaman = $peminjaman->sortByDesc('id_peminjaman');
-
-                                @endphp
-                                @foreach($sortedPeminjaman as $key => $peminjaman)
+                              
+                                @foreach($peminjaman as $key => $peminjaman)
                                 <tr>
                                     <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>
@@ -113,7 +149,7 @@ Peminjaman
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel">Pengembalian
+                                                    <h5 class="modal-title" id="editModalLabel">Edit
                                                         Barang</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -346,9 +382,9 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
     const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
         '#karyawanForm');
 
-    const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
+    const kelasElement = this.parentNode.parentNode.querySelector(
         '#kelas');
-    const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
+    const jurusanElement = this.parentNode.parentNode.querySelector(
         '#jurusan');
 
     // Hide all forms
