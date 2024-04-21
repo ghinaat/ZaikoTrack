@@ -130,15 +130,6 @@ class PemakaianController extends Controller
         return response()->json($ruanganOptions);
     }
 
-    public function getStokOptions($id_ruangan)
-    {
-        // Ambil stok berdasarkan ID ruangan
-        $stok = Inventaris::where('id_ruangan', $id_ruangan)->sum('jumlah_barang');
-    
-        // Kembalikan stok dalam format JSON
-        return response()->json(['stok' => $stok]);
-    }    
-    
     public function getPemakaianData($id_pemakaian)
     {
         
@@ -166,11 +157,37 @@ class PemakaianController extends Controller
             'jumlah_barang' => 'required',
         ]);
         $id_inventaris = Inventaris::where('id_barang', $request->id_barang)->where('id_ruangan', $request->id_ruangan)->with(['barang'])->first();
+        
+      
+        if (!$id_inventaris || $id_inventaris->jumlah_barang < $request->jumlah_barang || $id_inventaris->jumlah_barang - $request->jumlah_barang < 0) {
+            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
+        }
+
         $detailPemakaian = new DetailPemakaian();
         $detailPemakaian->id_pemakaian = $request->id_pemakaian;
         $detailPemakaian->id_inventaris = $id_inventaris->id_inventaris;
         $detailPemakaian->jumlah_barang = $request->jumlah_barang;
         $detailPemakaian->save();
+
+        $barang = Barang::find($request->id_barang);
+        $totalQuantity = Inventaris::where('id_barang', $request->id_barang)
+                            ->sum('jumlah_barang');
+        $TotalStok = $barang->stok_barang + $totalQuantity;
+        
+        $pengguna = User::where('level', 'teknisi')->get();
+
+
+        if ($TotalStok < 3) {
+            $notifikasi = new Notifikasi();
+            $notifikasi->judul = 'Stok Barang';
+            $notifikasi->pesan = 'Stok barang ' . $barang->nama_barang . ' kurang dari 3.';
+            $notifikasi->is_dibaca = 'tidak_dibaca';
+            $notifikasi->send_email = 'yes';
+            $notifikasi->label = 'info';
+            $notifikasi->link = '/Barang';
+            $notifikasi->id_users = $pengguna->id_users; // Assuming $pengguna is defined somewhere
+            $notifikasi->save();
+        }
         
         if($request->ajax()){
             $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPemakaian->id_inventaris)->first();
@@ -189,6 +206,7 @@ class PemakaianController extends Controller
     }
 
     public function store(Request $request){
+        // dd($request);
         $request->validate([
             'tgl_pakai' => 'required',
             'id_users' => 'nullable',
@@ -198,30 +216,29 @@ class PemakaianController extends Controller
             'kelas' => 'nullable',
             'jurusan' => 'nullable',
             'keterangan_pemakaian' => 'nullable'
+
         ]);
-    
+        // dd($request);
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
+
+            $pemakaian = new Pemakaian();
+            $pemakaian->tgl_pakai = $request->tgl_pakai;
+            $pemakaian->id_users = $id_users;
+            $pemakaian->id_guru = $id_guru;
+            $pemakaian->id_karyawan = $id_karyawan;
+            $pemakaian->status = $request->status;
+            $pemakaian->kelas = $request->kelas;
+            $pemakaian->jurusan = $request->jurusan;
+            $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
+            $pemakaian->save();
         
-        $pemakaian = new Pemakaian();
-        $pemakaian->tgl_pakai = $request->tgl_pakai;
-        $pemakaian->id_users = $id_users;
-        $pemakaian->id_guru = $id_guru;
-        $pemakaian->id_karyawan = $id_karyawan;
-        $pemakaian->status = $request->status;
-        $pemakaian->kelas = $request->kelas;
-        $pemakaian->jurusan = $request->jurusan;
-        $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
-        $pemakaian->save();
-        
-        if (request()->ajax()) {
-            return response()->json(['id_pemakaian' =>  $pemakaian->id_pemakaian, 'message' => 'Peminjaman berhasil disimpan']);
-        } else {
-            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
-        }
+            return response()->json([
+                'id_pemakaian' => $pemakaian->id_pemakaian,
+            ]);
     }
-        
+    
 
     public function update(Request $request){
         // dd($request);
@@ -305,7 +322,7 @@ class PemakaianController extends Controller
             }
         }
 
-        return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
+        // return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
 
     }
 

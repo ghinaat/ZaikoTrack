@@ -41,7 +41,14 @@ class InventarisController extends Controller
         ->first();
 
     if ($existingInventaris) {
-        $existingInventaris->jumlah_barang = $existingInventaris->jumlah_barang + $request->jumlah_barang;        $existingInventaris->ket_barang = $request->ket_barang;
+        $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
+
+        if (!$stokBarang || $stokBarang->stok_barang < ($existingInventaris->jumlah_barang + $request->jumlah_barang)) {
+            return redirect()->back()->with(['error' => 'Jumlah barang melebihi stok barang yang tersedia.']);
+        }
+
+        $existingInventaris->jumlah_barang = $existingInventaris->jumlah_barang + $request->jumlah_barang;        
+        $existingInventaris->ket_barang = $request->ket_barang;
         $existingInventaris->save();
 
         return redirect()->back()->with(['success_message' => 'Data telah diperbarui.']);
@@ -49,7 +56,7 @@ class InventarisController extends Controller
 
     $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
 
-    if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang) {
+    if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang || $stokBarang->stok_barang - $request->jumlah_barang < 0) {
         return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
     }
  
@@ -91,7 +98,7 @@ class InventarisController extends Controller
 
         $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
 
-        if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang) {
+        if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang || $stokBarang->stok_barang - $request->jumlah_barang < 0) {
             return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
         }
 
@@ -144,6 +151,8 @@ class InventarisController extends Controller
             if (!$id_barang) {
                 return redirect()->back()->with(['error' => 'Data barang sudah diinventarisasikan.']);
             }    
+
+            
             
             $inventaris = new Inventaris();
                 $inventaris->id_barang = $id_barang->id_barang;
