@@ -142,8 +142,8 @@ Barang
                                         <td>{{$key+1}}</td>
                                         <td>{{$br->nama_barang}}</td>
                                         <td>{{$br->merek}}</td>
+                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>   
                                         <td>{{$br->stok_barang}}</td>
-                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
                                         <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
                                         {{-- <td>{{$br->jenisbarang->nama_jenis_barang}}</td> --}}
                                         <td>
@@ -338,8 +338,8 @@ Barang
                         <label for="jenis_barang">Jenis Barang</label>
                         <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
                             @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
-                                id_jenis_barang)selected @endif>
+                            <option value="{{$jb->id_jenis_barang}}" @if($jb->id_jenis_barang ==
+                                old('id_jenis_barang', $jb->id_jenis_barang) ) selected @endif>
                                 {{$jb->nama_jenis_barang}}
                             </option>
                             @endforeach

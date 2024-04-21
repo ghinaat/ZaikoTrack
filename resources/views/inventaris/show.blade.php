@@ -336,7 +336,6 @@ Inventaris / List Barang
                              old('id_barang', $b->id_barang) ) selected @endif>
                                 {{ $b ->nama_barang }}</option>
                             @endforeach
-                         
                         </select>
                         @error('id_barang')
                         <div class="invalid-feedback">
