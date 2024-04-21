@@ -152,76 +152,6 @@ Detail Pembelian
       </div>
       {{-- Close --}}
 
-      {{-- Edit odal --}}
-      @foreach($detailPembelian as $key =>$dp)
-    
-      <div class="modal fade" id="editModal{{$dp->id_detail_pembelian}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$dp->id_detail_pembelian}}" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="editModalLabel">Edit Detail Pembelian</h5>
-                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-close" style="color: black;"></i>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <form id="addForm" action="{{route('detailpembelian.update',$dp->id_detail_pembelian)}}" method="POST" enctype="multipart/form-data">
-                          @csrf
-                          @method('PUT')
-                          <input type="hidden" id="id_pembelian" name="id_pembelian" value="{{old('id_pembelian', $pembelian->id_pembelian)}}">
-                          <div class="form-group" >
-                            <label for="jenis_barang">Jenis Barang</label>
-                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang_update" >
-                              <option value="1" >Alat dan Perlengkapan</option>
-                              <option value="3" >Bahan Praktik</option>
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="alatPerlengkapan_update">
-                            <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($selectedalatPerlengkapan as $key => $br)
-                                <option value="{{$br->id_barang }}" @if( $dp->id_barang == $br->id_barang || 
-                                  old('id_barang_perlengkapans') == $br->id_barang)selected @endif>
-                                  {{$br->nama_barang}} - {{$br->kode_barang}}
-                                </option>  
-                              @endforeach
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="bahanPraktik_update">
-                            <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang_bahan" id="id_barang_bahan_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($bahanPraktik as $key => $br)
-                                <option value="{{$br->id_barang }}" @if($dp->id_barang == $br->id_barang || 
-                                  old('id_barang_bahan') == $br->id_barang)selected @endif>
-                                  {{$br->nama_barang}}
-                                </option>  
-                              @endforeach
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="jumlah_barang_update">
-                              <label for="jumlah_barang">Jumlah Barang</label>
-                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
-                                value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
-                          </div>
-                          <div class="form-group">
-                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
-                              <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
-                              value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
-                          </div>
-                          <div class="modal-footer">
-                              <button type="submit" class="btn btn-primary">Simpan</button>
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-      @endforeach
-      {{-- {{close}}       --}}
-
         <div class="col-md-5 mt-4">
             <div class="card h-20 mb-4">
             <div class="card-header pb-0 px-3">
@@ -349,6 +279,146 @@ Detail Pembelian
         </div>
       </div>
     </div>
+
+    @foreach($detailPembelian as $key => $dp)
+<div class="modal fade" id="editModal{{$dp->id_detail_pembelian}}" tabindex="-1" role="dialog"
+    aria-labelledby="editModalLabel{{$dp->id_detail_pembelian}}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+              <form id="addForm" action="{{route('detailpembelian.update', $dp->id_detail_pembelian)}}" method="POST"
+                enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="id_pembelian" name="id_pembelian" value="{{old('id_pembelian', $pembelian->id_pembelian)}}">
+                          <div class="form-group" >
+                            <label for="jenis_barang">Jenis Barang</label>
+                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang_update" >
+                              <option value="1" >Alat dan Perlengkapan</option>
+                              <option value="3" >Bahan Praktik</option>
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="alatPerlengkapan_update">
+                            <label for="id_barang">Nama Barang</label>
+                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update" >
+                              <option value="" hidden>-- Pilih Nama Barang --</option>
+                              @foreach($selectedalatPerlengkapan as $key => $br)
+                                <option value="{{$br->id_barang }}" @if( $dp->id_barang == $br->id_barang || 
+                                  old('id_barang_perlengkapans') == $br->id_barang)selected @endif>
+                                  {{$br->nama_barang}} - {{$br->kode_barang}}
+                                </option>  
+                              @endforeach
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="bahanPraktik_update">
+                            <label for="id_barang">Nama Barang</label>
+                            <select class="form-select" name="id_barang_bahan" id="id_barang_bahan_update" >
+                              <option value="" hidden>-- Pilih Nama Barang --</option>
+                              @foreach($bahanPraktik as $key => $br)
+                                <option value="{{$br->id_barang }}" @if($dp->id_barang == $br->id_barang || 
+                                  old('id_barang_bahan') == $br->id_barang)selected @endif>
+                                  {{$br->nama_barang}}
+                                </option>  
+                              @endforeach
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="jumlah_barang_update">
+                              <label for="jumlah_barang">Jumlah Barang</label>
+                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
+                                value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
+                              <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
+                              value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Simpan</button>
+                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                          </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+      {{-- Edit Modal --}}
+      {{-- @foreach($detailPembelian as $key =>$dp)
+      <div class="modal fade" id="editModal{{$dp->id_detail_pembelian}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$dp->id_detail_pembelian}}" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="editModalLabel">Edit Detail Pembelian</h5>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color: black;"></i>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="addForm" action="{{route('detailpembelian.update',$dp->id_detail_pembelian)}}" method="POST" enctype="multipart/form-data">
+                          @csrf
+                          @method('PUT')
+                          <input type="hidden" id="id_pembelian" name="id_pembelian" value="{{old('id_pembelian', $pembelian->id_pembelian)}}">
+                          <div class="form-group" >
+                            <label for="jenis_barang">Jenis Barang</label>
+                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang_update" >
+                              <option value="1" >Alat dan Perlengkapan</option>
+                              <option value="3" >Bahan Praktik</option>
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="alatPerlengkapan_update">
+                            <label for="id_barang">Nama Barang</label>
+                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update" >
+                              <option value="" hidden>-- Pilih Nama Barang --</option>
+                              @foreach($selectedalatPerlengkapan as $key => $br)
+                                <option value="{{$br->id_barang }}" @if( $dp->id_barang == $br->id_barang || 
+                                  old('id_barang_perlengkapans') == $br->id_barang)selected @endif>
+                                  {{$br->nama_barang}} - {{$br->kode_barang}}
+                                </option>  
+                              @endforeach
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="bahanPraktik_update">
+                            <label for="id_barang">Nama Barang</label>
+                            <select class="form-select" name="id_barang_bahan" id="id_barang_bahan_update" >
+                              <option value="" hidden>-- Pilih Nama Barang --</option>
+                              @foreach($bahanPraktik as $key => $br)
+                                <option value="{{$br->id_barang }}" @if($dp->id_barang == $br->id_barang || 
+                                  old('id_barang_bahan') == $br->id_barang)selected @endif>
+                                  {{$br->nama_barang}}
+                                </option>  
+                              @endforeach
+                            </select> 
+                          </div>
+                          <div class="form-group" style="display: ;" id="jumlah_barang_update">
+                              <label for="jumlah_barang">Jumlah Barang</label>
+                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
+                                value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
+                              <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
+                              value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Simpan</button>
+                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      @endforeach --}}
+</div>
+
+      {{-- {{close}}       --}}
 
 
 

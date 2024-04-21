@@ -89,7 +89,7 @@ class PemakaianController extends Controller
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
             
-
+        // dd($detailPemakaians);
         return view('pemakaian.show',[
             'detailpemakaian' => $detailPemakaians,
             'pemakaian' => $pemakaian,
@@ -160,7 +160,6 @@ class PemakaianController extends Controller
         $detailPemakaian = new DetailPemakaian();
         $detailPemakaian->id_pemakaian = $request->id_pemakaian;
         $detailPemakaian->id_inventaris = $id_inventaris->id_inventaris;
-        $detailPemakaian->jumlah_barang = $request->jumlah_barang;
         $detailPemakaian->jumlah_barang = $request->jumlah_barang;
         $detailPemakaian->save();
         
@@ -266,6 +265,24 @@ class PemakaianController extends Controller
             }
     }
 
+    public function updateDetail(Request $request, $id_detail_pemakaian){
+        $request->validate([
+            'id_barang' => 'required',
+            'id_ruangan' => 'required',
+            'jumlah_barang' => 'required',
+        ]);
+        dd($request);
+
+        $Idinventaris = Inventaris::where('id_barang', $request->id_barang)->where('id_ruangan', $request->id_ruangan)->with(['barang'])->first();
+        $detailPemakaian = DetailPemakaian::find($request->id_detail_pemakaian);
+        $detailPemakaian->id_pemakaian = $request->id_pemakaian;
+        $detailPemakaian->id_inventaris = $Idinventaris->id_inventaris;
+        $detailPemakaian->jumlah_barang = $request->jumlah_barang;
+        $detailPemakaian->save();
+        
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
+        
+    }
     public function destroy($id_pemakaian){
         $pemakaian = Pemakaian::find($id_pemakaian);
         if ($pemakaian) {

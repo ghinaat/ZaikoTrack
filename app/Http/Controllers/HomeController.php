@@ -44,10 +44,12 @@ class HomeController extends Controller
         // dd($jadwalKembali);
         $user = Auth::user();
         if ($user->level == 'siswa') {
-            $jadwals = $user->peminjaman()->with('detailPeminjaman.inventaris.barang')->get();
+            $jadwals = $user->peminjaman()->with(['detailPeminjaman.inventarisis.barang'])->get();
         } else {
             $jadwals = $jadwalKembali->groupBy('id_peminjaman');
         }
+
+        // dd($jadwals);
         return view('home',[
             'inventaris' => $inventaris,
             'peminjaman' => $peminjaman,
@@ -56,7 +58,8 @@ class HomeController extends Controller
             'perlengkapan' => $perlengkapan,
             'alatPraktik' => $alatPraktik,
             'bahanPraktik' => $bahanPraktik,
-            'jadwals'=> $jadwals
+            'jadwals'=> $jadwals,
+            'user' => $user,
         ]);
     }
 }

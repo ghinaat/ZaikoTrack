@@ -20,6 +20,10 @@ class DetailPeminjaman extends Model
     {
         return $this->belongsTo(Inventaris::class, 'id_inventaris', 'id_inventaris');
     }
+    public function inventarisis()
+    {
+        return $this->hasMany(Inventaris::class, 'id_inventaris', 'id_inventaris');
+    }
     
     public function peminjaman()
     {

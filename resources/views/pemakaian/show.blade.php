@@ -48,21 +48,25 @@ Detail Pemakaian
                   </div>
                 </div>
               </li>
-              @if($pemakaian->status == 'siswa' && $pemakaian->status == 'guru')
+              @if($pemakaian->status == 'siswa')
               <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
                 <div class="col-12">
                   <div class="d-flex flex-column">
-                    @if($pemakaian->status == 'siswa')
                     <h6 class="mt-2 text-secondary text-xs">Kelas</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $pemakaian->kelas ?? '' }} {{ $pemakaian->jurusan ?? '' }}
                     </div>
-                    @elseif($pemakaian->status == 'guru')
+                  </div>
+                </div>
+              </li>
+              @elseif($pemakaian->status == 'guru')
+              <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
+                <div class="col-12">
+                  <div class="d-flex flex-column">
                     <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $pemakaian->jurusan ?? '' }}
                     </div>
-                    @endif              
                   </div>
                 </div>
               </li>
@@ -121,18 +125,22 @@ Detail Pemakaian
                               $groupedDetails = $detailpemakaian->groupBy('id_inventaris');
                           @endphp
                       
-                          @foreach($groupedDetails as $id_inventaris => $details)
+                          @foreach($detailpemakaian as $key => $dp)
                               @php
-                                  $totalJumlahBarang = $details->sum('jumlah_barang');
+                                  $totalJumlahBarang = $dp->sum('jumlah_barang');
                               @endphp
                       
                               <tr>
-                                  <td>{{$loop->iteration}}</td>
-                                  <td>{{$details[0]->inventaris->barang->nama_barang}}</td>
-                                  <td>{{$details[0]->inventaris->ruangan->nama_ruangan}}</td>
+                                  <td>{{$key+1}}</td>
+                                  <td>{{$dp->inventaris->barang->nama_barang}}</td>
+                                  <td>{{$dp->inventaris->ruangan->nama_ruangan}}</td>
                                   <td>{{$totalJumlahBarang}}</td>
                                   <td>
-                                      <a href="{{ route('pemakaian.destroyDetail', $details[0]->id_pemakaian) }}" onclick="notificationBeforeDelete(event, this, {{$loop->iteration}})" class="btn btn-danger btn-xs mx-1">
+                                    <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pemakaian}}"
+                                      data-id="{{$dp->id_detail_pemakaian}}">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                      <a href="{{ route('pemakaian.destroyDetail', $dp->id_detail_pemakaian) }}" onclick="notificationBeforeDelete(event, this, {{$loop->iteration}})" class="btn btn-danger btn-xs mx-1">
                                           <i class="fa fa-trash"></i>
                                       </a>
                                   </td>
@@ -211,6 +219,62 @@ Detail Pemakaian
             </div>
         </div>
       </div>
+
+      @foreach($detailpemakaian as $key => $dp)
+      <div class="modal fade" id="editModal{{$dp->id_detail_pemakaian}}" tabindex="-1" role="dialog"
+          aria-labelledby="editModalLabel{{$dp->id_detail_pemakaian}}" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="editModalLabel">Edit Barang Pemakaian</h5>
+                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                          <i class="fa fa-close" style="color: black;"></i>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="addForm" action="{{route('pemakaian.updateDetail', $dp->id_detail_pemakaian)}}" method="POST"
+                      enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                          <div class="form-group">
+                            <label for="id_barang">Nama Barang</label>
+                            <select class="form-select" name="id_barang" id="id_barang">
+                                @foreach($barang as $key => $br)
+                                <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                    {{$br->barang->nama_barang}}
+                                </option>
+                                @endforeach
+                            </select>                                
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="id_ruangan">Ruangan</label>
+                                    <select class="form-select" name="id_ruangan" id="id_ruangan">
+                                        
+                                    </select>                                
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                              <div class="form-group">
+                                  <label for="jumlah_barang">Jumlah Barang</label>
+                                  <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" >
+                              </div>
+                            </div>
+                          </div>
+                            </div>
+                              <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Simpan</button>
+                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                          </div>
+                      </div>
+                  </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+      @endforeach
+
   </div>
 </div>
 

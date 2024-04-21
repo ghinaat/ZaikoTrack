@@ -175,11 +175,11 @@ class DatabaseSeeder extends Seeder
             'ket_barang' => ''
         ]);
 
-        Siswa::create([
-            'id_siswa' => '1',
-            'nama_siswa' => '-',
-            'nis' => '0'
-        ]);
+        // Siswa::create([
+        //     'id_siswa' => '1',
+        //     'nama_siswa' => '-',
+        //     'nis' => '0'
+        // ]);
 
         Guru::create([
             'id_guru' => '1',
@@ -198,7 +198,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Inventaris::factory(10)->create();
         // \App\Models\Peminjaman::factory(10)->create();
         // \App\Models\DetailPeminjaman::factory(10)->create();
-        \App\Models\Siswa::factory(10)->create();
+        // \App\Models\Siswa::factory(10)->create();
         \App\Models\Karyawan::factory(10)->create();
         \App\Models\Guru::factory(10)->create();
 

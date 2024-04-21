@@ -2,7 +2,7 @@
 @section('title', 'Home')
 @section('css')
  <link rel="stylesheet" href="{{asset('css\home.css')}}"> 
- <link rel="stylesheet" href="{{asset('css\card.css')}}"> 
+ {{-- <link rel="stylesheet" href="{{asset('css\card.css')}}">  --}}
 <style>
     .truncate {
         white-space: nowrap;
@@ -162,13 +162,13 @@ Home
                         </div>
                 </div>
                 @if ($jadwals->isEmpty())    
-                <div class="card-body pt-2 p-3">
+                <div class="card-body pt-4 p-3">
                     <div class="container" style="height:100px;" >
                     <ul class="list-group">
                       <li class="list-group-item border-0 p-3 bg-gray-100 border-radius-lg">
                         <div class="d-flex flex-column">
                           <h6 class="mb-3 text-sm"></h6>
-                          <p class="text-center">Tidak ada barang yang dipinjam.</p>                   
+                          <p class="text-center">No data available</p>                   
                         </div>
                       </li>
                     </ul>
@@ -299,16 +299,52 @@ Home
         </div>
     </div>
     <footer class="footer pt-3  ">
-       
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+                <div class="col-lg-6 mb-lg-0 mb-4">
+                    <div class="copyright text-center text-sm text-muted text-lg-start">
+                        © <script>
+                        document.write(new Date().getFullYear())
+                        </script>,
+                        made with <i class="fa fa-heart"></i> by
+                        <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
+                        for a better web.
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative
+                                Tim</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted"
+                                target="_blank">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/blog" class="nav-link text-muted"
+                                target="_blank">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted"
+                                target="_blank">License</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </footer>
 </div>
 @endcan
 
+
+@can ('isSiswa')
 <div class="container-fluid ">
     <div class="card">
         <div class="row align-items-center">
                 <div class="col-12 col-md-8 welcome-card">
-                    <h3>Welcome Name!</h3>
+                    <h3>Welcome {{ implode(' ', array_slice(explode(' ', $user->name), 0, 2)) }}!</h3>
+
                     <p style="text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic dolorem autem ab at rerum eumsit? Delectus enim animi id aliquam porro!</p>
                     <a href="{{ route('barang.index') }}" class="btn bg-gradient-primary btn-sm text-sm">Lihat Barang</a>
                 </div>
@@ -338,7 +374,7 @@ Home
                     </svg>
                 </div>
                 <h5 class="mt-3 mb-0">Peminjaman</h5>
-                <a href="{{route('peminjaman.create')}}" class=" btn btn-link btn-sm mb-0">Klik Disini</a>
+                <a href="{{route('peminjaman.barcode')}}" class=" btn btn-link btn-sm mb-0">Klik Disini</a>
             </div>
         </div>
         
@@ -362,116 +398,85 @@ Home
 </div>
 <div class="container-fluid py-4">
     <div class="riwayat-pinjam">
-        <div class="header">
+        <div class="header mb-2"> 
             <h6>Riwayat Peminjaman</h6>
         </div>
         
         <div class="body mt-2">
-            @foreach($jadwals as $key => $jw)
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="text center" style="margin-left: 1rem;">
-                                        <div class="icon-history text-lg justify-content-center" style="background-color: #2dce89">
-                                            <i class="fa-regular fa-clock" style="color: #ffffff"></i>
-                                        </div>
-                                        
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <div class="ms-4">
-                                            <p class="text-sm mb-0 truncate" style="max-width: 120px;"> <!-- Menerapkan gaya langsung -->
-                                           {{-- {{$jw->detailPeminjaman->inventaris->barang->nama_barang}} --}}
-                                           nama barang
-                                            </p>
-                                        </div>                                
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">kode barang</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl pinjam</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl kembali</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl kembali</p>
-                                    </div>
-                                </td>
-                                <td>  
-                                    <a href="{{}}" class="btn btn-link btn-icon-only btn-rounded btn-md text-dark icon-move-right my-auto">
-                                        
-                                        <i class="ni ni-bold-right" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="text center" style="margin-left: 1rem;">
-                                        <div class="icon-history text-lg justify-content-center" style="background-color: #2dce89">
-                                            <i class="fa-regular fa-clock" style="color: #ffffff"></i>
-                                        </div>
-                                        
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <div class="ms-4">
-                                            <p class="text-sm mb-0 truncate" style="max-width: 120px;"> <!-- Menerapkan gaya langsung -->
-                                           {{-- {{$jw->detailPeminjaman->inventaris->barang->nama_barang}} --}}
-                                           nama barang
-                                            </p>
-                                        </div>                                
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">kode barang</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl pinjam</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl kembali</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <p class="text-sm mb-0">tgl kembali</p>
-                                    </div>
-                                </td>
-                                <td>  
-                                    <a class="btn btn-link btn-icon-only btn-rounded btn-md text-dark icon-move-right my-auto">
-                                        
-                                        <i class="ni ni-bold-right" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            @if($jadwals->isNotEmpty())
+            @foreach ($jadwals as $jadwal)
+                @foreach ($jadwal->detailPeminjaman as $detailPeminjaman)
+                    @foreach ($detailPeminjaman->inventarisis as $inventaris)
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table align-items-center mb-0 px-2">
+                                <tbody>
+                                    <tr>
+                                        <td class="w-25">
+                                            <div class="d-flex align-items-center" style="margin-left: 20px;">
+                                                @if($detailPeminjaman->status == 'dipinjam')
+                                                <div class="icon-history text-lg justify-content-center" style="background-color: #2dce89">
+                                                    <i class="fa-regular fa-clock" style="color: #ffffff"></i>
+                                                </div>      
+                                                @elseif($detailPeminjaman->status == 'sudah_dikembalikan')
+                                                <div class="icon-history text-lg justify-content-center" style="background-color: #5e72e4;">
+                                                    <i class="fa-solid fa-circle-check" style="color: #ffffff"></i>
+                                                </div>    
+                                                @elseif($detailPeminjaman->status == 'dipinjam' && strtotime($jadwal->tgl_pinjam) > strtotime($jadwal->tgl_kembali))
+                                                <div class="icon-history text-lg justify-content-center" style="background-color: #f5365c">
+                                                    <i class="fa-solid fa-triangle-exclamation" style="color: #ffffff"></i>
+                                                </div>    
+                                                @endif                                      
+                                                <div class="ms-4">
+                                                    <p class="text-sm mb-0"> <!-- Menerapkan gaya langsung -->
+                                                        {{$inventaris->barang->nama_barang}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <p class="text-sm mb-0">{{$inventaris->barang->kode_barang}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <p class="text-sm mb-0">{{\Carbon\Carbon::parse($jadwal->tgl_pinjam)->format('d M Y')}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <p class="text-sm mb-0">{{\Carbon\Carbon::parse($jadwal->tgl_kembali)->format('d M Y')}}</p>
+                                            </div>
+                                        </td>
+                                        <td>  
+                                            <a href="{{ route('peminjaman.showDetail', $detailPeminjaman->id_detail_peminjaman)}}" class="btn btn-link btn-icon-only btn-rounded btn-md text-dark icon-move-right my-auto">
+                                                
+                                                <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endforeach
+                @endforeach
             @endforeach
+            @else
+            <div class="card">
+                {{-- <div class="container" style="height:100px;" > --}}
+                {{-- <ul class="list-group"> --}}
+                  <li class="list-group-item border-0 p-3 bg-gray-200 border-radius-lg">
+                      <p class="text-center text-sm mb-0">Tidak ada barang yang dipinjam.</p>                   
+                  </li>
+                {{-- </ul> --}}
+              </div>
+            @endif
         </div>
     </div>
 </div>
+@endcan
 {{-- 
 <div class="container">
     <div class="row">

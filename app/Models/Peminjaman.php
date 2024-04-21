@@ -12,8 +12,9 @@ class Peminjaman extends Model
 
     protected $primaryKey = 'id_peminjaman';
 
-    protected $date = ['tgl_pinjam']
+    protected $date = ['tgl_pinjam', 'tgl_kembali']
     ;
+    protected $guarded = ['id_peminjaman'];    
 
     public function inventaris()
     {
@@ -38,5 +39,5 @@ class Peminjaman extends Model
         return $this->belongsTo(Guru::class, 'id_guru', 'id_guru');
     }
 
-    protected $guarded = ['id_peminjaman'];
+   
 }

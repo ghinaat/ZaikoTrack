@@ -15,7 +15,6 @@ body a {
 }
 
 .card{
-  width: 70%;
   margin: 0 auto 50px;
   box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2),
   0px 10px 15px 0px rgba(0, 0, 0, 0.15);
@@ -209,4 +208,14 @@ body a {
   transition-timing-function: linear;
   transition-delay: 0s;
   transform: scale(1);
+}
+
+@media (max-width: 576px) {
+  .kelas{
+    padding-right: 8px;
+  }
+
+  .jurusan{
+    padding-left: 8px;
+  }
 }
