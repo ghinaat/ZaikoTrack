@@ -130,6 +130,15 @@ class PemakaianController extends Controller
         return response()->json($ruanganOptions);
     }
 
+    public function getStokOptions($id_ruangan)
+    {
+        // Ambil stok berdasarkan ID ruangan
+        $stok = Inventaris::where('id_ruangan', $id_ruangan)->sum('jumlah_barang');
+    
+        // Kembalikan stok dalam format JSON
+        return response()->json(['stok' => $stok]);
+    }    
+    
     public function getPemakaianData($id_pemakaian)
     {
         
@@ -180,7 +189,6 @@ class PemakaianController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request);
         $request->validate([
             'tgl_pakai' => 'required',
             'id_users' => 'nullable',
@@ -190,29 +198,30 @@ class PemakaianController extends Controller
             'kelas' => 'nullable',
             'jurusan' => 'nullable',
             'keterangan_pemakaian' => 'nullable'
-
         ]);
-        // dd($request);
+    
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
-
-            $pemakaian = new Pemakaian();
-            $pemakaian->tgl_pakai = $request->tgl_pakai;
-            $pemakaian->id_users = $id_users;
-            $pemakaian->id_guru = $id_guru;
-            $pemakaian->id_karyawan = $id_karyawan;
-            $pemakaian->status = $request->status;
-            $pemakaian->kelas = $request->kelas;
-            $pemakaian->jurusan = $request->jurusan;
-            $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
-            $pemakaian->save();
         
-            return response()->json([
-                'id_pemakaian' => $pemakaian->id_pemakaian,
-            ]);
+        $pemakaian = new Pemakaian();
+        $pemakaian->tgl_pakai = $request->tgl_pakai;
+        $pemakaian->id_users = $id_users;
+        $pemakaian->id_guru = $id_guru;
+        $pemakaian->id_karyawan = $id_karyawan;
+        $pemakaian->status = $request->status;
+        $pemakaian->kelas = $request->kelas;
+        $pemakaian->jurusan = $request->jurusan;
+        $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
+        $pemakaian->save();
+        
+        if (request()->ajax()) {
+            return response()->json(['id_pemakaian' =>  $pemakaian->id_pemakaian, 'message' => 'Peminjaman berhasil disimpan']);
+        } else {
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
+        }
     }
-    
+        
 
     public function update(Request $request){
         // dd($request);
@@ -296,7 +305,7 @@ class PemakaianController extends Controller
             }
         }
 
-        // return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
+        return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
 
     }
 

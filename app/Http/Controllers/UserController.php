@@ -26,6 +26,7 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
             'level' => 'required',
+            'nis' => 'required',
         ]);
 
         $array = $request->only([
@@ -33,6 +34,7 @@ class UserController extends Controller
             'email',
             'password',
             'level',
+            'nis',
         ]);
 
         $array['_password_'] = $request->password;
@@ -52,6 +54,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'password' => 'required',
+            'nis' => 'required',
             'level' => 'required',
         ];
 
@@ -109,6 +112,7 @@ class UserController extends Controller
     {
         $rules = [
             'name' => 'required',
+            'nis' => 'nullable',
             'email' => 'required',
             'password' => 'nullable',
             'old_password' => 'nullable|required_with:password|string',
@@ -128,6 +132,7 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }       
         $user->name = $request->name;
+        $user->nis = $request->nis;
         $user->email = $request->email;
         if ($request->password) {
             $user->password = bcrypt($request->password);

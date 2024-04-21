@@ -25,7 +25,7 @@ class BarangController extends Controller
 
         $alatdanperlengkapan = Barang::with('inventaris')->where('id_jenis_barang', '!=', 3)->get();
 
-            $bahan = Barang::where('id_jenis_barang',  3)->get();
+        $bahan = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::all();
         $inventaris = Inventaris::all();
         $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
@@ -33,11 +33,11 @@ class BarangController extends Controller
         });
         // dd($alatdanperlengkapan);
           // Create an associative array where keys are id_barang and values are updated stok_barang
-        $updatedStokBarang = $bahan->mapWithKeys(function ($barangItem) use ($totals) {
-            $id_barang = $barangItem->id_barang;
-            $total = $totals->get($id_barang, 0); // Get the total or default to 0
-            return [$id_barang => $barangItem->stok_barang - $total];
-        }); 
+          $updatedStokBarang = $totals->map(function ($jumlah_barang, $id_barang) {
+            $barang = Barang::find($id_barang); // Assuming you have a model named Barang for the barang table
+            $updatedStok = $barang->stok_barang + $jumlah_barang;
+            return $updatedStok;
+        });
 
         return view('barang.index',[
         'barang' => $barang,
@@ -56,23 +56,41 @@ class BarangController extends Controller
             'merek' => 'required',
             'kode_barang' => 'nullable',
             'stok_barang' => 'nullable',
-            'id_jenis_barang' => 'required',
+            'id_jenis_barang' => 'nullable',
         ]);
 
+
+        // dd($request);
+        $barangs = Barang::all();
+        foreach ($barangs as $br){
+            if($request->kode_barang){
+                if ($request->kode_barang === $br->kode_barang){
+                    return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
+                }
+            }
+        }
+
         $barang = new Barang();
-        $barang->nama_barang = $request->nama_barang;
-        $barang->merek = $request->merek;
-        $barang->stok_barang = $request->stok_barang;
-        $barang->kode_barang = $request->kode_barang;
-        $barang->id_jenis_barang = $request->id_jenis_barang;
-        // Generate QR code and get the image name if kode_barang is not empty
-        $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
+        if ($request->id_jenis_barang){
+            $barang->id_jenis_barang = $request->id_jenis_barang;
+            $barang->nama_barang = $request->nama_barang;
+            $barang->merek = $request->merek;
+            $barang->stok_barang = $request->stok_barang;
+            $barang->kode_barang = $request->kode_barang;
+            $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
+            $barang->qrcode_image = $imageName;
+        }else{
+            $barang->id_jenis_barang = $request->id_jenis_barang;
+            $barang->nama_barang = $request->nama_barang;
+            $barang->merek = $request->merek;
+            $barang->stok_barang = $request->stok_barang;
+            $barang->kode_barang = null;
+            $barang->qrcode_image = null;
+        }
 
-        // Update path QR code pada barang yang baru dibuat
-        $barang->qrcode_image = $imageName;
-
+        // dd($barang);
         if($request->id_jenis_barang !== '3' && $request->kode_barang == null){
-        return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
+            return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
         }else{
         $barang->save();
 

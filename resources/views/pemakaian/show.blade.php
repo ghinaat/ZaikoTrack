@@ -191,26 +191,20 @@ Detail Pemakaian
                                     <div class="col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="id_ruangan">Ruangan</label>
-                                            <select class="form-select" name="id_ruangan" id="id_ruangan">
-                                                
-                                            </select>                                
+                                            <select class="form-select" name="id_ruangan" id="id_ruangan"></select>                                
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6">
-                                      <div class="form-group">
-                                        <label for="id_ruangan">Ruangan</label>
-                                        <select class="form-select" name="id_ruangan" id="id_ruangan">
-                                        </select>
-                                        <small id="stok_info" style="display: none;">Stok: <span id="stok_value"></span></small>
-                                    </div>
-                                    
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div class="modal-footer mt-2" style="text-align: right;">
-                              <button class="btn btn-primary " type="submit" title="Next">Pilih</button>
-                              <button class="btn btn-danger js-btn-prev" type="button" title="Prev">Batal</button>
+                                  <div class="form-group">
+                                      <label for="stok_barang">Stok Barang</label>
+                                      <input type="number" class="form-control" name="stok_barang" id="stok_barang" min="0" disabled>
+                                      <small id="stok_info" style="display: none;">Stok: <span id="stok_value"></span></small>
+                                  </div>
+                              </div>
+                          </div>                            
+                          <div class="modal-footer mt-2" style="text-align: right;">
+                              <button type="submit" class="btn btn-primary">Simpan</button>
+                              <a href="{{ route('pemakaian.showDetail', ['id_pemakaian' => $pemakaian->id_pemakaian]) }}" class="btn btn-danger">Batal</a>
                             </div>
                         </div>
                     </div>
@@ -277,14 +271,8 @@ Detail Pemakaian
 
   </div>
 </div>
-
-
-
-
-
 @stop
 @push('js')
-
 <form action="" id="delete-form" method="post">
     @method('delete')
     @csrf
@@ -302,47 +290,76 @@ $(document).ready(function() {
     });
 });
 
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change',
-    function() {
-        const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
-            'select[name=id_ruangan]');
-        const stokInfo = this.closest('.form-group').querySelector('small#stok_info');
-        const stokValue = stokInfo.querySelector('span#stok_value');
+document.addEventListener('DOMContentLoaded', function() {
+    const stokInput = document.getElementById('stok_barang');
+    const stokInfo = document.getElementById('stok_info');
+    const stokValue = document.getElementById('stok_value');
 
-        const selectedIdRuangan = this.value;
+    // Fetch ruangan options for the selected barang
+    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change', function() {
+        const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
+        const selectedIdBarang = this.value;
 
-        // Fetch id_barang options for the selected id_ruangan
-        fetch(`/get-ruangan-options/${selectedIdRuangan}`)
+        // Fetch ruangan options for the selected barang
+        fetch(`/get-ruangan-options/${selectedIdBarang}`)
             .then(response => response.json())
             .then(data => {
-                
                 // Clear existing options
-                id_barangSelect.innerHTML = '';
+                id_ruanganSelect.innerHTML = '';
 
                 // Populate options based on the received data
                 data.forEach(option => {
                     const newOption = document.createElement('option');
                     newOption.value = option.ruangan.id_ruangan;
                     newOption.text = option.ruangan.nama_ruangan;
-                    id_barangSelect.add(newOption);
+                    id_ruanganSelect.add(newOption);
                 });
 
-                // Show or hide the id_barang select based on whether options are available
-                id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
-                id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+                // Show or hide the ruangan select based on whether options are available
+                id_ruanganSelect.style.display = data.length > 0 ? 'block' : 'none';
+                id_ruanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
 
                 // Set the stock information
                 if (data.length > 0) {
-                    stokValue.textContent = data[0].jumlah_barang;
+                    stokInput.disabled = false;
                     stokInfo.style.display = 'block'; // Show the stock info
+                    stokValue.textContent = data[0].jumlah_barang;
                 } else {
+                    stokInput.disabled = true;
                     stokInfo.style.display = 'none'; // Hide the stock info
                 }
             })
             .catch(error => console.error('Error:', error));
     }));
 
+    // Event listener untuk perubahan pilihan ruangan
+    document.getElementById('id_ruangan').addEventListener('change', function() {
+        const selectedIdRuangan = this.value;
+        updateStok(selectedIdRuangan);
+    });
+
+    // Fungsi untuk memperbarui stok berdasarkan id ruangan yang dipilih
+    function updateStok(idRuangan) {
+        fetch(`/get-stok-options/${idRuangan}`)
+            .then(response => response.json())
+            .then(data => {
+                // Menampilkan informasi stok
+                stokInput.disabled = false;
+                stokInfo.style.display = 'block';
+                stokValue.textContent = data.stok;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    stokInput.addEventListener('input', function() {
+        const selectedStok = parseInt(this.value);
+        const availableStok = parseInt(stokValue.textContent);
+        if (selectedStok > availableStok) {
+            this.setCustomValidity('Stok yang dimasukkan melebihi stok yang tersedia');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+});
 </script>
-
-
 @endpush

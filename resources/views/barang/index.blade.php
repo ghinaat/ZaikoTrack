@@ -142,8 +142,8 @@ Barang
                                         <td>{{$key+1}}</td>
                                         <td>{{$br->nama_barang}}</td>
                                         <td>{{$br->merek}}</td>
+                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>   
                                         <td>{{$br->stok_barang}}</td>
-                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>
                                         <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
                                         {{-- <td>{{$br->jenisbarang->nama_jenis_barang}}</td> --}}
                                         <td>
@@ -174,7 +174,7 @@ Barang
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Tambah barang</h5>
+                <h5 class="modal-title" id="editModalLabel">Tambah Barang</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
                 </button>
@@ -218,7 +218,7 @@ Barang
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Tambah barang</h5>
+                <h5 class="modal-title" id="editModalLabel">Tambah barang bahan</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
                 </button>
@@ -226,6 +226,7 @@ Barang
             <div class="modal-body">
                 <form id="addForm" action="{{route('barang.store')}}" method="post">
                     @csrf
+                    <input type="hidden" name="id_jenis_barang" value="3">
                     <div class="form-group">
                         <label for="nama_barang">Nama Barang</label>
                         <input type="text" name="nama_barang" id="nama_barang" class="form-control" required>
@@ -239,17 +240,6 @@ Barang
                         <label for="stok_barang">Stok Barang</label>
                         <input type="number" name="stok_barang" id="stok_barang" class="form-control">
                     </div>
-                    {{-- <div class="form-group">
-                        <label for="jenis_barang">Jenis Barang</label>
-                        <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
-                            @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
-                                id_jenis_barang)selected @endif>
-                                {{$jb->nama_jenis_barang}}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
@@ -260,58 +250,58 @@ Barang
     </div>
 </div>
 
-@foreach($alatdanperlengkapan as $key => $br)
-<div class="modal fade" id="editModalPerlengkapan{{$br->id_barang}}" tabindex="-1" role="dialog"
-    aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <i class="fa fa-close" style="color: black;"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group">
-                        <label for="nama_barang">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="nama_barang" class="form-control"
-                            value="{{old('nama_barang', $br->nama_barang)}}">
-                    </div>
-                    <div class="form-group">
-                        <label for="merek">Merek</label>
-                        <input type="text" name="merek" id="merek" class="form-control"
-                            value="{{old('merek', $br->merek)}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="kode_barang">Kode Barang</label>
-                        <input type="text" name="kode_barang" id="kode_barang" class="form-control"
-                        value="{{old('kode_barang', $br->kode_barang)}}">
-                    </div>
-                    <div class="form-group">
-                        <label for="jenis_barang">Jenis Barang</label>
-                        <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
-                            @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
-                                id_jenis_barang)selected @endif>
-                                {{$jb->nama_jenis_barang}}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                    </div>
-                </form>
+    @foreach($alatdanperlengkapan as $key => $br)
+    <div class="modal fade" id="editModalPerlengkapan{{$br->id_barang}}" tabindex="-1" role="dialog"
+        aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color: black;"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label for="nama_barang">Nama Barang</label>
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                                value="{{old('nama_barang', $br->nama_barang)}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="merek">Merek</label>
+                            <input type="text" name="merek" id="merek" class="form-control"
+                                value="{{old('merek', $br->merek)}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kode_barang">Kode Barang</label>
+                            <input type="text" name="kode_barang" id="kode_barang" class="form-control"
+                            value="{{old('kode_barang', $br->kode_barang)}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="jenis_barang">Jenis Barang</label>
+                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
+                                @foreach($jenisBarang as $key => $jb)
+                                <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
+                                    id_jenis_barang)selected @endif>
+                                    {{$jb->nama_jenis_barang}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@endforeach
+    @endforeach
 
 @foreach($bahan as $key => $br)
 <div class="modal fade" id="editModalBahan{{$br->id_barang}}" tabindex="-1" role="dialog"
@@ -348,8 +338,8 @@ Barang
                         <label for="jenis_barang">Jenis Barang</label>
                         <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
                             @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if( old('id_jenis_barang')==$jb->
-                                id_jenis_barang)selected @endif>
+                            <option value="{{$jb->id_jenis_barang}}" @if($jb->id_jenis_barang ==
+                                old('id_jenis_barang', $jb->id_jenis_barang) ) selected @endif>
                                 {{$jb->nama_jenis_barang}}
                             </option>
                             @endforeach

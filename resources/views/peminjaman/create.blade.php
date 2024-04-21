@@ -218,14 +218,18 @@ Tambah Peminjaman
                                     <div class="form-group">
                                         <label for="id_barang">Kode Barang</label>
                                         <select class="form-select" name="id_barang" id="id_barang" required>
+                                            @if($id_barang_options->isEmpty())
+                                            <option value="" disabled selected>No data available</option>
+                                             @else
                                             @foreach($id_barang_options as $key => $b)
                                             <option value="{{ $b->barang->id_barang }}">
                                                 {{ $b->barang->kode_barang }}
                                             </option>
                                             @endforeach
+                                            @endif
                                         </select>
                                         @error('id_barang')
-                                        <div class="invalid-feedback">
+                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror

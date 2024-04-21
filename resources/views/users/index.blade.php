@@ -40,6 +40,7 @@ Users
                                     <th>No.</th>
                                     <th>Nama User</th>
                                     <th>Email</th>
+                                    <th>level</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>
@@ -49,18 +50,19 @@ Users
                                     <td>{{$key+1}}</td>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>
+                                    <td>{{$user->level}}</td>
                                     <td>
                                         @include('components.action-buttons', ['id' => $user->id_users, 'key' => $key,
                                         'route' => 'user'])
                                     </td>
                                 </tr>
-                                <!-- Modal Edit Pegawai -->
+                                <!-- Modal Edit User -->
                                 <div class="modal fade" id="editModal{{$user->id_users}}" tabindex="-1" role="dialog"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
+                                                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
                                                 <button type="button" class="btn-close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <i class="fa fa-close" style="color: black;"></i>
@@ -106,6 +108,11 @@ Users
                                                             {{ $message }}
                                                         </div>
                                                         @enderror
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nis">NIS</label>
+                                                        <input type="text" name="nis"
+                                                            id="exampleInputPassword" class="form-control"   value="{{ old('nis', $user->nis) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword">Password</label>
@@ -174,6 +181,11 @@ Users
                             {{ $message }}
                         </div>
                         @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="nis">NIS</label>
+                        <input type="text" name="nis" id="nis"
+                            class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword">Password</label>
