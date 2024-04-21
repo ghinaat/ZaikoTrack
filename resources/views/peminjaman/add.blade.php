@@ -54,7 +54,9 @@
                         </div>
                     
                         <div class="button-row d-flex justify-content-end mt-4">
-                            <button class="btn btn-secondary mr-4" type="button" title="Prev">Batal</button>
+                            <a href="{{ route('peminjaman.index') }}" class="btn btn-danger ml-3">
+                                Batal
+                            </a>       
                             <button class="btn btn-primary" type="submit" title="Prev">Simpan</button>
                         </div>
                     </form>

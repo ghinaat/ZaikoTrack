@@ -185,28 +185,27 @@ Peminjaman / List Barang
                                         </td>
                                         <td>
                                             @if($barang->status == "dipinjam")
-                                            <button class="btn btn-primary btn-xs mb-2"
-                                            data-id-detail-peminjaman="{{ $barang->id_detail_peminjaman }}"
-                                            onclick="notificationBeforeReturn(event, this)">
-                                             <i class="fa fa-undo"></i>
-                                             </button>
-                                    
-                                            {{-- <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
+                                            <div class="btn-group">
+                                            <a href="{{ route('detailPeminjaman.return', $barang->id_detail_peminjaman) }}" class="btn btn-info btn-xs mx-2"> <i class="fa fa-undo"></i></a>
+                                           @can("isTeknisi", 'isKabeng')
+                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
                                                 data-target="#editModal{{$barang->id_detail_peminjaman}}"
                                                 data-id="{{$barang->id_detail_peminjaman}}">
-                                                <i class="fa fa-undo"></i>
-                                            </a> --}}
-                                            {{-- <a href="{{ route('detailPeminjaman.destroy', $barang->id_detail_peminjaman) }}"
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('detailPeminjaman.destroy', $barang->id_detail_peminjaman) }}"
                                                 onclick="notificationBeforeDelete(event, this, {{$key+1}})"
                                                 class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa fa-trash"></i>
-                                            </a> --}}
+                                            </a>
+                                            @endcan
                                             @else
                                             <div style='display: flex; justify-content: center;'>
                                                 <span> <i class="fas fa-check-circle  fa-2x"
                                                         style="color: #42e619; align-items: center;"></i></span>
                                             </div>
                                             @endif
+                                            </div>
                                         </td>
                                     </tr>
                                     <!-- Modal Edit Pegawai -->
@@ -215,7 +214,7 @@ Peminjaman / List Barang
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel">Pengembalian Barang</h5>
+                                                    <h5 class="modal-title" id="editModalLabel">Edit Barang</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <i class="fa fa-close" style="color: black;"></i>
@@ -228,39 +227,44 @@ Peminjaman / List Barang
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="form-group">
-                                                            <div class="form-input-group">
-                                                                <div class="form-input-text1">
-                                                                    <label for="id_barang">Barang</label>
-                                                                    <input type="text" name="id_barang" id="id_barang"
-                                                                        class="form-control"
-                                                                        value="{{$barang->inventaris->barang->nama_barang ?? old('id_barang')}}"
-                                                                        readonly>
-                                                                    @error('id_barang')
-                                                                    <div class="invalid-feedback">
-                                                                        {{ $message }}
-                                                                    </div>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-input-text">
-                                                                    <label for="id_ruangan">Ruangan</label>
-                                                                    <select class="form-select" name="id_ruangan"
-                                                                        id="id_ruangan" required>
-                                                                        @foreach($ruangans as $key => $r)
-                                                                        <option value="{{$r->id_ruangan}}" @if(
-                                                                            old('id_ruangan')==$r->
-                                                                            id_ruangan)selected @endif>
-                                                                            {{$r->nama_ruangan}}
-                                                                        </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    @error('id_ruangan')
-                                                                    <div class="invalid-feedback">
-                                                                        {{ $message }}
-                                                                    </div>
-                                                                    @enderror
-                                                                </div>
+                                                            <label for="id_barang">Kode Barang</label>
+                                                            <select class="form-select" name="id_barang" id="id_barang" required>
+                                                                @foreach($id_barang_edit as $key => $br)
+                                                                <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                                                    {{$br->kode_barang}}
+                                                                </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('id_barang')
+                                                             <div class="invalid-feedback">
+                                                                {{ $message }}
                                                             </div>
+                                                            @enderror
                                                         </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="kondisi_barang">Nama Barang</label>
+                                                            <select class="form-select" name="kondisi_barang" id="kondisi_barang" readonly>
+                    
+                                                            </select>
+                                                            @error('kondisi_barang')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                    
+                                                            <label for="id_ruangan">Ruangan</label>
+                                                            <select class="form-select" name="id_ruangan" id="id_ruangan" readonly>
+                    
+                                                            </select>
+                                                        </div>
+                                                        @error('id_ruangan')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                    
                                                         <div class="form-group">
                                                             <label for="status">Status</label>
                                                             <select
@@ -502,11 +506,9 @@ function addData() {
 
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
-    const idRuanganSelect = this.closest('.form-group').nextElementSibling.querySelector(
+    const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector('select[name=kondisi_barang]');
+    const idRuanganSelect = this.closest('.form-group').nextElementSibling.nextElementSibling.querySelector(
         'select[name=id_ruangan]');
-    const kondisiSelect = this.closest('.form-group').nextElementSibling.nextElementSibling
-        .querySelector(
-            'select[name=kondisi_barang]');
     let selectedIdRuangan; // Variabel untuk menyimpan nilai id_ruangan
 
     // Fetch id_ruangan options for the selected id_barang
@@ -528,28 +530,23 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
             idRuanganSelect.style.display = data.length > 0 ? 'block' : 'none';
             idRuanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
 
-            // Assign selectedIdRuangan after fetching options
-            selectedIdRuangan = idRuanganSelect.value;
-
-            // Trigger change event on id_ruanganSelect to fetch kondisi_barang
-            const event = new Event('change');
-            idRuanganSelect.dispatchEvent(event);
+          
         })
 
         .then(() => {
             // Fetch kondisi barang for the selected id_ruangan and id_barang
-            fetch(`/fetch-kondisi-barang/${selectedIdRuangan}/${selectedIdBarang}`)
+            fetch(`/fetch-nama-barang/${selectedIdBarang}`)
                 .then(response => response.json())
                 .then(data => {
-                   
+                    console.log(data);
+                    // Clear existing options
                     kondisiSelect.innerHTML = '';
 
                     // Populate options based on the received data
                     data.forEach(option => {
                         const newOption = document.createElement('option');
-                        newOption.value = option.kondisi_barang;
-                        newOption.text = option.kondisi_barang + (option.ket_barang ?
-                            ' - ' + option.ket_barang : '');
+                        newOption.value = option.barang.id_barang;
+                        newOption.text = option.barang.nama_barang;
                         kondisiSelect.add(newOption);
                     });
 

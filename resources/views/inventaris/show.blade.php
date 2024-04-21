@@ -331,13 +331,12 @@ Inventaris / List Barang
                     <div class="form-group">
                         <label for="id_barang">Nama Barang</label>
                         <select class="form-select" name="id_barang" id="id_barang" required>
-                            @foreach($Barangbahan->all() as $id_barang =>
-                            $nama_barang)
-                            <option value="{{ $id_barang }}" @if($barang->
-                                id_barang
-                                == $id_barang) selected @endif>
-                                {{ $nama_barang }}</option>
+                            @foreach($Barangbahan as $b)
+                            <option value="{{ $b ->id_barang }}" @if($b->id_barang ==
+                             old('id_barang', $b->id_barang) ) selected @endif>
+                                {{ $b ->nama_barang }}</option>
                             @endforeach
+                         
                         </select>
                         @error('id_barang')
                         <div class="invalid-feedback">

@@ -186,6 +186,11 @@ class PeminjamanController extends Controller
         ->select('inventaris.id_barang', DB::raw('MAX(inventaris.id_inventaris) as max_id_inventaris'))
         ->groupBy('inventaris.id_barang')
         ->get();
+        $id_barang_edit = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
+        ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
+        ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
+        ->whereNotIn('barang.id_jenis_barang', [3])
+        ->get();
         
         $ruangans = Ruangan::all();
       
@@ -194,6 +199,7 @@ class PeminjamanController extends Controller
             'peminjaman' => $peminjaman,
             'detailPeminjamans' => $detailPeminjamans,
             'id_barang_options' => $id_barang_options,
+            'id_barang_edit' => $id_barang_edit,
             'ruangan' => $ruangan,
             'ruangans' => $ruangans,
             
@@ -323,38 +329,77 @@ class PeminjamanController extends Controller
         }
     }
 
+    public function fetchPeminjamanStatus($id_peminjaman)
+    {
+        $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+
+        // Return the status of the fetched Peminjaman record
+        return response()->json(['status' => $peminjaman->status]);
+    }
+
     public function export(Request $request)
-{
-    // Set default date range if not provided
-    $defaultStartDate = '2023-01-01';
-    $defaultEndDate = '2023-12-31';
+    {
+        $defaultStartDate = '2023-01-01';
+        $defaultEndDate = '2023-12-31';
+    
+        $tglawal = $request->input('tglawal', $defaultStartDate);
+        $tglakhir = $request->input('tglakhir', $defaultEndDate);
+        $id_barang = $request->input('id_barang');
+ 
+        
+        // Cek apakah tglawal dan tglakhir diberikan atau tidak
+        if ($request->filled('tglawal') && $request->filled('tglakhir')) {
+            $peminjamans = Peminjaman::with(['users', 'guru', 'karyawan'])
+                ->whereBetween('tgl_pakai', [$tglawal, $tglakhir])
+                ->orderBy('id_users')
+                ->orderBy('id_guru')
+                ->orderBy('id_karyawan')
+                ->orderBy('tgl_pinjam')
+                ->get();
+        } elseif ($request->filled('id_barang') ){
+            $peminjamans = Peminjaman::with(['users', 'guru', 'karyawan'])
+            ->whereHas('detailPeminjaman.inventaris.barang', function ($query) use ($id_barang) {
+                $query->where('id_barang', $id_barang);
+            })
+            ->orderBy('id_users')
+            ->orderBy('id_guru')
+            ->orderBy('id_karyawan')
+            ->orderBy('tgl_pinjam')
+            ->get();
 
-    // Get filter parameters from request or use default values
-    $tglawal = $request->input('tglawal', $defaultStartDate);
-    $tglakhir = $request->input('tglakhir', $defaultEndDate);
-
-    // Initialize query builder
-    $peminjamanQuery = Peminjaman::query();
-
-    // Apply date range filter if provided
-    if ($tglawal && $tglakhir) {
-        $peminjamanQuery->whereBetween('tgl_pinjam', [$tglawal, $tglakhir]);
+        } elseif($request->filled('tglawal') && $request->filled('tglakhir') && $request->filled('id_barang')) {
+          
+                $peminjamans = Peminjaman::with(['users', 'guru', 'karyawan'])
+                ->whereHas('detailPeminjaman.inventaris.barang', function ($query) use ($id_barang) {
+                    $query->where('id_barang', $id_barang);
+                })
+                ->whereBetween('tgl_pakai', [$tglawal, $tglakhir])
+                ->orderBy('id_users')
+                ->orderBy('id_guru')
+                ->orderBy('id_karyawan')
+                ->orderBy('tgl_pinjam')
+                ->get();
+        }else{
+            $peminjamans = Peminjaman::with(['users', 'guru', 'karyawan'])
+                ->orderBy('id_users')
+                ->orderBy('id_guru')
+                ->orderBy('id_karyawan')
+                ->orderBy('tgl_pinjam')
+                ->get();
+        }
+    
+        $dataDetail = DetailPeminjaman::with(['inventaris.barang'])
+            ->whereIn('id_peminjaman', $peminjamans->pluck('id_peminjaman'))
+            ->get();
+    
+        return Excel::download((new PeminjamanExport)
+            ->setPeminjamans($peminjamans)
+            ->setDataDetail($dataDetail)
+            ->setBarang($id_barang)
+            ->setStartDate($tglawal)
+            ->setEndDate($tglakhir), 'peminjaman.xlsx');
     }
-
-    // Apply id_barang filter if provided
-    $id_barang = $request->input('id_barang');
-    if ($id_barang) {
-        $peminjamanQuery->whereHas('detailPeminjaman.inventaris.barang', function ($query) use ($id_barang) {
-            $query->where('id_barang', $id_barang);
-        });
-    }
-
-    // Retrieve the filtered Peminjaman records
-    $peminjaman = $peminjamanQuery->orderBy('id_peminjaman', 'desc')->get();
-
-    // Download the report using the filtered data
-    return Excel::download(new PeminjamanExport($peminjaman), 'peminjaman.xlsx');
-}
+    
 
 
     

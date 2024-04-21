@@ -1,35 +1,54 @@
 <table>
     <thead>
-        <tr><td>Rekap Peminjaman Barang SIJA</td></tr>
-        <tr><td>Tanggal Awal: {{ $peminjaman['tglawal'] }} Tanggal Akhir : {{ $peminjaman['tglakhir'] }}</td></tr>
+        <tr>
+            <td colspan="6">Rekap Data Pemakaian Barang SIJA</td>
+        </tr>
+        @if($start_date && $end_date)
+        <tr>
+            <td colspan="6">Tanggal Awal: {{ $start_date }} Tanggal Akhir : {{ $end_date}}</td>
+        </tr>
+        @endif
+        @if($id_barang)
+        <tr>
+        <td colspan="6">Barang: {{ $id_barang }} </td>
+        </tr>
+        @endif
+        <tr></tr>
         <tr>
             <th>No.</th>
             <th>Nama</th>
             <th>Kelas Jurusan</th>
             <th>Tanggal Pinjam</th>
             <th>Nama Barang</th>
+            <th>Tanggal Kembali</th>
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($peminjaman['peminjaman'] as $key => $peminjaman)
-        <tr>
-            <td>{{$key + 1}}</td>
-            <td> 
-                @if($peminjaman->id_siswa !== 1) 
-                {{ $peminjaman->siswa->nama_siswa}}
-                @elseif($peminjaman->id_guru !== 1) 
-                {{ $peminjaman->guru->nama_guru}}
-                @elseif($peminjaman->id_karyawan !== 1) 
-                {{ $peminjaman->karyawan->nama_karyawan}}
+        {{-- @dd($dataDetail) --}}
+        @php $nomorUrut = 1; @endphp
+        @foreach($peminjamans as $key => $peminjaman)
+            @foreach($dataDetail as $detail)
+                @if(isset($detail['id_peminjaman']) && $detail['id_peminjaman'] == $peminjaman->id_peminjaman)
+                    <tr>
+                        <td>{{ $nomorUrut++ }}</td>
+                        <td>
+                            @if($peminjaman->id_users !== 1) 
+                            {{ $peminjaman->users->name}}
+                            @elseif($peminjaman->id_guru !== 1) 
+                            {{ $peminjaman->guru->nama_guru}}
+                            @elseif($peminjaman->id_karyawan !== 1) 
+                            {{ $peminjaman->karyawan->nama_karyawan}}
+                            @endif
+                        </td>
+                        <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                        <td>{{ $peminjaman->tgl_pinjam }}</td>
+                        <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                        <td>{{ $detail['tgl_kembali']}}</td>
+                        <td>{{ $detail['status'] }}</td>
+                    </tr>
                 @endif
-            </td>
-            <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
-            <td>{{ $peminjaman->tgl_pinjam }}</td>
-            @foreach($peminjaman->detailPeminjaman as $detail)
-                <td>{{ $detail->inventaris->barang->nama_barang }}</td>
-                <td>{{ $detail->status }}</td>
             @endforeach
-        </tr>
         @endforeach
+        </tbody>
 </table>

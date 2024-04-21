@@ -81,6 +81,7 @@ Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailP
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
+Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
 Route::get('/peminjaman/qrcode/{id_peminjaman}', [PeminjamanController::class, 'Qrcode'])->name('peminjaman.Qrcode');
 Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
@@ -91,9 +92,8 @@ Route::put('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\Peminjama
 Route::delete('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
 Route::get('/fetch-nama-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchNamaBarang'])->name('peminjaman.fetchNamaBarang');
-Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
 Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name('peminjaman.filter');
-
+Route::get('/fetch-peminjaman-status/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'getSiswaOptions'])->name('peminjaman.getSiswaOptions');
 
 Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');
 Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjamanController::class, 'store'])->name('detailPeminjaman.store');
