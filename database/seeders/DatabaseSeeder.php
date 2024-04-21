@@ -174,9 +174,6 @@ class DatabaseSeeder extends Seeder
         //     'kondisi_barang' => 'lengkap',
         //     'ket_barang' => ''
         // ]);
-
-     
-
         Guru::create([
             'id_guru' => '1',
             'nip' => '0',
@@ -194,7 +191,6 @@ class DatabaseSeeder extends Seeder
         // \App\Models\Inventaris::factory(10)->create();
         // \App\Models\Peminjaman::factory(10)->create();
         // \App\Models\DetailPeminjaman::factory(10)->create();
-      
         \App\Models\Karyawan::factory(10)->create();
         \App\Models\Guru::factory(10)->create();
 
