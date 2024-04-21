@@ -38,7 +38,7 @@ Karyawan
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Nama Siswa</th>
+                                    <th>Nama Karyawan</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>
@@ -59,7 +59,7 @@ Karyawan
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Edit Siswa</h5>
+                                                <h5 class="modal-title" id="editModalLabel">Edit Karyawan</h5>
                                                 <button type="button" class="btn-close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <i class="fa fa-close" style="color: black;"></i>
@@ -71,7 +71,7 @@ Karyawan
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="form-group">
-                                                        <label for="nama_karyawan">Nama Siswa</label>
+                                                        <label for="nama_karyawan">Nama Karyawan</label>
                                                         <input type="text" name="nama_karyawan" id="nama_karyawan"
                                                             class="form-control"
                                                             value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
@@ -99,7 +99,7 @@ Karyawan
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Tambah Siswa</h5>
+                <h5 class="modal-title" id="addModalLabel">Tambah Karyawan</h5>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
                 </button>
@@ -108,7 +108,7 @@ Karyawan
                 <form id="addForm" action="{{route('karyawan.store')}}" method="post">
                     @csrf
                     <div class="form-group">
-                        <label for="nama_karyawan">Nama Siswa</label>
+                        <label for="nama_karyawan">Nama Karyawan</label>
                         <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control"
                             value="{{ old('nama_karyawan') }}" required>
                     </div>

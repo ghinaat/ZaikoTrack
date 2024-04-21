@@ -54,13 +54,13 @@ Users
                                         'route' => 'user'])
                                     </td>
                                 </tr>
-                                <!-- Modal Edit Pegawai -->
+                                <!-- Modal Edit User -->
                                 <div class="modal fade" id="editModal{{$user->id_users}}" tabindex="-1" role="dialog"
                                     aria-labelledby="editModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Edit Pegawai</h5>
+                                                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
                                                 <button type="button" class="btn-close" data-dismiss="modal"
                                                     aria-label="Close">
                                                     <i class="fa fa-close" style="color: black;"></i>
