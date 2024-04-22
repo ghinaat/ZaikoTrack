@@ -87,13 +87,18 @@ body a {
   display: flex;
 }
 
-.form-input-text1{
-  width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+.form-input-text {
+  width: 100%; /* Set width to 100% by default */
+  max-width: 380px; /* Set maximum width */
   margin-right: 16px;
 }
-.form-input-text{
-  width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
+
+@media only screen and (max-width: 768px) {
+  .form-input-text {
+    max-width: 100%; /* Set maximum width to 100% for smaller screens */
+  }
 }
+
 
 
 .btn-secondary{

@@ -150,7 +150,7 @@ Peminjaman
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="editModalLabel">Edit
-                                                        Barang</h5>
+                                                        Peminjaman</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <i class="fa fa-close" style="color: black;"></i>

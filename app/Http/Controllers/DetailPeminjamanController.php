@@ -202,7 +202,7 @@ class DetailPeminjamanController extends Controller
         $request->validate([
             'id_barang' => 'required',
             'status' => 'required',
-            'kondisi_barang_akhir' => 'required',
+
             'ket_tidak_lengkap_akhir' => 'nullable',
         ]);
 
@@ -216,12 +216,12 @@ class DetailPeminjamanController extends Controller
         })
         ->first();
         if ($existingInventaris) {
-            return redirect()->back()->with(['error' => 'An inventaris item with the same Kode Barang already exists.']);
+            return redirect()->back()->with(['error' => 'An invetaris item with the same Kode Barang already exists.']);
         }
         
         $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
         $detailPeminjaman-> status = $request->status;
-        $detailPeminjaman->kondisi_barang_akhir = $request->kondisi_barang_akhir;
+     
         $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
 
         $detailPeminjaman ->save();
@@ -327,7 +327,7 @@ class DetailPeminjamanController extends Controller
             ]);
             
         } else {
-            return redirect()->back()->with('success_message', 'Data has been deleted.');
+            return redirect()->back()->with('success_message', 'Data telah terhapus.');
         }
     }
 }

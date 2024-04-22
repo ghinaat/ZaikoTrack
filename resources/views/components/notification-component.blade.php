@@ -83,6 +83,7 @@ function notificationBeforeAdd(event, el, dt) {
         } else {
             // If the user chooses "Tanpa Barcode", display the add modal
             showAddModal();
+            $('#addModal').modal('hide')
         }
         // Hide the addModal (if applicable)
         $('#addModal').modal('hide');
@@ -90,8 +91,10 @@ function notificationBeforeAdd(event, el, dt) {
 }
 
 function showAddModal() {
+    Swal.close();
 
     $('#addModal').modal('show');
+    
 }
 
 function addData() {

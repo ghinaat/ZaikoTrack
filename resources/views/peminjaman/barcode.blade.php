@@ -118,14 +118,16 @@ Tambah Peminjaman
                                                         @enderror
                                                     </div>
 
-                                                    <div class="form-group">
-                                                        <div class="form-input-group">
-                                                            <div class="form-input-text1">
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <div class="form-group">
                                                                 <label for="kelas" class="form-label">Kelas</label>
                                                                 <input type="text" name="kelas" id="kelas"
                                                                     class="form-control" required>
                                                             </div>
-                                                            <div class="form-input-text">
+                                                        </div>
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <div class="form-group">
                                                                 <label for="jurusan" class="form-label">Jurusan</label>
                                                                 <input type="text" name="jurusan" id="jurusan"
                                                                     class="form-control" required>
@@ -139,27 +141,25 @@ Tambah Peminjaman
                                                         <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="form-input-group">
-                                                            <div class="form-input-text1">
-                                                                <label for="tgl_pinjam" class="form-label">Tanggal
-                                                                    Pinjam</label>
-                                                                <input type="date" name="tgl_pinjam" id="tgl_pinjam"
-                                                                    class="form-control" required>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                    <label for="tgl_pinjam" class="form-label">Tanggal
+                                                                        Pinjam</label>
+                                                                    <input type="date" name="tgl_pinjam" id="tgl_pinjam"
+                                                                        class="form-control" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                    <label for="tgl_kembali" class="form-label">Tanggal
+                                                                        Kembali</label>
+                                                                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                                                                        class="form-control" required>
+                                                                </div>
                                                             </div>
-                                                            <div class="form-input-text">
-                                                                <label for="tgl_kembali" class="form-label">Tanggal
-                                                                    Kembali</label>
-                                                                <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                                    class="form-control" required>
-                                                            </div>
-
                                                         </div>
                                                     </div>
-
-                                                </div>
-
-
                                                 <div class="button-row d-flex justify-content-end mt-4">
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
