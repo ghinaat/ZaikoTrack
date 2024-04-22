@@ -88,12 +88,23 @@ class PemakaianController extends Controller
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
+
             
+                    // Mengumpulkan semua id_inventaris dari $dp ke dalam array
+        $id_inventaris_list = $detailPemakaians->pluck('id_inventaris');
+
+        // Query untuk mendapatkan id_barang yang sesuai dengan setiap id_inventaris
+        $id_barang_old_list = Inventaris::whereIn('id_inventaris', $id_inventaris_list)->pluck('id_barang', 'id_inventaris');
+
+        // Membuat array yang berisi pasangan id_inventaris dan id_barang
+        $idBarangOld = $id_barang_old_list->toArray();
+
         // dd($detailPemakaians);
         return view('pemakaian.show',[
             'detailpemakaian' => $detailPemakaians,
             'pemakaian' => $pemakaian,
             'barang' => $bahanPraktik,
+            'idBarangOld' => $idBarangOld,
             
         ]);
     }
@@ -128,6 +139,32 @@ class PemakaianController extends Controller
         
         // Kembalikan data dalam format JSON
         return response()->json($ruanganOptions);
+    }
+
+
+    public function getStokOptions($id_ruangan)
+    {
+        // Ambil stok berdasarkan ID ruangan
+        $stok = Inventaris::where('id_ruangan', $id_ruangan)->sum('jumlah_barang');
+    
+        // Kembalikan stok dalam format JSON
+        return response()->json(['stok' => $stok]);
+    }    
+    
+    public function getRuanganAndStok($id_detail_pemakaian)
+    {
+
+        $DetailOld = DetailPemakaian::with('inventaris')->find($id_detail_pemakaian);
+        $ruanganOptions = Inventaris::where('id_barang', $DetailOld->inventaris->id_barang)
+        ->select('id_ruangan', 'jumlah_barang') 
+        ->distinct()
+        ->with(['ruangan:id_ruangan,nama_ruangan']) // Specify the columns you want
+        ->get();
+
+        return response()->json([
+            'ruanganOptions' => $ruanganOptions,
+            'DetailOld' => $DetailOld->inventaris->id_ruangan,
+        ]);
     }
 
     public function getPemakaianData($id_pemakaian)
@@ -198,7 +235,7 @@ class PemakaianController extends Controller
                 'nama_ruangan' => $namaRuangan->ruangan->nama_ruangan,    // Ganti dengan nilai sesuai kebutuhan
                 'jumlah_barang' => $detailPemakaian->jumlah_barang, // Ganti dengan nilai sesuai kebutuhan
                 'id_detail_pemakaian' => $detailPemakaian->id_detail_pemakaian             // Ganti dengan nilai sesuai kebutuhan
-            ]);
+            ]); 
         }else{
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
         }
