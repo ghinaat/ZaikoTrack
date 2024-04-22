@@ -163,8 +163,9 @@ Tambah Pemakaian
                                                                     </div>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         <div class="form-group">
-                                                                            <label for="jumlah_barang">Jumlah Barang</label>
-                                                                            <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" >
+                                                                            <label for="jumah_barang">Stok Barang</label>
+                                                                            <input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang" min="0" disabled>
+                                                                            <small id="stok_info" style="display: none;">Stok: <span id="stok_value"></span></small>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -291,35 +292,77 @@ $(document).ready(function() {
 
 
 //untuk select ruangan 
-document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
-    function() {
-        const id_barangSelect = this.closest('.form-group').nextElementSibling.querySelector(
-            'select[name=id_ruangan]');
-        const selectedIdRuangan = this.value;
+document.addEventListener('DOMContentLoaded', function() {
+    const stokInput = document.getElementById('jumlah_barang');
+    const stokInfo = document.getElementById('stok_info');
+    const stokValue = document.getElementById('stok_value');
 
-        // Fetch id_barang options for the selected id_ruangan
-        fetch(`/get-ruangan-options/${selectedIdRuangan}`)
+    // Fetch ruangan options for the selected barang
+    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change', function() {
+        const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
+        const selectedIdBarang = this.value;
+
+        // Fetch ruangan options for the selected barang
+        fetch(`/get-ruangan-options/${selectedIdBarang}`)
             .then(response => response.json())
             .then(data => {
-                
                 // Clear existing options
-                id_barangSelect.innerHTML = '';
+                id_ruanganSelect.innerHTML = '';
 
                 // Populate options based on the received data
                 data.forEach(option => {
                     const newOption = document.createElement('option');
                     newOption.value = option.ruangan.id_ruangan;
-                    newOption.text =
-                        option.ruangan.nama_ruangan;
-                    id_barangSelect.add(newOption);
+                    newOption.text = option.ruangan.nama_ruangan;
+                    id_ruanganSelect.add(newOption);
                 });
 
-                // Show or hide the id_barang select based on whether options are available
-                id_barangSelect.style.display = data.length > 0 ? 'block' : 'none';
-                id_barangSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+                // Show or hide the ruangan select based on whether options are available
+                id_ruanganSelect.style.display = data.length > 0 ? 'block' : 'none';
+                id_ruanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+                // Set the stock information
+                if (data.length > 0) {
+                    stokInput.disabled = false;
+                    stokInfo.style.display = 'block'; // Show the stock info
+                    stokValue.textContent = data[0].jumlah_barang;
+                } else {
+                    stokInput.disabled = true;
+                    stokInfo.style.display = 'none'; // Hide the stock info
+                }
             })
             .catch(error => console.error('Error:', error));
     }));
+
+    // Event listener untuk perubahan pilihan ruangan
+    document.getElementById('id_ruangan').addEventListener('change', function() {
+        const selectedIdRuangan = this.value;
+        updateStok(selectedIdRuangan);
+    });
+
+    // Fungsi untuk memperbarui stok berdasarkan id ruangan yang dipilih
+    function updateStok(idRuangan) {
+        fetch(`/get-stok-options/${idRuangan}`)
+            .then(response => response.json())
+            .then(data => {
+                // Menampilkan informasi stok
+                stokInput.disabled = false;
+                stokInfo.style.display = 'block';
+                stokValue.textContent = data.stok;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    stokInput.addEventListener('input', function() {
+        const selectedStok = parseInt(this.value);
+        const availableStok = parseInt(stokValue.textContent);
+        if (selectedStok > availableStok) {
+            this.setCustomValidity('Stok yang dimasukkan melebihi stok yang tersedia');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+});
 
 // untuk select nama berdasarkan status
     document.querySelectorAll('select[id=status]').forEach(select => select.addEventListener('click', function() {

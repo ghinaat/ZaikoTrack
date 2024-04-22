@@ -118,6 +118,7 @@ Route::put('/pemakaian/detail/{id_detail_pemakaian}', [App\Http\Controllers\Pema
 Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
 Route::get('/get-stok-options/{id_ruangan}', [App\Http\Controllers\PemakaianController::class, 'getStokOptions'])->name('pemakaian.getStokOptions');
+Route::get('/get-ruangan-and-stok/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'getRuanganAndStok'])->name('pemakaian.getRuanganStokUpdate');
 
 Route::get('/get-siswa-options', [App\Http\Controllers\PemakaianController::class, 'getSiswaOptions'])->name('pemakaian.getSiswaOptions');
 Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class, 'export'])->name('pemakaian.export');

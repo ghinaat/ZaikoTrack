@@ -134,7 +134,7 @@ Detail Pemakaian
                                   <td>{{$key+1}}</td>
                                   <td>{{$dp->inventaris->barang->nama_barang}}</td>
                                   <td>{{$dp->inventaris->ruangan->nama_ruangan}}</td>
-                                  <td>{{$totalJumlahBarang}}</td>
+                                  <td>{{$dp->jumlah_barang}}</td>
                                   <td>
                                     <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pemakaian}}"
                                       data-id="{{$dp->id_detail_pemakaian}}">
@@ -196,9 +196,9 @@ Detail Pemakaian
                                     </div>
                                     <div class="col-md-6 col-sm-6">
                                   <div class="form-group">
-                                      <label for="stok_barang">Stok Barang</label>
-                                      <input type="number" class="form-control" name="stok_barang" id="stok_barang" min="0" disabled>
-                                      <small id="stok_info" style="display: none;">Stok: <span id="stok_value"></span></small>
+                                      <label for="jumlah_barang">Jumlah Barang</label>
+                                      <input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang" min="0" disabled>
+                                      <small id="stok_info" class="" style="display: none;">Stok: <span id="stok_value"></span></small>
                                   </div>
                               </div>
                           </div>                            
@@ -214,63 +214,63 @@ Detail Pemakaian
         </div>
       </div>
 
-      @foreach($detailpemakaian as $key => $dp)
-      <div class="modal fade" id="editModal{{$dp->id_detail_pemakaian}}" tabindex="-1" role="dialog"
-          aria-labelledby="editModalLabel{{$dp->id_detail_pemakaian}}" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="editModalLabel">Edit Barang Pemakaian</h5>
-                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                          <i class="fa fa-close" style="color: black;"></i>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="addForm" action="{{route('pemakaian.updateDetail', $dp->id_detail_pemakaian)}}" method="POST"
+    </div>
+  </div>
+  @foreach($detailpemakaian as $key => $dp)
+  <div class="modal fade" id="editModal{{$dp->id_detail_pemakaian}}" tabindex="-1" role="dialog"
+      aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editModalLabel">Edit Barang Pemakaian</h5>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                      <i class="fa fa-close" style="color: black;"></i>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form id="addForm" action="{{route('pemakaian.updateDetail', $dp->id_detail_pemakaian)}}" method="POST"
                       enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                          <div class="form-group">
-                            <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang" id="id_barang">
-                                @foreach($barang as $key => $br)
-                                <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
-                                    {{$br->barang->nama_barang}}
-                                </option>
-                                @endforeach
-                            </select>                                
+                      @csrf
+                      @method('PUT')
+                      <div class="form-group">
+                        <label for="id_barang">Nama Barang</label>
+                        <select class="form-select" name="id_barang" id="id_barang_update_{{$dp->id_detail_pemakaian}}">
+                            <option value="" selected hidden>-- Pilih Barang --</option>
+                            @foreach($barang as $br)
+                            <option value="{{ $br->id_barang }}" {{ old('id_barang', $idBarangOld[$dp->id_inventaris]) == $br->id_barang ? 'selected' : '' }}>
+                                {{ $br->barang->nama_barang }}
+                            </option>
+                            @endforeach
+                        </select>
+                        
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6 col-sm-6">
+                              <div class="form-group">
+                                  <label for="id_ruangan">Ruangan</label>
+                                  <select class="form-select" name="id_ruangan" id="id_ruangan_update_{{$dp->id_detail_pemakaian}}">
+
+                                  </select>
+                              </div>
                           </div>
-                          <div class="row">
-                            <div class="col-md-6 col-sm-6">
-                                <div class="form-group">
-                                    <label for="id_ruangan">Ruangan</label>
-                                    <select class="form-select" name="id_ruangan" id="id_ruangan">
-                                        
-                                    </select>                                
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
+                          <div class="col-md-6 col-sm-6">
                               <div class="form-group">
                                   <label for="jumlah_barang">Jumlah Barang</label>
-                                  <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" >
+                                  <input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang_update_{{$dp->id_detail_pemakaian}}" min="0" disabled>
+                                  <small id="stok_info_update" style="display: none;">Stok: <span id="stok_value_update"></span></small>
                               </div>
-                            </div>
-                          </div>
-                            </div>
-                              <div class="modal-footer">
-                              <button type="submit" class="btn btn-primary">Simpan</button>
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                           </div>
                       </div>
+                      <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Simpan</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                      </div>
                   </form>
-                  </div>
               </div>
           </div>
       </div>
-      @endforeach
-
   </div>
-</div>
+  @endforeach
 @stop
 @push('js')
 <form action="" id="delete-form" method="post">
@@ -291,7 +291,7 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const stokInput = document.getElementById('stok_barang');
+    const stokInput = document.getElementById('jumlah_barang');
     const stokInfo = document.getElementById('stok_info');
     const stokValue = document.getElementById('stok_value');
 
@@ -361,5 +361,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  @foreach($detailpemakaian as $key => $dp)
+    const idBarangSelect{{$dp->id_detail_pemakaian}} = document.getElementById('id_barang_update_{{$dp->id_detail_pemakaian}}');
+    const idRuanganSelect{{$dp->id_detail_pemakaian}} = document.getElementById('id_ruangan_update_{{$dp->id_detail_pemakaian}}');
+    const stokInput{{$dp->id_detail_pemakaian}} = document.getElementById('jumlah_barang_update_{{$dp->id_detail_pemakaian}}');
+    const stokInfo{{$dp->id_detail_pemakaian}} = document.getElementById('stok_info_update_{{$dp->id_detail_pemakaian}}');
+    const stokValue{{$dp->id_detail_pemakaian}} = document.getElementById('stok_value_update_{{$dp->id_detail_pemakaian}}');
+
+    const selectedIdBarang{{$dp->id_detail_pemakaian}} = idBarangSelect{{$dp->id_detail_pemakaian}}.value;
+
+    if (selectedIdBarang{{$dp->id_detail_pemakaian}}) {
+        loadRuanganAndStok(selectedIdBarang{{$dp->id_detail_pemakaian}}, '{{$dp->id_detail_pemakaian}}');
+    }
+  @endforeach
+
+  // Fungsi untuk mengambil dan memuat data ruangan dan stok terkait dengan barang yang dipilih
+  function loadRuanganAndStok(idBarang, idDetailPemakaian) {
+    const idRuanganSelect = document.getElementById('id_ruangan_update_' + idDetailPemakaian);
+    const stokInput = document.getElementById('jumlah_barang_update_' + idDetailPemakaian);
+    const stokInfo = document.getElementById('stok_info_update_' + idDetailPemakaian);
+    const stokValue = document.getElementById('stok_value_update_' + idDetailPemakaian);
+
+    // Fetch data ruangan dan stok menggunakan fetch API
+    fetch(`/get-ruangan-and-stok/${idDetailPemakaian}`)
+      .then(response => response.json())
+      .then(data => {
+        // Periksa apakah data yang diterima sesuai dengan yang diharapkan
+        console.log(data); // Periksa apakah data ruanganOptions ada di sini
+
+        // Isi opsi ruangan jika data diterima
+        if (data && data.ruanganOptions) {
+          data.ruanganOptions.forEach(option => {
+            const newOption = document.createElement('option');
+            newOption.value = option.id;
+            newOption.textContent = option.nama_ruangan;
+            idRuanganSelect.appendChild(newOption);
+          });
+        }
+
+        // Set nilai stok jika data diterima
+        if (data && data.stok) {
+          stokInput.disabled = false;
+          stokInfo.style.display = 'block';
+          stokValue.textContent = data.stok;
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+});
+
 </script>
 @endpush
