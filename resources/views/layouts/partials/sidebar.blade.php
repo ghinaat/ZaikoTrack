@@ -3,8 +3,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
-            target="_blank">
+        <a class="navbar-brand m-0"  target="_blank">
             <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
             <span class="ms-1 font-weight-bold">Zaiko Track</span>
         </a>
@@ -91,7 +90,7 @@
                     href="{{route('ruangan.index')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-building text-info text-sm opacity-10"></i>
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
                     </div>
                     <span class="nav-link-text ms-1">Ruangan</span>
                 </a>
@@ -104,16 +103,6 @@
                         <i class="ni ni-folder-17 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Jenis Barang</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('siswa.index') ? 'active' : '' }} "
-                    href="{{route('siswa.index')}}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-hat-3 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Siswa</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -141,7 +130,7 @@
                     href="{{route('emailConfiguration.show')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-briefcase-24 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
+                        <i class="ni ni-email-83 text-sm opacity-10" style="color: rgb(219, 149, 99)"></i>
                     </div>
                     <span class="nav-link-text ms-1">Email Configuration</span>
                 </a>

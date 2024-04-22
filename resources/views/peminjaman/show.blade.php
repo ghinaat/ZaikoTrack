@@ -214,7 +214,7 @@ Peminjaman / List Barang
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel">Edit Barang</h5>
+                                                    <h5 class="modal-title" id="editModalLabel">Edit Peminjaman</h5>
                                                     <button type="button" class="btn-close" data-dismiss="modal"
                                                         aria-label="Close">
                                                         <i class="fa fa-close" style="color: black;"></i>
@@ -286,7 +286,7 @@ Peminjaman / List Barang
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                        <div class="form-group">
+                                                        {{-- <div class="form-group">
                                                             <label for="exampleInputkondisi_barang_akhir">Kondisi
                                                                 Barang Akhir</label>
                                                             <select
@@ -323,7 +323,7 @@ Peminjaman / List Barang
                                                                 {{ $message }}
                                                             </div>
                                                             @enderror
-                                                        </div>
+                                                        </div> --}}
                                                         <div class="form-group mt-2">
                                                             <label for="ket_tidak_lengkap_akhir">Keterangan
                                                                 Barang</label>
