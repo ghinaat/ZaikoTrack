@@ -46,7 +46,7 @@ Tambah Pemakaian
                                                                 <div class="form-group " style="display: block;" id="id_siswa">
                                                                     <label for="id_siswa">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_users" id="id_siswa" >
-                                                                            <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                            <option value="" selected disabled>Pilih Nama</option>
                                                                             @foreach($siswa as $key => $sw)
                                                                             <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
                                                                                 {{$sw->name}}
@@ -57,7 +57,7 @@ Tambah Pemakaian
                                                                 <div class="form-group " style="display: none;" id="id_guru">
                                                                     <label for="id_guru">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_guru" id="id_guru" >
-                                                                            <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                            <option value="" selected disabled>Pilih Nama</option>
                                                                             @foreach($guru as $key => $gr)
                                                                             <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
                                                                                 {{$gr->nama_guru}}
@@ -68,7 +68,7 @@ Tambah Pemakaian
                                                                 <div class="form-group " style="display: none;" id="id_karyawan">
                                                                     <label for="id_karyawan">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan" >
-                                                                            <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                            <option value="" selected disabled>Pilih Nama</option>
                                                                             @foreach($karyawan as $key => $krywn)
                                                                             <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
                                                                                 {{$krywn->nama_karyawan}}
@@ -92,15 +92,15 @@ Tambah Pemakaian
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                    <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control"  ></textarea>
+                                                                    <input type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></input>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="tgl_pakai">Tanggal Pakai</label>
                                                                     <input type="date" name="tgl_pakai" id="tgl_pakai" class="multisteps-form__input form-control" ></input>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group mb-0 mt-3" style="text-align: right;">
-                                                                <button class="btn btn-danger js-btn-cancel" type="click" title="Prev">Batal</button>
+                                                            <div class="form-group text-end justify-content-end mb-0 mt-4" >
+                                                                <button class="btn btn-danger js-btn-cancel mx-2" type="click" title="Prev">Batal</button>
                                                                 <button class="btn btn-primary js-btn-save" type="click" title="Next">Selnjutnya</button>
                                                             </div>
                                                         </div>
@@ -197,7 +197,7 @@ Tambah Pemakaian
                                                             <div class="form-group " style="display: none;" id="id_siswa_update">
                                                                 <label for="id_siswa">Nama Lengkap</label>
                                                                     <select class="form-select" data-live-search="true" name="id_users" id="id_siswa_upd" >
-                                                                        <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                        <option value="" selected disabled>Pilih Nama</option>
                                                                         @foreach($siswa as $key => $sw)
                                                                         <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
                                                                             {{$sw->name}}
@@ -208,7 +208,7 @@ Tambah Pemakaian
                                                             <div class="form-group " style="display: none;" id="id_guru_update">
                                                                 <label for="id_guru">Nama Lengkap</label>
                                                                     <select class="form-select" data-live-search="true" name="id_guru" id="id_guru_upd" >
-                                                                        <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                        <option value="" selected disabled>Pilih Nama</option>
                                                                         @foreach($guru as $key => $gr)
                                                                         <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
                                                                             {{$gr->nama_guru}}
@@ -219,7 +219,7 @@ Tambah Pemakaian
                                                             <div class="form-group " style="display: none;" id="id_karyawan_update">
                                                                 <label for="id_karyawan">Nama Lengkap</label>
                                                                     <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan_upd" >
-                                                                        <option value="" selected hidden>-- Pilih Nama --</option>
+                                                                        <option value="" selected disabled>Pilih Nama</option>
                                                                         @foreach($karyawan as $key => $krywn)
                                                                         <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
                                                                             {{$krywn->nama_karyawan}}
@@ -243,7 +243,7 @@ Tambah Pemakaian
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                <textarea rows="3" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="form-control"  ></textarea>
+                                                                <input type="text" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></input>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="tgl_pakai">Tanggal Pakai</label>

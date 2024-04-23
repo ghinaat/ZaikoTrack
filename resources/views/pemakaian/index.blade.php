@@ -3,22 +3,16 @@
 @section('css')
 <style>
    @media (min-width: 768px) {
-    /* CSS untuk perangkat dengan lebar layar minimum 768px (tablet, laptop, dan monitor) */
     .input-date{
         width: 105%
     }
    }
     @media (max-width: 576px) {
-    /* CSS untuk perangkat dengan lebar layar minimum 768px (tablet, laptop, dan monitor) */
     .no-padding-co{
        padding-left: 5px;
        padding-right: 5px;
        padding-bottom: 0;
     }
-
-    /* .button-filter{
-        justify-content: end;
-    } */
 }
 </style>
 @endsection
@@ -35,6 +29,17 @@ Pemakaian
                 </div>
                 <div class="card-body m-0">
                     <form method="get" action="{{ route('pemakaian.index')}}" class=" mb-2">
+                        <div class="form-group">
+                            <label for="id_barang" class="form-label">Barang:</label>
+                            <select id="id_barang" name="id_barang" class="form-select @error('id_barang') is-invalid @enderror">
+                                <option value="0" @if(session('selected_id_barang', 0)==0) selected @endif>All
+                                </option>
+                                @foreach ($barang as $barang)
+                                <option value="{{ $barang->id_barang }}" @if($barang->id_barang ==
+                                    session('selected_id_barang')) selected @endif>{{ $barang->barang->nama_barang }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <div class="row">
@@ -54,7 +59,6 @@ Pemakaian
                             </div>
                             <div class="col-10 col-md-4 d-flex align-items-end mt-0">
                                 <button type="submit" class="btn btn-primary" style="margin-right: 10px">Tampilkan</button>
-                                <a href="{{ route('pemakaian.export', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}" class="btn btn-danger">Export Data</a>
                             </div>
                         </div>
                         
@@ -63,10 +67,11 @@ Pemakaian
                     
                     
                     
-                    <div class=" mt-3" style="margin-right: 7px;">
-                        <a class="btn btn-primary mb-2" href="{{ route('pemakaian.create') }}">Tambah</a>
+                    <div class="d-flex justify-content-between mt-1" style="margin-right: 7px;">
+                        <a class="btn btn-primary" href="{{ route('pemakaian.create') }}">Tambah</a>
+                        <a href="{{ route('pemakaian.export', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}" class="btn btn-danger">Export Data</a>
                     </div>
-                    
+
                     <div class="table-responsive ">
                         <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                             <thead>

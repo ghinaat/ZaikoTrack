@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\DetailPemakaian;
 use App\Models\Guru;
 use App\Models\Inventaris;
@@ -54,29 +55,49 @@ class PemakaianController extends Controller
     }
     
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
+        $id_barang = $request->input('id_barang');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
 
-        $groupedPemakaians = [];
+        $pemakaianFilter = Pemakaian::query();
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $start_date = $request->input('start_date');
-            $end_date = $request->input('end_date');
-    
-            $groupedPemakaians = Pemakaian::whereBetween('tgl_pakai', [$start_date, $end_date])->get();
-        } else {
-            $groupedPemakaians = Pemakaian::orderBy('tgl_pakai')->get();
+        // Filter berdasarkan id_barang dan rentang tanggal jika keduanya tersedia
+        if ($id_barang && $start_date && $end_date) {
+            $pemakaianFilter->whereBetween('tgl_pakai', [$start_date, $end_date])
+                            ->whereHas('detailpemakaian.inventaris.barang', function ($query) use ($id_barang) {
+                                $query->where('id_barang', $id_barang);
+                            });
+        } elseif ($id_barang) {
+            // Filter hanya berdasarkan id_barang jika id_barang tersedia
+            $pemakaianFilter->whereHas('detailpemakaian.inventaris.barang', function ($query) use ($id_barang) {
+                $query->where('id_barang', $id_barang);
+            });
+        } elseif ($start_date && $end_date) {
+            // Filter hanya berdasarkan rentang tanggal jika rentang tanggal tersedia
+            $pemakaianFilter->whereBetween('tgl_pakai', [$start_date, $end_date]);
         }
-    
 
+        // Menyimpan nilai id_barang ke dalam sesi
+        $request->session()->put('selected_id_barang', $id_barang);
+
+        // Mendapatkan data pemakaian yang telah difilter
+        $groupedPemakaians = $pemakaianFilter->orderBy('id_pemakaian', 'desc')->get();
+
+        $idJenisBarang = 3;
+        $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
+            $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
+            ->groupBy('id_barang')->with(['barang'])->get();
         $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])->get();
         $guru = Guru::all()->except(1);
         $karyawan = Karyawan::all()->except(1);
-        // dd($siswa);
         return view('pemakaian.index',[
             'groupedPemakaians' => $groupedPemakaians,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
+            'barang' => $bahanPraktik,
             
         ]);
     }
