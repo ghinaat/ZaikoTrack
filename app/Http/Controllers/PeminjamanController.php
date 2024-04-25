@@ -292,7 +292,7 @@ class PeminjamanController extends Controller
                 'jurusan' => 'nullable',
                 'kelas' => 'nullable',
                 'status' => 'nullable',
-                'keterangan_pemakaian' => 'nullable',
+                'keterangan_peminjaman' => 'nullable',
                 'tgl_pinjam' => 'required|date',
                 'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             ]);
@@ -308,7 +308,7 @@ class PeminjamanController extends Controller
             return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
         }
     
-        // Create new record
+        // dd($request);
         $peminjaman = new Peminjaman([
             'id_users' => $id_users,
             'id_guru' => $id_guru,
@@ -318,7 +318,7 @@ class PeminjamanController extends Controller
             'kelas' => $request->kelas,
             'tgl_pinjam' => $request->tgl_pinjam,
             'tgl_kembali' => $request->tgl_kembali,
-            'keterangan_pemakaian' => $request->keterangan_pemakaian,
+            'keterangan_peminjaman' => $request->keterangan_peminjaman,
         ]);
         $peminjaman->save();
 

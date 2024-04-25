@@ -87,6 +87,7 @@ Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\De
 
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman/notifikasi', [App\Http\Controllers\PeminjamanController::class, 'notifikasi'])->name('peminjaman.notifikasi');
+
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
 Route::get('/peminjaman/qrcode/{id_peminjaman}', [PeminjamanController::class, 'Qrcode'])->name('peminjaman.Qrcode');
 Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');
