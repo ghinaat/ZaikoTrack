@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Barang;
 use App\Models\DetailPemakaian;
 use App\Models\Guru;
 use App\Models\Inventaris;
 use App\Models\Karyawan;
 use App\Models\Pemakaian;
-use App\Models\Siswa;
+// use App\Models\Siswa;
 use App\Exports\PemakaianExport;
 use App\Models\User;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -54,29 +56,49 @@ class PemakaianController extends Controller
     }
     
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
+        $id_barang = $request->input('id_barang');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
 
-        $groupedPemakaians = [];
+        $pemakaianFilter = Pemakaian::query();
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $start_date = $request->input('start_date');
-            $end_date = $request->input('end_date');
-    
-            $groupedPemakaians = Pemakaian::whereBetween('tgl_pakai', [$start_date, $end_date])->get();
-        } else {
-            $groupedPemakaians = Pemakaian::orderBy('tgl_pakai')->get();
+        // Filter berdasarkan id_barang dan rentang tanggal jika keduanya tersedia
+        if ($id_barang && $start_date && $end_date) {
+            $pemakaianFilter->whereBetween('tgl_pakai', [$start_date, $end_date])
+                            ->whereHas('detailpemakaian.inventaris.barang', function ($query) use ($id_barang) {
+                                $query->where('id_barang', $id_barang);
+                            });
+        } elseif ($id_barang) {
+            // Filter hanya berdasarkan id_barang jika id_barang tersedia
+            $pemakaianFilter->whereHas('detailpemakaian.inventaris.barang', function ($query) use ($id_barang) {
+                $query->where('id_barang', $id_barang);
+            });
+        } elseif ($start_date && $end_date) {
+            // Filter hanya berdasarkan rentang tanggal jika rentang tanggal tersedia
+            $pemakaianFilter->whereBetween('tgl_pakai', [$start_date, $end_date]);
         }
-    
 
+        // Menyimpan nilai id_barang ke dalam sesi
+        $request->session()->put('selected_id_barang', $id_barang);
+
+        // Mendapatkan data pemakaian yang telah difilter
+        $groupedPemakaians = $pemakaianFilter->orderBy('id_pemakaian', 'desc')->get();
+
+        $idJenisBarang = 3;
+        $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
+            $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
+            ->groupBy('id_barang')->with(['barang'])->get();
         $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])->get();
         $guru = Guru::all()->except(1);
         $karyawan = Karyawan::all()->except(1);
-        // dd($siswa);
         return view('pemakaian.index',[
             'groupedPemakaians' => $groupedPemakaians,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
+            'barang' => $bahanPraktik,
             
         ]);
     }
@@ -88,12 +110,23 @@ class PemakaianController extends Controller
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
+
             
+                    // Mengumpulkan semua id_inventaris dari $dp ke dalam array
+        $id_inventaris_list = $detailPemakaians->pluck('id_inventaris');
+
+        // Query untuk mendapatkan id_barang yang sesuai dengan setiap id_inventaris
+        $id_barang_old_list = Inventaris::whereIn('id_inventaris', $id_inventaris_list)->pluck('id_barang', 'id_inventaris');
+
+        // Membuat array yang berisi pasangan id_inventaris dan id_barang
+        $idBarangOld = $id_barang_old_list->toArray();
+
         // dd($detailPemakaians);
         return view('pemakaian.show',[
             'detailpemakaian' => $detailPemakaians,
             'pemakaian' => $pemakaian,
             'barang' => $bahanPraktik,
+            'idBarangOld' => $idBarangOld,
             
         ]);
     }
@@ -128,6 +161,28 @@ class PemakaianController extends Controller
         
         // Kembalikan data dalam format JSON
         return response()->json($ruanganOptions);
+    }
+
+
+    public function getStokOptions($id_ruangan)
+    {
+        // Ambil stok berdasarkan ID ruangan
+        $stok = Inventaris::where('id_ruangan', $id_ruangan)->sum('jumlah_barang');
+    
+        // Kembalikan stok dalam format JSON
+        return response()->json(['stok' => $stok]);
+    }    
+    
+    public function getRuanganAndStok($id_detail_pemakaian)
+    {
+
+        $DetailOld = DetailPemakaian::with('inventaris')->find($id_detail_pemakaian);
+        $id_ruangan = $DetailOld->inventaris->first()->id_ruangan;
+
+        return response()->json([
+            'DetailOld' => $DetailOld,
+            'id_ruangan'  =>$id_ruangan,
+        ]);
     }
 
     public function getPemakaianData($id_pemakaian)
@@ -198,7 +253,7 @@ class PemakaianController extends Controller
                 'nama_ruangan' => $namaRuangan->ruangan->nama_ruangan,    // Ganti dengan nilai sesuai kebutuhan
                 'jumlah_barang' => $detailPemakaian->jumlah_barang, // Ganti dengan nilai sesuai kebutuhan
                 'id_detail_pemakaian' => $detailPemakaian->id_detail_pemakaian             // Ganti dengan nilai sesuai kebutuhan
-            ]);
+            ]); 
         }else{
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
         }
@@ -333,6 +388,7 @@ class PemakaianController extends Controller
             $detailpemakaian->delete();
         }
 
+        return redirect()->back()->with(['success_message' => 'Data telah terhapus.',]);
 
     }
 }

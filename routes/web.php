@@ -8,6 +8,8 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\EmailConfigurationController;
+use App\Http\Controllers\LaporanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,7 @@ Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class,
 Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
 Route::get('/barang/exportalat', [App\Http\Controllers\BarangController::class, 'exportAlatPerlengkapan'])->name('barang.exportAlatPerlengkapan');
 Route::get('/barang/exportbahan', [App\Http\Controllers\BarangController::class, 'exportBahan'])->name('barang.exportBahan');
+Route::get('/barang/print/{id_barang}', [App\Http\Controllers\BarangController::class, 'print'])->name('barang.print');
 
 Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
 Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'store'])->name('pembelian.store');
@@ -63,6 +66,7 @@ Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianContro
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
+Route::get('fetch-id-barang/{id_detail_pembelian}',  [App\Http\Controllers\DetailPembelianController::class, 'getIdBarang'])->name('detailpembelian.fetchIdbarang');
 // Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
@@ -120,6 +124,7 @@ Route::put('/pemakaian/detail/{id_detail_pemakaian}', [App\Http\Controllers\Pema
 Route::delete('/pemakaian/delete/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'destroyDetail'])->name('pemakaian.destroyDetail');
 Route::get('/get-ruangan-options/{id_barang}', [App\Http\Controllers\PemakaianController::class, 'getRuanganOptions'])->name('pemakaian.getRuanganOptions');
 Route::get('/get-stok-options/{id_ruangan}', [App\Http\Controllers\PemakaianController::class, 'getStokOptions'])->name('pemakaian.getStokOptions');
+Route::get('/get-ruangan-and-stok/{id_detail_pemakaian}', [App\Http\Controllers\PemakaianController::class, 'getRuanganAndStok'])->name('pemakaian.getRuanganStokUpdate');
 
 Route::get('/get-siswa-options', [App\Http\Controllers\PemakaianController::class, 'getSiswaOptions'])->name('pemakaian.getSiswaOptions');
 Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class, 'export'])->name('pemakaian.export');
@@ -141,3 +146,6 @@ Route::get('/notifikasi/{id_notifikasi}/detail', [NotifikasiController::class, '
 
 Route::get('/email-configuration', [EmailConfigurationController::class, 'show'])->name('emailConfiguration.show');
 Route::post('/email-configuration', [EmailConfigurationController::class, 'update'])->name('emailConfiguration.update');
+
+Route::get('/laporan-peminjaman', [LaporanController::class, 'index'])->name('laporan-peminjaman');
+Route::get('/laporan/pdf', [LaporanController::class, 'exportPDF'])->name('downloadpdf');

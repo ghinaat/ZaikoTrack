@@ -71,7 +71,7 @@ Detail Pembelian
                       <div class="col-sm-6 col-lg-6 text-end">
                         <a class="btn btn-link mt-0 text-danger text-gradient " href="{{ route('detailpembelian' . '.destroy',$dp->id_detail_pembelian) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})">
                           <i class="far fa-trash-alt me-2"></i><span>Hapus</span></a>
-                        <a class="btn btn-link text-dark" href="javascript:;" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pembelian}}">
+                        <a class="btn btn-link text-dark editButton" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pembelian}}" data-id="{{$dp->id_detail_pembelian}}">
                           <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
                       </div>
                     </div>
@@ -100,7 +100,7 @@ Detail Pembelian
                           <div class="form-group">
                             <label for="jenis_barang">Jenis Barang</label>
                             <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" >
-                              <option value="" selected hidden>-- Jenis Barang --</option>
+                              <option value="" selected disabled>Pilih Jenis Barang</option>
                               <option value="1" >Alat dan Perlengkapan</option>
                               <option value="3" >Bahan Praktik</option>
                             </select> 
@@ -108,7 +108,7 @@ Detail Pembelian
                           <div class="form-group" style="display: none;" id="alatPerlengkapan">
                             <label for="id_barang">Nama Barang</label>
                             <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat" >
-                              <option value="" selected hidden>-- Pilih Nama Barang --</option>
+                              <option value="" selected disabled>Pilih Nama Barang</option>
                               @foreach($selectedalatPerlengkapan as $key => $br)
                                 <option value="{{$br->id_barang }}" @if( old('id_barang') == $br->id_barang)selected @endif>
                                   {{$br->nama_barang}} - {{$br->kode_barang}}
@@ -119,7 +119,7 @@ Detail Pembelian
                           <div class="form-group" style="display: none;" id="bahanPraktik">
                             <label for="id_barang">Nama Barang</label>
                             <select class="form-select" name="id_barang_bahan" id="id_barang_bahan" >
-                              <option value="" selected hidden>-- Pilih Nama Barang --</option>
+                              <option value="" selected disabled>Pilih Nama Barang</option>
                               @foreach($bahanPraktik as $key => $br)
                                 <option value="{{$br->id_barang }}" @if( old('id_barang') == $br->id_barang)selected @endif>
                                   {{$br->nama_barang}}
@@ -130,15 +130,16 @@ Detail Pembelian
                           <div class="form-group" style="display: block;" id="namaForm">
                             <label for="id_barang">Nama Barang</label>
                             <select class="form-select" name="id_barang" id="id_barang_bahan" >
-                              <option value="" selected hidden>-- Pilih Nama Barang --</option>
+                              <option value="" selected disabled>Pilih Nama Barang</option>
                             </select> 
                           </div>
                           <div class="form-group" id="jumlah_barang_js" style="display: none;">
                               <label for="jumlah_barang">Jumlah Barang</label>
-                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" >
+                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" min="0">
                           </div>
                           <div class="form-group">
-                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
+                              <label for="subtotal_pembelian" id="subtotal" style="display: none;">Subtotal Pembelian</label>
+                              <label for="harga_barang" id="harga" style="display: block;">Harga Barang</label>
                               <input type="text" name="subtotal_pembelian" id="subtotal_pembelian" class="form-control" >
                           </div>
                           <div class="modal-footer">
@@ -304,38 +305,34 @@ Detail Pembelian
                               <option value="3" >Bahan Praktik</option>
                             </select> 
                           </div>
-                          <div class="form-group" style="display: ;" id="alatPerlengkapan_update">
+                          <div class="form-group" style="display: none;" id="alatPerlengkapan_update{{$dp->id_detail_pembelian}}">
                             <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($selectedalatPerlengkapan as $key => $br)
-                                <option value="{{$br->id_barang }}" @if( $dp->id_barang == $br->id_barang || 
-                                  old('id_barang_perlengkapans') == $br->id_barang)selected @endif>
-                                  {{$br->nama_barang}} - {{$br->kode_barang}}
-                                </option>  
-                              @endforeach
+                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update{{$dp->id_detail_pembelian}}" >
+                              <option value="" selected disabled>Pilih Nama Barang</option>
+                             
                             </select> 
                           </div>
-                          <div class="form-group" style="display: ;" id="bahanPraktik_update">
+                          <div class="form-group" style="display: none;" id="bahanPraktik_update{{$dp->id_detail_pembelian}}">
                             <label for="id_barang">Nama Barang</label>
                             <select class="form-select" name="id_barang_bahan" id="id_barang_bahan_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($bahanPraktik as $key => $br)
-                                <option value="{{$br->id_barang }}" @if($dp->id_barang == $br->id_barang || 
-                                  old('id_barang_bahan') == $br->id_barang)selected @endif>
+                              <option value="" selected disabled>Pilih Nama Barang</option>
+                                @foreach($bahanPraktik as $key => $br)
+                                <option value="{{$br->id_barang }}" @if($br->id_barang ==
+                                  old('id_barang', $br->id_barang) ) selected @endif>
                                   {{$br->nama_barang}}
                                 </option>  
-                              @endforeach
+                                @endforeach
                             </select> 
                           </div>
-                          <div class="form-group" style="display: ;" id="jumlah_barang_update">
+                          <div class="form-group" style="display: none;" id="jumlah_barang_update{{$dp->id_detail_pembelian}}">
                               <label for="jumlah_barang">Jumlah Barang</label>
                               <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
                                 value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
                           </div>
                           <div class="form-group">
-                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
-                              <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
+                            <label for="subtotal_pembelian" id="subtotal_edit{{$dp->id_detail_pembelian}}" style="display: none;">Subtotal Pembelian</label>
+                            <label for="harga_barang" id="harga_edit{{$dp->id_detail_pembelian}}" style="display: none;">Harga Barang</label>
+                            <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
                               value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
                           </div>
                           <div class="modal-footer">
@@ -349,73 +346,7 @@ Detail Pembelian
 </div>
 @endforeach
 
-      {{-- Edit Modal --}}
-      {{-- @foreach($detailPembelian as $key =>$dp)
-      <div class="modal fade" id="editModal{{$dp->id_detail_pembelian}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{$dp->id_detail_pembelian}}" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="editModalLabel">Edit Detail Pembelian</h5>
-                      <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-close" style="color: black;"></i>
-                      </button>
-                  </div>
-                  <div class="modal-body">
-                      <form id="addForm" action="{{route('detailpembelian.update',$dp->id_detail_pembelian)}}" method="POST" enctype="multipart/form-data">
-                          @csrf
-                          @method('PUT')
-                          <input type="hidden" id="id_pembelian" name="id_pembelian" value="{{old('id_pembelian', $pembelian->id_pembelian)}}">
-                          <div class="form-group" >
-                            <label for="jenis_barang">Jenis Barang</label>
-                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang_update" >
-                              <option value="1" >Alat dan Perlengkapan</option>
-                              <option value="3" >Bahan Praktik</option>
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="alatPerlengkapan_update">
-                            <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang_perlengkapan" id="id_barang_alat_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($selectedalatPerlengkapan as $key => $br)
-                                <option value="{{$br->id_barang }}" @if( $dp->id_barang == $br->id_barang || 
-                                  old('id_barang_perlengkapans') == $br->id_barang)selected @endif>
-                                  {{$br->nama_barang}} - {{$br->kode_barang}}
-                                </option>  
-                              @endforeach
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="bahanPraktik_update">
-                            <label for="id_barang">Nama Barang</label>
-                            <select class="form-select" name="id_barang_bahan" id="id_barang_bahan_update" >
-                              <option value="" hidden>-- Pilih Nama Barang --</option>
-                              @foreach($bahanPraktik as $key => $br)
-                                <option value="{{$br->id_barang }}" @if($dp->id_barang == $br->id_barang || 
-                                  old('id_barang_bahan') == $br->id_barang)selected @endif>
-                                  {{$br->nama_barang}}
-                                </option>  
-                              @endforeach
-                            </select> 
-                          </div>
-                          <div class="form-group" style="display: ;" id="jumlah_barang_update">
-                              <label for="jumlah_barang">Jumlah Barang</label>
-                              <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control"
-                                value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
-                          </div>
-                          <div class="form-group">
-                              <label for="subtotal_pembelian">Subtotal Pembelian</label>
-                              <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" 
-                              value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
-                          </div>
-                          <div class="modal-footer">
-                              <button type="submit" class="btn btn-primary">Simpan</button>
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-      @endforeach --}}
+   
 </div>
 
       {{-- {{close}}       --}}
@@ -526,6 +457,8 @@ $(document).ready(function() {
     const bahanElemnet = document.querySelector('#bahanPraktik');
     const jumlahBarangElement = document.querySelector('#jumlah_barang_js');
     const NamaElement = document.querySelector('#namaForm');
+    const LabelSutotal = document.querySelector('#subtotal');
+    const LabelHarga = document.querySelector('#harga');
 
     // Inisialisasi style display sebagai 'none'
 
@@ -533,11 +466,16 @@ $(document).ready(function() {
     bahanElemnet.style.display = 'none';
     jumlahBarangElement.style.display = 'none';
     NamaElement.style.display = 'block'
+    LabelSutotal.style.display = 'none'
+    LabelHarga.style.display = 'block'
+    
 
     if (this.value === '3') { // Pastikan untuk membandingkan dengan string
         bahanElemnet.style.display = 'block';
         jumlahBarangElement.style.display = 'block';
         NamaElement.style.display = 'none';
+        LabelSutotal.style.display = 'block';
+        LabelHarga.style.display = 'none';
     } else {
         PerlengkapanElement.style.display = 'block';
         NamaElement.style.display = 'none';
@@ -545,39 +483,94 @@ $(document).ready(function() {
 }));
 
 
-  //const PerlengkapanElementUpdate = document.querySelector('#alatPerlengkapan_update');
-  //const BahanElementUpdate = document.querySelector('#bahanPraktik_update');
-  //const JumlahBrgElementUpdate = document.querySelector('#jumlah_barang_update');
 
-  // PerlengkapanElementUpdate.style.display = 'none';
-  // BahanElementUpdate.style.display = 'none';
-  // JumlahBrgElementUpdate.style.display = 'none';
+  document.addEventListener('DOMContentLoaded', function() {
+    // Temukan semua tombol "Edit" dengan kelas edit-button
+    var editButtons = document.querySelectorAll('.editButton');
+    console.log(editButtons);
+    // Tambahkan event listener untuk setiap tombol "Edit"
+    editButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Ambil id_detail_pembelian dari atribut data pada tombol
+            var idDetailPembelian = button.getAttribute('data-id');
+          console.log(idDetailPembelian);
+        // Kirim permintaan fetch untuk mendapatkan ID barang
+        fetch(`/fetch-id-barang/${idDetailPembelian}`)
+            .then(response => {
+                // Periksa apakah respons berstatus OK
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Mengembalikan respons sebagai JSON
+                return response.json();
+            })
+            .then(data => {
+              
+              const PerlengkapanElementUpdate = document.querySelector('#alatPerlengkapan_update' + idDetailPembelian);
+              const BahanElementUpdate = document.querySelector('#bahanPraktik_update' + idDetailPembelian);
+              const JumlahBrgElementUpdate = document.querySelector('#jumlah_barang_update' + idDetailPembelian);
+              const LabelSubtotalUpdate = document.querySelector('#subtotal_edit' + idDetailPembelian);
+              const LabelHargaUpdate = document.querySelector('#harga_edit' + idDetailPembelian);
 
-  
-  // var selectedPerlengkapan = $('#id_barang_alat_update').val();
-  //   var selectedBahan = $('#id_barang_bahan_update').val();
-  //   console.log('selectedPerrlengkapan', selectedPerlengkapan);
-  //   console.log('selectedBahan', selectedBahan);
-    
-  //   if (selectedPerlengkapan == null) {
-  //       BahanElementUpdate.style.display = 'block';
-  //       JumlahBrgElementUpdate.style.display = 'block';
-  //       $('#id_jenis_barang_update').val('3');
-  //   } else {
-  //       PerlengkapanElementUpdate.style.display = 'block';
-  //       $('#id_jenis_barang_update').val('1');
-  //   }
+               
+              PerlengkapanElementUpdate.style.display = 'none';
+              BahanElementUpdate.style.display = 'none';
+              JumlahBrgElementUpdate.style.display = 'none';
+              LabelSubtotalUpdate.style.display = 'none';
+              LabelHargaUpdate.style.display = 'none';
+              console.log('Data:', alatPerlengkapan);
 
-   
-  // document.querySelectorAll('select[id=id_jenis_barang_update]').forEach(select => select.addEventListener('click', function() {
-  //   if (this.value === '3') { // Pastikan untuk membandingkan dengan string
-  //     BahanElementUpdate.style.display = 'block';
-  //     JumlahBrgElementUpdate.style.display = 'block';
-  //   } else {
-  //     PerlengkapanElementUpdate.style.display = 'block';
+                if (alatPerlengkapan === '3') {
+                  PerlengkapanElementUpdate.style.display = 'none';
+                  BahanElementUpdate.style.display = 'block';
+                  JumlahBrgElementUpdate.style.display = 'block';
+                  LabelSubtotalUpdate.style.display = 'block';
+                  LabelHargaUpdate.style.display = 'none';
+                } 
+                else{
+                  PerlengkapanElementUpdate.style.display = 'block';
+                  LabelHargaUpdate.style.display = 'block';
+                  //  $('#id_jenis_barang_update').val('1');
 
-  //   }
-  // }));
+                }
+              // console.log('data terkirim');
+              const SelectAlat = document.getElementById('id_barang_alat_update' + idDetailPembelian);
+              data.selectUpdate.forEach(option => {
+                  const newOption = document.createElement('option');
+                  newOption.value = option.id_barang; // Menggunakan id_barang langsung
+                  newOption.text = option.nama_barang;
+                  if (data.barangSebelumnya.includes(option.id_barang)) {
+                      newOption.selected = true; // Jika ya, tandai opsi sebagai terpilih
+                  }
+                  SelectAlat.appendChild(newOption); // Menambahkan opsi ke dalam select
+              });
+
+
+              
+          
+
+          
+          // document.querySelectorAll('select[id=id_jenis_barang_update]').forEach(select => select.addEventListener('click', function() {
+          //   if (this.value === '3') { // Pastikan untuk membandingkan dengan string
+          //     BahanElementUpdate.style.display = 'block';
+          //     JumlahBrgElementUpdate.style.display = 'block';
+          //   } else {
+          //     PerlengkapanElementUpdate.style.display = 'block';
+
+          //   }
+          // }));
+
+
+                // Lakukan sesuatu dengan data yang diterima, misalnya, tampilkan ID barang
+            })
+            .catch(error => {
+                // Tangani kesalahan jika permintaan gagal
+                console.error('Error:', error);
+            });
+    });
+});
+  });
+
 </script>
 
 @endpush

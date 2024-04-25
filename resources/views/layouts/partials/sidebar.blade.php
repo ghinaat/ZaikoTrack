@@ -135,6 +135,39 @@
                     <span class="nav-link-text ms-1">Email Configuration</span>
                 </a>
             </li>
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laporan</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('ruangan.index') ? 'active' : '' }} "
+                    href="{{route('ruangan.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Pembelian</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('laporan-peminjaman') ? 'active' : '' }} "
+                    href="{{route('laporan-peminjaman')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Peminjaman</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('ruangan.index') ? 'active' : '' }} "
+                    href="{{route('ruangan.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Pemakaian</span>
+                </a>
+            </li>
             @endcan
         </ul>
     </div>

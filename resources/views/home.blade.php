@@ -14,6 +14,11 @@
     border-top: 0.3vh solid #e5e5e5;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+    .card-body p {
+        overflow-wrap: break-word;
+    }
+    
     @media (min-width: 768px) {
     .welcome-card {
         padding-left: 40px;
@@ -62,22 +67,22 @@ Home
 @endsection
 @section('content')
 @can('isTeknisi', 'isKaprog', 'isKabeng')
-<div class="container-fluid py-4">
+<div class="container-fluid pt-4 pb-2">
     <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-4 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-8" style="padding-right: 0px">
                                 <div class="numbers">
                                     <h5 class="font-weight-bolder text-primary mt-2" style="font-size: 26px">
                                     {{$inventaris}}
                                     </h5>
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
 
                                 </div>
                             </div>
-                            <div class="col-4 d-flex d-flex align-items-center justify-content-end">
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
                                 <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
                                     <i class="ni ni-box-2 text-lg opacity-10" aria-hidden="true"></i>
                                 </div>
@@ -86,7 +91,7 @@ Home
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -95,11 +100,11 @@ Home
                                     <h5 class="font-weight-bolder text-danger mt-2" style="font-size: 26px">
                                         {{$peminjaman}}
                                     </h5>
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Dipinjam</p>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Dipinjam</p>
 
                                 </div>
                             </div>
-                            <div class="col-4 d-flex d-flex align-items-center justify-content-end">
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
                                 <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
                                     <i class="fa-solid fa-people-carry-box text-lg opacity-10" aria-hidden="true"></i>
                                 </div>
@@ -108,7 +113,7 @@ Home
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -117,11 +122,11 @@ Home
                                     <h5 class="font-weight-bolder text-success mt-2" style="font-size: 26px">
                                         {{$barangRusak}}
                                     </h5>
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Kondisi Rusak</p>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Kondisi Rusak</p>
 
                                 </div>
                             </div>
-                            <div class="col-4 d-flex d-flex align-items-center justify-content-end">
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
                                 <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
                                     <i class="fa-solid fa-screwdriver-wrench text-lg opacity-10" aria-hidden="true"></i>
                                 </div>
@@ -139,11 +144,11 @@ Home
                                     <h5 class="font-weight-bolder text-warning mt-2" style="font-size: 26px">
                                         {{$users}}
                                     </h5>
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Pengguna</p>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Pengguna</p>
 
                                 </div>
                             </div>
-                            <div class="col-4 d-flex d-flex align-items-center justify-content-end">
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
                                 <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
                                     <i class="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
                                 </div>
@@ -298,7 +303,17 @@ Home
             </div>
         </div>
     </div>
-   
+
+    <footer class="footer pt-3">
+        <div class="container-fluid pb-0">
+            <div class=" align-items-start">
+                    <div class="copyright text-start text-sm text-muted ">
+                        ©2024 SIJA STUDENT
+                    </div>
+            </div>
+        </div>
+    </footer>
+
 </div>
 @endcan
 
