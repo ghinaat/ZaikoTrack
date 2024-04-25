@@ -19,7 +19,6 @@ class PembelianController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request);
         $request->validate([
             'tgl_pembelian' => 'required',
             'nama_toko' => 'required',
@@ -28,6 +27,7 @@ class PembelianController extends Controller
             'keterangan_anggaran' => 'required',
             'nota_pembelian' => 'mimes:jpg,jpng,png',
         ]);
+        dd($request);
 
         $pembelian = new Pembelian;
         $pembelian->tgl_pembelian = $request->tgl_pembelian;

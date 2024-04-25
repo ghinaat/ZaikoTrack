@@ -26,7 +26,7 @@
                     <td>{{ $br->nama_barang}}</td>
                     <td>{{ $br->merek }}</td>
                     <td>{{ $br->kode_barang }}</td>
-                    <td><img src="{{ asset('/storage/barcode/' . $br->barqode_image) }}" width="500px"></td>
+                    <td><img  width="500px"></td>
                 </tr>
             @endforeach
         </tbody>
