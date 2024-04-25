@@ -12,6 +12,7 @@ use App\Models\Karyawan;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Events\NotifPeminjaman;
 use Illuminate\Support\Facades\DB;
 use App\Exports\PeminjamanExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -118,6 +119,52 @@ class PeminjamanController extends Controller
         ]);
     }
 
+    public function notifikasi(Request $request)
+{
+    // Get all peminjaman records
+    $peminjamans = Peminjaman::all();
+
+    foreach ($peminjamans as $peminjaman) {
+        // Assuming tgl_kembali is the return date column
+        $tgl_kembali = $peminjaman->tgl_kembali;
+
+        // Check if the return date has passed
+        if (Carbon\Carbon::now()->greaterThan($tgl_kembali)) {
+            $peminjaman->status = 'dipinjam';
+            $peminjaman->save();
+
+            $pengguna = User::where('id_users', $peminjaman->id_users)->first();
+            $notifikasi = new Notifikasi();
+            $notifikasi->judul = 'Peminjaman Barang ';
+            $notifikasi->pesan = 'Peminjaman barang yang Anda lakukan belum dikembalikan. Mohon segera mengembalikan barang yang dipinjam untuk mencegah keterlambatan.';
+            $notifikasi->is_dibaca = 'tidak_dibaca';
+            $notifikasi->label = 'info';
+            $notifikasi->send_email = 'yes';
+            $notifikasi->link = '/peminjaman';  
+            $notifikasi->id_users = $pengguna->id_users;
+            $notifikasi->save();
+
+            $notifikasiTeknisi = User::where('level', 'teknisi')->get();
+            
+            foreach ($notifikasiTeknisi as $na) {
+                $notifikasi = new Notifikasi();
+                $notifikasi->judul = 'Peminjaman Barang ';
+                $notifikasi->pesan =  'Peminjaman dari '.$pengguna->name.' sudah melewati batas waktu peminjaman.'; 
+                $notifikasi->is_dibaca = 'tidak_dibaca';
+                $notifikasi->label = 'info';
+                $notifikasi->link = '/peminjaman';
+                $notifikasi->send_email = 'no';
+                $notifikasi->id_users = $na->id_users;
+                $notifikasi->save();
+            }
+        }
+    }
+
+    // Redirect after processing notifications
+    return response()->json(['success' => true, 'message' => 'Notifikasi telah terkirim.']);
+}   
+ 
+
     public function Barcode()
     {
       
@@ -172,20 +219,22 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::findOrFail($id_peminjaman);
         $detailPeminjamans = DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->get();
+        $detailPeminjaman = DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->get();
         $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
         ->groupBy('id_ruangan')
         ->get();
         $id_barang_options = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
-        ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
-        ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
-        ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude specific jenis_barang
-        ->where(function($query) {
-            $query->whereNull('detail_peminjaman.status') // Include cases with no status (not borrowed)
-                ->orWhere('detail_peminjaman.status', '!=', 'dipinjam'); // Exclude borrowed status
-        })
-        ->select('inventaris.id_barang', DB::raw('MAX(inventaris.id_inventaris) as max_id_inventaris'))
-        ->groupBy('inventaris.id_barang')
-        ->get();
+            ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
+            ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
+            ->whereNotIn('barang.id_jenis_barang', [3]) // Exclude specific jenis_barang
+            ->where(function($query) {
+                $query->whereNull('detail_peminjaman.status') // Include cases with no status (not borrowed)
+                    ->orWhere('detail_peminjaman.status', '!=', 'dipinjam'); // Exclude borrowed status
+            })
+            ->select('inventaris.id_barang', DB::raw('MAX(inventaris.id_inventaris) as max_id_inventaris'))
+            ->groupBy('inventaris.id_barang')
+            ->get();
+        // dd($id_barang_options);
         $id_barang_edit = Inventaris::whereIn('id_ruangan', $ruangan->pluck('id_ruangan'))
         ->join('barang', 'inventaris.id_barang', '=', 'barang.id_barang')
         ->leftJoin('detail_peminjaman', 'inventaris.id_inventaris', '=', 'detail_peminjaman.id_inventaris')
@@ -198,6 +247,7 @@ class PeminjamanController extends Controller
         return view('peminjaman.show', [
             'peminjaman' => $peminjaman,
             'detailPeminjamans' => $detailPeminjamans,
+            'detailPeminjaman' => $detailPeminjaman,
             'id_barang_options' => $id_barang_options,
             'id_barang_edit' => $id_barang_edit,
             'ruangan' => $ruangan,
@@ -271,7 +321,9 @@ class PeminjamanController extends Controller
             'keterangan_peminjaman' => $request->keterangan_peminjaman,
         ]);
         $peminjaman->save();
+
         
+
         if (request()->ajax()) {
         return response()->json(['id_peminjaman' => $peminjaman->id_peminjaman, 'message' => 'Peminjaman berhasil disimpan']);
         }else{
@@ -299,20 +351,21 @@ class PeminjamanController extends Controller
             return response()->json(['error' => $e->validator->errors()], 422);
         }
         
-        // $id_peminjaman_session = session()->get('id_peminjaman', null);
-        $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+        try {
+            $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['error' => 'Peminjaman not found'], 404);
+        }
+    
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
     
-        if ($id_users == 1 && $id_karyawan == 1 && $id_guru == 1) {
-            return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
-        }
         // Update existing record
         $peminjaman->update([
-            'id_users' =>  $id_users,
+            'id_users' => $id_users,
             'id_guru' => $id_guru,
-            'id_karyawan' =>  $id_karyawan,
+            'id_karyawan' => $id_karyawan,
             'status' => $request->status,
             'jurusan' => $request->jurusan,
             'kelas' => $request->kelas,
@@ -321,14 +374,13 @@ class PeminjamanController extends Controller
             'keterangan_pemakaian' => $request->keterangan_pemakaian,
         ]);
         
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return response()->json(['id_peminjaman' => $peminjaman->id_peminjaman, 'message' => 'Peminjaman berhasil disimpan']);
-            }else{
-            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
-        ]);
+        } else {
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
         }
     }
-
+    
     public function fetchPeminjamanStatus($id_peminjaman)
     {
         $peminjaman = Peminjaman::findOrFail($id_peminjaman);

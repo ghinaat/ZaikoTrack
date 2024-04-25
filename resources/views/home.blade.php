@@ -303,6 +303,7 @@ Home
             </div>
         </div>
     </div>
+
     <footer class="footer pt-3">
         <div class="container-fluid pb-0">
             <div class=" align-items-start">
@@ -312,6 +313,7 @@ Home
             </div>
         </div>
     </footer>
+
 </div>
 @endcan
 

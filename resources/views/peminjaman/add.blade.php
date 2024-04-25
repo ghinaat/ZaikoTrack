@@ -33,8 +33,7 @@
                                 <video id="previewKamera" style="width: 100%; height: auto;"></video>
                             </div>
                             <br>
-                            <select id="pilihKamera" class="form-select">
-                            </select>
+                           
                             <br>
                             <label for="ket_barang">Kode Barang</label>
                             <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
@@ -54,9 +53,9 @@
                         </div>
                     
                         <div class="button-row d-flex justify-content-end mt-4">
-                            <a href="{{ route('peminjaman.index') }}" class="btn btn-danger ml-3">
+                            <a href="{{ route('peminjaman.showDetail', $id_peminjaman) }}" class="btn btn-danger ml-3">
                                 Batal
-                            </a>       
+                            </a>        
                             <button class="btn btn-primary" type="submit" title="Prev">Simpan</button>
                         </div>
                     </form>
