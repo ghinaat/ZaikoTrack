@@ -85,10 +85,11 @@ Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailP
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
+Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+Route::get('/peminjaman/notifikasi', [App\Http\Controllers\PeminjamanController::class, 'notifikasi'])->name('peminjaman.notifikasi');
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
 Route::get('/peminjaman/qrcode/{id_peminjaman}', [PeminjamanController::class, 'Qrcode'])->name('peminjaman.Qrcode');
 Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');
-Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
 Route::get('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'showDetail'])->name('peminjaman.showDetail');
 Route::post('/peminjaman/create', [App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
@@ -100,6 +101,7 @@ Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name(
 Route::get('/fetch-peminjaman-status/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'getSiswaOptions'])->name('peminjaman.getSiswaOptions');
 
 Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');
+Route::get('/detailPeminjaman/return/barcode/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'returnScan'])->name('detailPeminjaman.returnScan');
 Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjamanController::class, 'store'])->name('detailPeminjaman.store');
 Route::delete('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'destroy'])->name('detailPeminjaman.destroy');
 Route::put('/peminjaman/detailPeminjaman/returnBarcode/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'returnBarcode'])->name('detailPeminjaman.returnBarcode');

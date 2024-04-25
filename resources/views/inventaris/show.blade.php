@@ -101,11 +101,12 @@ Inventaris / List Barang
                                         </td>
                                         @can('isTeknisi', 'isKabeng')
                                         <td>
-                                            @include('components.action-buttons', ['id' =>
-                                            $barang->id_inventaris,
-                                            'key'
-                                            =>
-                                            $key, 'route' => 'inventaris'])
+                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('pemakaian.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </a>
                                         </td>
                                         @endcan
                                     </tr>

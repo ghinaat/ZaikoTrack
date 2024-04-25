@@ -33,8 +33,6 @@ Tambah Barang
                                 <video id="previewKamera" style="width: 100%; height: auto;"></video>
                             </div>
                             <br>
-                            <select id="pilihKamera" class="form-select">
-                            </select>
                             <br>
                             <label for="ket_barang">Kode Barang</label>
                             <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>

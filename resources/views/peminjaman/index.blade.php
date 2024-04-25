@@ -54,16 +54,16 @@ Peminjaman
                                 </div>
                                 <div class="col-md-4 col-lg-3">
                                     <div class="form-group">
-                                    <label for="tglawal" class="form-label">Tanggal Awal:</label>
-                                    <input type="date" id="tglawal" name="tglawal" class="form-control"
-                                        value="{{ request()->input('tglawal') }}">
+                                    <label for="tanggal_awal" class="form-label">Tanggal Awal:</label>
+                                    <input type="date" id="tanggal_awal" name="tanggal_awal" class="form-control"
+                                        value="{{ request()->input('tanggal_awal') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-3">
                                     <div class="form-group">
-                                    <label for="tglakhir" class="form-label">Tanggal Akhir:</label>
-                                    <input type="date" id="tglakhir" name="tglakhir" class="form-control"
-                                        value="{{ request()->input('tglakhir') }}">
+                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir:</label>
+                                    <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="form-control"
+                                        value="{{ request()->input('tanggal_akhir') }}">
                                         </div>
                                 </div>
                 
@@ -265,6 +265,13 @@ Peminjaman
                                                                         required>
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="keterangan_pemakaian">Keterangan
+                                                                Pemakaian</label>
+                                                            <input type="text" name="keterangan_pemakaian"
+                                                                id="keterangan_pemakaian" class="form-control" value="{{$peminjaman->keterangan_pemakaian ?? old('keterangan_pemakaians')}}">
                                                         </div>
 
                                                         <div class="form-input-group">

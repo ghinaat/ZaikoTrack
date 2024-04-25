@@ -18,6 +18,7 @@ class UsersImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         $name = $row[1];
+        $nis = $row[2];
 
         if (empty($name)) {
             return null; // Or handle the empty value as needed, like skipping the User creation
@@ -29,6 +30,7 @@ class UsersImport implements ToModel, WithStartRow
         return new User([
             'name' => $name,
             'email' => $email,
+            'nis' => $nis,
             'password' => Hash::make('12345678'),
             'level' => 'siswa',
 
