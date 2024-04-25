@@ -74,7 +74,7 @@ Peminjaman / List Barang
                   <div class="d-flex flex-column">
                     <h6 class="mt-2 text-secondary text-xs">Tanggal peminjaman</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
-                      {{\Carbon\Carbon::parse($peminjaman->tgl_pakai)->format('d F Y') ?? '' }}
+                      {{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') ?? '' }}
                     </div>
                   </div>
                 </div>
@@ -85,19 +85,25 @@ Peminjaman / List Barang
                         <h6 class="mt-2 text-secondary text-xs">Tanggal Pengembalian</h6>
                         <div class="col-12 text-dark font-weight-bold mb-3">
                             @php
-                                $tglKembali = \Carbon\Carbon::parse($peminjaman->tgl_kembali);
-                                $currentDate = \Carbon\Carbon::now();
-                                $daysRemaining = $tglKembali->diffInDays($currentDate, false);
-    
-                                $badgeClass = '';
-                                if ($daysRemaining <= 0) {
-                                    
-                                    $badgeClass = 'badge bg-gradient-danger'; 
-                                } elseif ($daysRemaining <= 3) {
-                                  
-                                    $badgeClass = 'badge bg-gradient-warning'; 
+                            $tglKembali = \Carbon\Carbon::parse($peminjaman->tgl_kembali);
+                            $currentDate = \Carbon\Carbon::now();
+                        
+                            // Periksa apakah tanggal kembali sudah terlewati
+                            if ($currentDate->greaterThan($tglKembali)) {
+                                $badgeClass = 'badge bg-gradient-danger'; // Tanggal kembali sudah terlewati
+                            } else {
+                                // Hitung sisa hari dari tanggal kembali
+                                $daysRemaining = $currentDate->diffInDays($tglKembali);
+                                
+                                if ($daysRemaining <= 3) {
+                                    $badgeClass = 'badge bg-gradient-warning'; // Kurang dari atau sama dengan 3 hari
+                                } else {
+                                    // Default badge class
+                                    $badgeClass = '';
                                 }
-                            @endphp
+                            }
+                        @endphp
+                        
                             
                            
                             <span class="{{ $badgeClass }}">
@@ -133,10 +139,7 @@ Peminjaman / List Barang
                     <div class="table-container">
                         <div class="table-responsive">
                             <div class="mb-2">
-                              <a href="{{ route('peminjaman.Qrcode', $peminjaman->id_peminjaman) }}"
-                                                class="btn btn-primary mx-1">
-                                                Tambah
-                                            </a> 
+                                <button class="btn btn-primary mb-2" onclick="notificationBeforeAddPeminjaman(event, this, {{ $peminjaman->id_peminjaman }})" data-id-peminjaman="{{ $peminjaman->id_peminjaman }}">Tambah</button>
                             </div>
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
@@ -186,8 +189,13 @@ Peminjaman / List Barang
                                         <td>
                                             @if($barang->status == "dipinjam")
                                             <div class="btn-group">
-                                            <a href="{{ route('detailPeminjaman.return', $barang->id_detail_peminjaman) }}" class="btn btn-info btn-xs mx-2"> <i class="fa fa-undo"></i></a>
-                                           @can("isTeknisi", 'isKabeng')
+                                            
+                                                <button class="btn btn-info btn-xs mx-1"
+                                                data-id-detail-peminjaman="{{ $barang->id_detail_peminjaman }}"
+                                                onclick="notificationBeforeReturn(event, this)">
+                                                 <i class="fa fa-undo"></i>
+                                                 </button>                                           
+                                            @can("isTeknisi", 'isKabeng')
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
                                                 data-target="#editModal{{$barang->id_detail_peminjaman}}"
                                                 data-id="{{$barang->id_detail_peminjaman}}">
@@ -230,7 +238,8 @@ Peminjaman / List Barang
                                                             <label for="id_barang">Kode Barang</label>
                                                             <select class="form-select" name="id_barang" id="id_barang" required>
                                                                 @foreach($id_barang_edit as $key => $br)
-                                                                <option value="{{$br->id_barang }}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                                                <option value="{{$br->id_barang }}" @if($br->id_barang ==
+                                                                    old('id_barang', $br->id_barang) )selected @endif>
                                                                     {{$br->kode_barang}}
                                                                 </option>
                                                                 @endforeach
@@ -265,65 +274,7 @@ Peminjaman / List Barang
                                                         </div>
                                                         @enderror
                     
-                                                        <div class="form-group">
-                                                            <label for="status">Status</label>
-                                                            <select
-                                                                class="form-select @error('status') is-invalid @enderror"
-                                                                id="status" name="status">
-                                                                <option value="dipinjam" @if($barang->status ==
-                                                                    'dipinjam'
-                                                                    ||
-                                                                    old('status')=='dipinjam' )selected
-                                                                    @endif>Dipinjam
-                                                                </option>
-                                                                <option value="sudah_dikembalikan" @if($barang->
-                                                                    status
-                                                                    ==
-                                                                    'sudah_dikembalikan' ||
-                                                                    old('status')=='sudah_dikembalikan'
-                                                                    )selected
-                                                                    @endif>Dikembalikan
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        {{-- <div class="form-group">
-                                                            <label for="exampleInputkondisi_barang_akhir">Kondisi
-                                                                Barang Akhir</label>
-                                                            <select
-                                                                class="form-select @error('kondisi_barang_akhir') is-invalid @enderror"
-                                                                id="exampleInputkondisi_barang_akhir"
-                                                                name="kondisi_barang_akhir">
-                                                                <option value="lengkap" @if($barang->
-                                                                    kondisi_barang_akhir
-                                                                    ==
-                                                                    'lengkap' ||
-                                                                    old('kondisi_barang_akhir')=='lengkap'
-                                                                    )selected @endif>
-                                                                    Lengkap
-                                                                </option>
-                                                                <option value="tidak_lengkap" @if($barang->
-                                                                    kondisi_barang_akhir
-                                                                    ==
-                                                                    'tidak_lengkap' ||
-                                                                    old('kondisi_barang_akhir')=='tidak_lengkap'
-                                                                    )selected @endif>
-                                                                    Tidak Lengkap
-                                                                </option>
-                                                                <option value="rusak" @if($barang->
-                                                                    kondisi_barang_akhir
-                                                                    ==
-                                                                    'rusak' ||
-                                                                    old('kondisi_barang_akhir')=='rusak'
-                                                                    )selected @endif>
-                                                                    Rusak
-                                                                </option>
-                                                            </select>
-                                                            @error('kondisi_barang_akhir')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
-                                                        </div> --}}
+                                                    
                                                         <div class="form-group mt-2">
                                                             <label for="ket_tidak_lengkap_akhir">Keterangan
                                                                 Barang</label>
@@ -350,6 +301,7 @@ Peminjaman / List Barang
                                                 </div>
                                             </div>
                                         </div>
+                                    
                                         @endforeach
                                 </tbody>
                             </table>
@@ -382,15 +334,30 @@ Peminjaman / List Barang
                     <input type="hidden" name="id_peminjaman" value="{{ $peminjaman->id_peminjaman }}">
                     <div class="form-row mt-3">
                         <div class="form-group">
-                            <label for="id_barang">Barang</label>
+                            <label for="id_barang">Kode Barang</label>
                             <select class="form-select" name="id_barang" id="id_barang" required>
+                                @if($id_barang_options->isEmpty())
+                                <option value="" disabled selected>No data available</option>
+                                 @else
                                 @foreach($id_barang_options as $key => $b)
                                 <option value="{{ $b->barang->id_barang }}">
-                                    {{ $b->barang->nama_barang }}
+                                    {{ $b->barang->kode_barang }}
                                 </option>
                                 @endforeach
+                                @endif
                             </select>
                             @error('id_barang')
+                             <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="kondisi_barang">Nama Barang</label>
+                            <select class="form-select" name="kondisi_barang" id="kondisi_barang" readonly>
+
+                            </select>
+                            @error('kondisi_barang')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -399,7 +366,7 @@ Peminjaman / List Barang
                         <div class="form-group">
 
                             <label for="id_ruangan">Ruangan</label>
-                            <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+                            <select class="form-select" name="id_ruangan" id="id_ruangan" readonly>
 
                             </select>
                         </div>
@@ -409,24 +376,13 @@ Peminjaman / List Barang
                         </div>
                         @enderror
 
+                        
                         <div class="form-group mt-2">
-                            <label for="kondisi_barang">Kondisi Barang</label>
-                            <select class="form-select" name="kondisi_barang" id="kondisi_barang" required>
-
-                            </select>
-                            @error('kondisi_barang')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="ket_tidak_lengkap_awal">Keterangan Barang</label>
-                            <input type="text" name="ket_tidak_lengkap_awal" id="ket_tidak_lengkap_awal"
-                                class="form-control">
+                            <label for="ket_barang">Keterangan Barang</label>
+                            <input type="text" name="ket_barang" id="ket_barang" class="form-control">
                             <small class="form-text text-muted">*wajib diisi ketika
                                 barang tidak lengkap/rusak. </small>
-                            @error('ket_tidak_lengkap_awal')
+                            @error('ket_barang')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -443,6 +399,7 @@ Peminjaman / List Barang
         </div>
     </div>
 </div>
+
 
 
 
@@ -470,39 +427,6 @@ $(document).ready(function() {
     });
 });
 
-function notificationBeforeReturn(event, el, dt) {
-    event.preventDefault();
-    var idDetailPeminjaman = el.getAttribute('data-id-detail-peminjaman');
-
-    Swal.fire({
-        title: 'Pilihan Pengembalian Barang',
-        text: 'Pilih cara untuk pengembalian barang:',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Dengan Barcode',
-        cancelButtonText: 'Tanpa Barcode'
-
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Jika pengguna memilih "Dengan Barcode"
-window.location.href = `/detailPeminjaman/return/${idDetailPeminjaman}`;            // Jika pengguna memilih "Tanpa Barcode", tampilkan add modal
-            showeditModal();
-        }
-        $('#editModal').modal('hide');
-    });
-}
-
-function showAddModal() {
-
-    $('#editModal').modal('show');
-}
-
-function addData() {
-
-    $('#editModal').modal('hide');
-}
 
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
@@ -558,6 +482,49 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
         })
         .catch(error => console.error('Error fetching id_ruangan options:', error));
 }));
+
+function notificationBeforeAddPeminjaman(event, el, dt) {
+    event.preventDefault();
+
+    
+    const idPeminjaman = el.getAttribute('data-id-peminjaman');
+
+    console.log('id_peminjaman:', idPeminjaman);
+
+    Swal.fire({
+        title: 'Pilihan Tambah Data',
+        text: 'Pilih cara untuk menambahkan data:',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dengan Barcode',
+        cancelButtonText: 'Tanpa Barcode'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user chooses "Dengan Barcode"
+            window.location.href = `/peminjaman/qrcode/${idPeminjaman}`; // Navigate to the URL with the id_ruangan
+        } else {
+            // If the user chooses "Tanpa Barcode", display the add modal
+            showAddModal();
+            $('#addModal').modal('hide')
+        }
+        // Hide the addModal (if applicable)
+        $('#addModal').modal('hide');
+    });
+}
+
+function showAddModal() {
+    Swal.close();
+
+    $('#addModal').modal('show');
+    
+}
+
+function addData() {
+
+    $('#addModal').modal('hide');
+}
 </script>
 
 @endpush

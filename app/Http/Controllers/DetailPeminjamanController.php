@@ -5,6 +5,9 @@ use App\Models\DetailPeminjaman;
 use App\Models\Peminjaman;
 use App\Models\Inventaris;
 use App\Models\Ruangan;
+use App\Models\Notifikasi;
+use App\Events\NotifPeminjaman;
+use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
@@ -12,11 +15,11 @@ class DetailPeminjamanController extends Controller
 {
 
 
-    public function AddBarcode(Request $request)
-    {
-        // Validasi input request
-        try {
-            $request->validate([
+        public function AddBarcode(Request $request)
+        {
+            // Validasi input request
+            try {
+                $request->validate([
                 'kode_barang' => 'required',
                 'ket_tidak_lengkap_awal' => 'nullable',
             ]);
@@ -55,7 +58,10 @@ class DetailPeminjamanController extends Controller
          
         ]);
         $detailPeminjaman->save();
-    
+        $detail_peminjaman = DetailPeminjaman::all();
+        // dd($detail_peminjaman);
+        event(new NotifPeminjaman($detail_peminjaman));
+
         // Mengambil nama barang dan ruangan
         $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
         $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
@@ -118,6 +124,7 @@ class DetailPeminjamanController extends Controller
             'tgl_kembali' => $peminjaman->tgl_kembali,
         ]);
         $detailPeminjaman->save();
+        
     
         // Mengambil nama barang dan ruangan
         $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
@@ -176,6 +183,9 @@ class DetailPeminjamanController extends Controller
 
         ]);
         $detailPeminjaman ->save();
+        $detail_peminjaman = DetailPeminjaman::all();
+        // dd($detail_peminjaman);
+      
         
         $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
         $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
@@ -202,7 +212,6 @@ class DetailPeminjamanController extends Controller
         $request->validate([
             'id_barang' => 'required',
             'status' => 'required',
-
             'ket_tidak_lengkap_akhir' => 'nullable',
         ]);
 
@@ -225,9 +234,8 @@ class DetailPeminjamanController extends Controller
         $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
 
         $detailPeminjaman ->save();
-
        
-      
+
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
     ]);
     }
@@ -235,13 +243,31 @@ class DetailPeminjamanController extends Controller
     public function Return($id_detail_peminjaman)
     {
         $detailPeminjamans = DetailPeminjaman::find($id_detail_peminjaman);
+        $peminjaman = $detailPeminjamans->id_peminjaman;
         $ruangans = Ruangan::all();
       
     
         return view('peminjaman.return', [
             
             'detailPeminjamans' => $detailPeminjamans,
+            'peminjaman' => $peminjaman,  
+            'ruangans' => $ruangans,
+            
            
+        ]);
+    }
+
+    public function returnScan($id_detail_peminjaman)
+    {
+        $detailPeminjamans = DetailPeminjaman::find($id_detail_peminjaman);
+        $peminjaman = $detailPeminjamans->id_peminjaman;
+        $ruangans = Ruangan::all();
+      
+    
+        return view('peminjaman.scan', [
+            
+            'detailPeminjamans' => $detailPeminjamans,
+            'peminjaman' => $peminjaman,
             'ruangans' => $ruangans,
             
            
@@ -286,14 +312,27 @@ class DetailPeminjamanController extends Controller
                 ]);
                 $inventaris ->save();
             }
+
+
             
             $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
             $detailPeminjaman-> status = 'sudah_dikembalikan';
             $detailPeminjaman->kondisi_barang_akhir = $request->kondisi_barang_akhir;
             $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
-            $detailPeminjaman-> tgl_kembali = $peminjaman ->tgl_kembali;
+            $detailPeminjaman-> tgl_kembali = Carbon::now(); 
 
             $detailPeminjaman ->save();
+
+            $notificationsToDelete = Notifikasi::where('link', '/peminjaman/' . $id_detail_peminjaman)->get();
+            dd( $notificationsToDelete );
+            if($notificationsToDelete){
+                foreach ($notificationsToDelete as $notification) {
+                    $notification->delete();
+                }
+            }
+            $id_peminjaman =   $detailPeminjaman -> id_peminjaman;
+            
+            
 
                 return redirect()->route('peminjaman.showDetail', ["id_peminjaman" => $id_peminjaman])->with(['success_message' => 'Data telah tersimpan.'
             ]);

@@ -101,5 +101,36 @@ function addData() {
 
     $('#addModal').modal('hide');
 }
+
+
+function notificationBeforeReturn(event, el, dt) {
+    event.preventDefault();
+    var idDetailPeminjaman = el.getAttribute('data-id-detail-peminjaman');
+
+    Swal.fire({
+        title: 'Pilihan Pengembalian Barang',
+        text: 'Pilih cara untuk pengembalian barang:',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Dengan Barcode',
+        cancelButtonText: 'Tanpa Barcode'
+
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user chooses "Dengan Barcode"
+            window.location.href = `/detailPeminjaman/return/barcode/${idDetailPeminjaman}`; // Navigate to the URL with the id_ruangan
+        } else {
+            // If the user chooses "Tanpa Barcode", display the add modal
+            window.location.href = `/detailPeminjaman/return/${idDetailPeminjaman}`; // Navigate to the URL with the id_ruangan
+          
+        }
+        // Hide the returnModal (if applicable)
+        $('#returnModal').modal('hide');
+    });
+}
+
+
 </script>
 @endpush
