@@ -322,8 +322,10 @@ Home
         <div class="row align-items-center">
                 <div class="col-12 col-md-8 welcome-card">
                     <h3>Welcome {{ implode(' ', array_slice(explode(' ', $user->name), 0, 2)) }}!</h3>
-
-                    <p style="text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic dolorem autem ab at rerum eumsit? Delectus enim animi id aliquam porro!</p>
+                    <p style="text-sm">
+                        <strong>ZaikoTrack</strong> is an application designed to streamline the inventory management process, from recording to updating stock items.
+                    </p>
+                    
                     <a href="{{ route('barang.index') }}" class="btn bg-gradient-primary btn-sm text-sm">Lihat Barang</a>
                 </div>
                 <div class="col-md-4 mt-1 p-1 welcome-img">

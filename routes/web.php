@@ -79,12 +79,6 @@ Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisControlle
 Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
 Route::get('/inventaris/fetch-id-barang/{id_barang}', [App\Http\Controllers\InventarisController::class, 'fetchIdBarang'])->name('inventaris.fetchIdBarang');
 
-
-Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
-Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
-Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
-Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
-
 Route::get('/peminjaman/export', [PeminjamanController::class, 'export'])->name('peminjaman.export');
 Route::get('/peminjaman/qrcode/{id_peminjaman}', [PeminjamanController::class, 'Qrcode'])->name('peminjaman.Qrcode');
 Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->name('peminjaman.barcode');

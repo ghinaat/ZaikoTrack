@@ -113,8 +113,8 @@ Peminjaman / List Barang
                   <div class="d-flex flex-column">
                     <h6 class="mt-2 text-secondary text-xs">Keterangan</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-2">
-                      @if($peminjaman->keterangan_pemakaian)
-                        {{ $peminjaman->keterangan_pemakaian ?? '' }}
+                      @if($peminjaman->keterangan_peminjaman)
+                        {{ $peminjaman->keterangan_peminjaman ?? '' }}
                       @else
                         -
                       @endif

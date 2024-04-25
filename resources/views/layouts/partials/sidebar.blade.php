@@ -20,6 +20,7 @@
                     <span class="nav-link-text ms-1">Home</span>
                 </a>
             </li>
+            @can('isTeknisi', 'isKaprog','isKabeng')
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
                     href="{{route('user.index')}}">
@@ -50,6 +51,8 @@
                     <span class="nav-link-text ms-1">Pembelian</span>
                 </a>
             </li>
+            @endcan
+
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('inventaris.index') ? 'active' : '' }} "
                     href="{{route('inventaris.index')}}">
