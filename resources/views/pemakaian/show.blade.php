@@ -257,7 +257,7 @@ Detail Pemakaian
                               <div class="form-group">
                                   <label for="jumlah_barang">Jumlah Barang</label>
                                   <input type="number" class="form-control" name="jumlah_barang" id="jumlah_barang_update_{{$dp->id_detail_pemakaian}}" min="0" disabled>
-                                  <small id="stok_info_update" style="display: none;">Stok: <span id="stok_value_update"></span></small>
+                                  <small id="stok_info_update_{{$dp->id_detail_pemakaian}}" style="display: none;">Stok: <span id="stok_value_update_{{$dp->id_detail_pemakaian}}"></span></small>
                               </div>
                           </div>
                       </div>
@@ -377,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadRuanganAndStok(selectedIdBarang{{$dp->id_detail_pemakaian}}, '{{$dp->id_detail_pemakaian}}');
     }
   @endforeach
+    
 
   // Fungsi untuk mengambil dan memuat data ruangan dan stok terkait dengan barang yang dipilih
   function loadRuanganAndStok(idBarang, idDetailPemakaian) {
@@ -385,33 +386,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const stokInfo = document.getElementById('stok_info_update_' + idDetailPemakaian);
     const stokValue = document.getElementById('stok_value_update_' + idDetailPemakaian);
 
-    // Fetch data ruangan dan stok menggunakan fetch API
-    fetch(`/get-ruangan-and-stok/${idDetailPemakaian}`)
-      .then(response => response.json())
-      .then(data => {
-        // Periksa apakah data yang diterima sesuai dengan yang diharapkan
-        console.log(data); // Periksa apakah data ruanganOptions ada di sini
+    fetch(`/get-ruangan-options/${idBarang}`)
+        .then(response => response.json())
+        .then(dataRuangan => {
+            fetch(`/get-ruangan-and-stok/${idDetailPemakaian}`)
+                .then(response => response.json())
+                .then(pemakaianOld=> {
+                    // Clear existing options
+                    idRuanganSelect.innerHTML = '';
+                    
+                    dataRuangan.forEach(option => {
+                      const newOption = document.createElement('option');
+                      newOption.value = option.ruangan.id_ruangan;
+                      newOption.text = option.ruangan.nama_ruangan;
+                      idRuanganSelect.add(newOption);
+                      
+                      idRuanganOld = pemakaianOld.id_ruangan;
+                      if (option.ruangan.id_ruangan === idRuanganOld){
+                            newOption.selected = true;
+                        }
+                    });
 
-        // Isi opsi ruangan jika data diterima
-        if (data && data.ruanganOptions) {
-          data.ruanganOptions.forEach(option => {
-            const newOption = document.createElement('option');
-            newOption.value = option.id;
-            newOption.textContent = option.nama_ruangan;
-            idRuanganSelect.appendChild(newOption);
-          });
-        }
-
-        // Set nilai stok jika data diterima
-        if (data && data.stok) {
-          stokInput.disabled = false;
-          stokInfo.style.display = 'block';
-          stokValue.textContent = data.stok;
-        }
-      })
-      .catch(error => console.error('Error:', error));
-  }
-});
+                });
+        })
+        .catch(error => {
+            console.error('Terjadi kesalahan:', error);
+        });
+}
+})
 
 </script>
 @endpush

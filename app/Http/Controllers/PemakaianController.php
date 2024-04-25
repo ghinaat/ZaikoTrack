@@ -177,15 +177,11 @@ class PemakaianController extends Controller
     {
 
         $DetailOld = DetailPemakaian::with('inventaris')->find($id_detail_pemakaian);
-        $ruanganOptions = Inventaris::where('id_barang', $DetailOld->inventaris->id_barang)
-        ->select('id_ruangan', 'jumlah_barang') 
-        ->distinct()
-        ->with(['ruangan:id_ruangan,nama_ruangan']) // Specify the columns you want
-        ->get();
+        $id_ruangan = $DetailOld->inventaris->first()->id_ruangan;
 
         return response()->json([
-            'ruanganOptions' => $ruanganOptions,
-            'DetailOld' => $DetailOld->inventaris->id_ruangan,
+            'DetailOld' => $DetailOld,
+            'id_ruangan'  =>$id_ruangan,
         ]);
     }
 

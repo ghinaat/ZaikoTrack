@@ -55,6 +55,7 @@ Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class,
 Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
 Route::get('/barang/exportalat', [App\Http\Controllers\BarangController::class, 'exportAlatPerlengkapan'])->name('barang.exportAlatPerlengkapan');
 Route::get('/barang/exportbahan', [App\Http\Controllers\BarangController::class, 'exportBahan'])->name('barang.exportBahan');
+Route::get('/barang/print/{id_barang}', [App\Http\Controllers\BarangController::class, 'print'])->name('barang.print');
 
 Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
 Route::post('/pembelian', [App\Http\Controllers\PembelianController::class, 'store'])->name('pembelian.store');
@@ -65,6 +66,7 @@ Route::delete('/pembelian/{id_pembelian}', [App\Http\Controllers\PembelianContro
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
+Route::get('fetch-id-barang/{id_detail_pembelian}',  [App\Http\Controllers\DetailPembelianController::class, 'getIdBarang'])->name('detailpembelian.fetchIdbarang');
 // Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
 Route::get('/inventaris', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');

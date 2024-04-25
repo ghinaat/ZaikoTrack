@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\DetailPembelian;
 use App\Models\JenisBarang;
 use App\Models\Notifikasi;
 use App\Models\Inventaris;
@@ -60,56 +61,51 @@ class BarangController extends Controller
         ]);
 
 
-        // dd($request);
         $barangs = Barang::all();
         foreach ($barangs as $br){
-            if($request->kode_barang){
-                if ($request->kode_barang === $br->kode_barang){
-                    return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
+            if ($request->kode_barang === $br->kode_barang){
+                return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
+            }else{
+                $barang = new Barang();
+                if ($request->id_jenis_barang){
+                    $barang->id_jenis_barang = $request->id_jenis_barang;
+                    $barang->nama_barang = $request->nama_barang;
+                    $barang->merek = $request->merek;
+                    $barang->stok_barang = $request->stok_barang;
+                    $barang->kode_barang = $request->kode_barang;
+                    $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
+                    $barang->qrcode_image = $imageName;
+                }else{
+                    $barang->id_jenis_barang = $request->id_jenis_barang;
+                    $barang->nama_barang = $request->nama_barang;
+                    $barang->merek = $request->merek;
+                    $barang->stok_barang = $request->stok_barang;
+                    $barang->kode_barang = null;
+                    $barang->qrcode_image = null;
+                }
+        
+                // dd($barang);
+                if($request->id_jenis_barang !== '3' && $request->kode_barang == null){
+                    return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
+                }else{
+                $barang->save();
+        
+                $pengguna = auth()->user();
+        
+                $notifikasi = new Notifikasi();
+                $notifikasi->judul = 'Data Barang';
+                $notifikasi->pesan = 'Barang Baru Telah Berhasil Ditambahkan';
+                $notifikasi->is_dibaca = 'tidak_dibaca';
+                $notifikasi->send_email = 'yes';
+                $notifikasi->label = 'info';
+                $notifikasi->link = '/Barang';
+                $notifikasi->id_users = $pengguna->id_users;
+                $notifikasi->save();
+        
+                return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);}
                 }
             }
         }
-
-        $barang = new Barang();
-        if ($request->id_jenis_barang){
-            $barang->id_jenis_barang = $request->id_jenis_barang;
-            $barang->nama_barang = $request->nama_barang;
-            $barang->merek = $request->merek;
-            $barang->stok_barang = $request->stok_barang;
-            $barang->kode_barang = $request->kode_barang;
-            $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
-            $barang->qrcode_image = $imageName;
-        }else{
-            $barang->id_jenis_barang = $request->id_jenis_barang;
-            $barang->nama_barang = $request->nama_barang;
-            $barang->merek = $request->merek;
-            $barang->stok_barang = $request->stok_barang;
-            $barang->kode_barang = null;
-            $barang->qrcode_image = null;
-        }
-
-        // dd($barang);
-        if($request->id_jenis_barang !== '3' && $request->kode_barang == null){
-            return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
-        }else{
-        $barang->save();
-
-        $pengguna = auth()->user();
-
-        $notifikasi = new Notifikasi();
-        $notifikasi->judul = 'Data Barang';
-        $notifikasi->pesan = 'Barang Baru Telah Berhasil Ditambahkan';
-        $notifikasi->is_dibaca = 'tidak_dibaca';
-        $notifikasi->send_email = 'yes';
-        $notifikasi->label = 'info';
-        $notifikasi->link = '/Barang';
-        $notifikasi->id_users = $pengguna->id_users;
-        $notifikasi->save();
-
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
-
-    }
-}
 
     public function generateBarcode($kode_barang)
     {
@@ -176,6 +172,19 @@ class BarangController extends Controller
 
         return $pdf->download('Alat & Perlengkapan Sija.pdf');    
     }
+
+    public function print($id_barang){
+        $barang = Barang::with(['detailPembelian.pembelian'])->where('id_barang', $id_barang)->get();
+        $tahunPembelian = DetailPembelian::with(['pembelian'])->where('id_barang', $id_barang)->get();
+
+        // dd($barang);
+        $pdf = PDF::loadView('barang.export.print', [
+            'barang' => $barang,
+            'tahunPembelian' => $tahunPembelian,
+        ]);
+
+        return $pdf->download('LabelQRcode.pdf');   
+    } 
     public function exportBahan(){
         $barang = Barang::with(['jenisbarang'])->where('id_jenis_barang', 3)->get();
         $inventaris = Inventaris::all();

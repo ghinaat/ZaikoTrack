@@ -36,6 +36,25 @@ class DetailPembelianController extends Controller
         ]);
     }
 
+    public function getIdBarang($id_detail_pembelian){
+        $barangSebelumnya = DetailPembelian::where('id_detail_pembelian', $id_detail_pembelian)->pluck('id_barang');
+        $alatPerlengkapan = Barang::with(['jenisbarang'])->where('id_barang', $barangSebelumnya)->pluck('id_jenis_barang'); 
+        $barangSudahDibeli = DetailPembelian::pluck('id_barang')->toArray();
+        $selectUpdate = Barang::where(function($query) use ($barangSudahDibeli, $barangSebelumnya) {
+            $query->whereNotIn('id_barang', $barangSudahDibeli)
+                  ->orWhereIn('id_barang', $barangSebelumnya);
+        })
+        ->where('id_jenis_barang', '!=', 3)
+        ->get();
+    
+        
+        return response()->json([
+            'selectUpdate' => $selectUpdate,
+            'barangSebelumnya' => $barangSebelumnya,
+            'alatPerlengkapan' => $alatPerlengkapan
+        ]);
+    }
+
     public function store(Request $request, $id_pembelian){
         
         // dd($request);
