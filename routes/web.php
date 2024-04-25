@@ -8,6 +8,8 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\EmailConfigurationController;
+use App\Http\Controllers\LaporanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -140,3 +142,6 @@ Route::get('/notifikasi/{id_notifikasi}/detail', [NotifikasiController::class, '
 
 Route::get('/email-configuration', [EmailConfigurationController::class, 'show'])->name('emailConfiguration.show');
 Route::post('/email-configuration', [EmailConfigurationController::class, 'update'])->name('emailConfiguration.update');
+
+Route::get('/laporan-peminjaman', [LaporanController::class, 'index'])->name('laporan-peminjaman');
+Route::get('/laporan/pdf', [LaporanController::class, 'exportPDF'])->name('downloadpdf');
