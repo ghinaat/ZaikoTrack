@@ -7,9 +7,10 @@ use App\Models\Guru;
 use App\Models\Inventaris;
 use App\Models\Karyawan;
 use App\Models\Pemakaian;
-use App\Models\Siswa;
+// use App\Models\Siswa;
 use App\Exports\PemakaianExport;
 use App\Models\User;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -370,6 +371,7 @@ class PemakaianController extends Controller
             $detailpemakaian->delete();
         }
 
+        return redirect()->back()->with(['success_message' => 'Data telah terhapus.',]);
 
     }
 }

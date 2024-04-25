@@ -5658,7 +5658,7 @@ fieldset:disabled .btn {
   position: relative;
   padding: var(--bs-alert-padding-y) var(--bs-alert-padding-x);
   margin-bottom: var(--bs-alert-margin-bottom);
-  color: var(--bs-alert-color);
+  color: #ffff;
   background-color: var(--bs-alert-bg);
   border: var(--bs-alert-border);
   border-radius: var(--bs-alert-border-radius, 0);
@@ -5715,9 +5715,9 @@ fieldset:disabled .btn {
 }
 
 .alert-info {
-  --bs-alert-color: #075260;
-  --bs-alert-bg: #cff5fc;
-  --bs-alert-border-color: #b8f0fa;
+  --bs-alert-color: #5e72e4;
+  --bs-alert-bg: #5e72e4;
+  --bs-alert-border-color: #5e72e4;
 }
 
 .alert-info .alert-link {
@@ -20110,7 +20110,7 @@ fieldset:disabled .btn {
 }
 
 .alert-info {
-  background-image: linear-gradient(310deg, #1171ef 0%, #0eadca 100%);
+  background-image: linear-gradient(310deg, #5e72e4 0%, #5e72e4 100%);
 }
 
 .alert-warning {
