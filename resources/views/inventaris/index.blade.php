@@ -22,7 +22,12 @@ Inventaris
                                     <th>No.</th>
                                     <th>Ruangan</th>
                                     <th>List Barang</th>
+                                    @can('isTeknisi')
                                     <th>Opsi</th>
+                                    @endcan
+                                    @can('isKabeng')
+                                    <th>Opsi</th>
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,6 +42,7 @@ Inventaris
                                         </a>
 
                                     </td>
+                                    @can("isTeknisi")
                                     <td>
                                         <a href="{{ route('inventaris.destroyRuangan', $inventaris->id_ruangan) }}"
                                             onclick="notificationBeforeDelete(event, this, {{$key+1}})"
@@ -44,6 +50,16 @@ Inventaris
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </td>
+                                    @endcan
+                                    @can("isKabeng")
+                                    <td>
+                                        <a href="{{ route('inventaris.destroyRuangan', $inventaris->id_ruangan) }}"
+                                            onclick="notificationBeforeDelete(event, this, {{$key+1}})"
+                                            class="btn btn-danger btn-xs mx-1">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                    @endcan
                                 </tr>
                     </div>
                 </div>

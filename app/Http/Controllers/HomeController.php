@@ -44,10 +44,15 @@ class HomeController extends Controller
         // dd($jadwalKembali);
         $user = Auth::user();
         if ($user->level == 'siswa') {
-            $jadwals = $user->peminjaman()->with(['detailPeminjaman.inventarisis.barang'])->get();
+            $jadwals = $user->peminjaman()
+            ->whereHas('detailPeminjaman', function ($query) use ($user) {
+                $query->where('id_users', $user->id_users);
+            })
+            ->with(['detailPeminjaman.inventarisis.barang'])->get();
         } else {
             $jadwals = $jadwalKembali->groupBy('id_peminjaman');
         }
+        // dd($detail);
 
         // dd($jadwals);
         return view('home',[
