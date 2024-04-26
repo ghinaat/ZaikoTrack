@@ -26,23 +26,24 @@
             top: 20px;
             left: 20px;
         }
+        .tanda-tangan {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            text-align: center;
+            width: 200px;
+        }
     </style>
 </head>
 <body>
-    <!-- Kopsurat -->
-    <div class="kopsurat">
-        <img src="{{ asset('public/img/kopsmkn1.jpg') }}" alt="Kopsurat" style="width: 200px;">
-    </div>
-
     <h2 align="center">Laporan Data Peminjaman Barang SIJA</h2>
-
     @if($tglawal && $tglakhir)
     <p>Periode:</p>
     <p>Tanggal Awal: {{ \Carbon\Carbon::parse($tglawal)->format('d F Y') }}</p>
     <p>Tanggal Akhir: {{ \Carbon\Carbon::parse($tglakhir)->format('d F Y') }}</p>
     @endif
     @if($id_barang)
-    <p>Barang: {{ $id_barang }}</p>
+    <p>Barang: {{ $nama_barang }}</p>
     @endif
   
     <table>
@@ -84,5 +85,16 @@
             @endforeach
         </tbody>
     </table>
+    <div>
+        <div class="tanda-tangan">
+            <p>Cibinong, {{ date('d F Y') }}</p>
+            <p>Yang Menyatakan,</p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p>{{$userName}}</p>
+        </div>
+    </div>
 </body>
 </html>

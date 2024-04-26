@@ -323,13 +323,7 @@ class DetailPeminjamanController extends Controller
 
             $detailPeminjaman ->save();
 
-            $notificationsToDelete = Notifikasi::where('link', '/peminjaman/' . $id_detail_peminjaman)->get();
-            dd( $notificationsToDelete );
-            if($notificationsToDelete){
-                foreach ($notificationsToDelete as $notification) {
-                    $notification->delete();
-                }
-            }
+          
             $id_peminjaman =   $detailPeminjaman -> id_peminjaman;
             
             
