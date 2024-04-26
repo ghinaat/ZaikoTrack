@@ -60,9 +60,10 @@ class BarangController extends Controller
             'id_jenis_barang' => 'nullable',
         ]);
 
-
-        $barangs = Barang::all();
+        dd($request);
+        $barangs = Barang::where('id_jenis_barang', '!=', 3);
         foreach ($barangs as $br){
+            if($request->kode_baarang)
             if ($request->kode_barang === $br->kode_barang){
                 return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
             }else{
