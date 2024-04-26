@@ -11,6 +11,7 @@ use App\Models\Pemakaian;
 use App\Exports\PemakaianExport;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -60,7 +61,12 @@ class PemakaianController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
 
+        $user = Auth::user();
         $pemakaianFilter = Pemakaian::query();
+
+        if ($user->level == 'siswa') {
+            $pemakaianFilter->where('id_users', auth()->user()->id_users);
+        }
 
         // Filter berdasarkan id_barang dan rentang tanggal jika keduanya tersedia
         if ($id_barang && $start_date && $end_date) {
@@ -362,22 +368,28 @@ class PemakaianController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.',]);
         
     }
-    public function destroy($id_pemakaian){
+    public function destroy(Request $request, $id_pemakaian){
         $pemakaian = Pemakaian::find($id_pemakaian);
         if ($pemakaian) {
             $pemakaian->delete();
             $detailpemakaian = DetailPemakaian::where('id_pemakaian', $pemakaian->id_pemakaian)->first();
-
-            if ($detailpemakaian) {
-                return response()->json([
-                    'id_detail_pemakaian' => $detailpemakaian->id_pemakaian,
-                ]);
+            if($request->ajax()){
+                if ($detailpemakaian) {
+                    return response()->json([
+                        'id_detail_pemakaian' => $detailpemakaian->id_pemakaian,
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'Detail pemakaian tidak ditemukan.'
+                    ], 404);
+                }
+            } else {
+                return redirect()->back()->with(['success_message' => 'Data telah terhapus.']);
             }
         }
-
-        // return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.',]);
-
+        // return redirect('pemakaian')->with(['success_message' => 'Data telah terhapus.']);
     }
+    
 
     public function  destroyDetail($id_detail_pemakaian){
         $detailpemakaian = DetailPemakaian::find($id_detail_pemakaian);

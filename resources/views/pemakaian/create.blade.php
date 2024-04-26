@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const stokValue = document.getElementById('stok_value');
 
     // Fetch ruangan options for the selected barang
-    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('change', function() {
+    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
         const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
         const selectedIdBarang = this.value;
 
@@ -536,8 +536,6 @@ $(document).ready(function() {
                     if (responseJson && responseJson.errors) {
                         // Mengambil pesan kesalahan spesifik dari 'errors'
                         errorMessage =  'Input belum terisi.'
-                    } else {
-                        errorMessage = 'Jumlah barang melebihi stok';
                     }
                 } catch (error) {
                     errorMessage = 'Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.';

@@ -51,9 +51,9 @@ Barang
                         <div>
                             <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
                         </div>
-                        <div class="text-end">
+                        {{-- <div class="text-end">
                             <a href="{{ route('barang.exportAlatPerlengkapan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
-                        </div>
+                        </div> --}}
                     </div>
                     
                         <div class="table-responsive ">
@@ -80,8 +80,8 @@ Barang
                                         <td>{{$br->merek}}</td>
                                         <td>{{$br->kode_barang}}</td>
                                         <td>
-                                            <a href="{{ asset('/storage/barcode/'. $br->qrcode_image) }}" download>
-                                                <img  src="{{ asset('/storage/barcode/' . $br->qrcode_image) }}" style="width: 80px;">
+                                            <a href="{{ asset('/storage/qrcode/'. $br->qrcode_image) }}" download>
+                                                <img  src="{{ asset('/storage/qrcode/' . $br->qrcode_image) }}" style="width: 80px;">
                                             </a>
                                         </td>
                                         <td style="text-align: center">
