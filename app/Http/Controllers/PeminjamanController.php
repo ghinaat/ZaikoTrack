@@ -92,7 +92,7 @@ class PeminjamanController extends Controller
         
         $barang =  Barang::where('id_jenis_barang', '!=', 3)->get();
     
-        $users = User::where('level', 'siswa')
+        $users = User::where('level', 'siswa' )->whereNotIn('id_users', [1])
             ->orderByRaw("LOWER(name)")
             ->get();
         $guru = Guru::where('id_guru', '!=', 1)  

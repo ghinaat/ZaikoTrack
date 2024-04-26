@@ -228,25 +228,7 @@ class PemakaianController extends Controller
         $detailPemakaian->jumlah_barang = $request->jumlah_barang;
         $detailPemakaian->save();
 
-        $barang = Barang::find($request->id_barang);
-        $totalQuantity = Inventaris::where('id_barang', $request->id_barang)
-                            ->sum('jumlah_barang');
-        $TotalStok = $barang->stok_barang + $totalQuantity;
-        
-        $pengguna = User::where('level', 'teknisi')->get();
-
-
-        if ($TotalStok < 3) {
-            $notifikasi = new Notifikasi();
-            $notifikasi->judul = 'Stok Barang';
-            $notifikasi->pesan = 'Stok barang ' . $barang->nama_barang . ' kurang dari 3.';
-            $notifikasi->is_dibaca = 'tidak_dibaca';
-            $notifikasi->send_email = 'yes';
-            $notifikasi->label = 'info';
-            $notifikasi->link = '/Barang';
-            $notifikasi->id_users = $pengguna->id_users; // Assuming $pengguna is defined somewhere
-            $notifikasi->save();
-        }
+       
         
         if($request->ajax()){
             $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPemakaian->id_inventaris)->first();

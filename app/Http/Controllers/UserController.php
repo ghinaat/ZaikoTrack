@@ -81,7 +81,7 @@ class UserController extends Controller
     public function import(Request $request)
     {
         
-        Excel::import(new SiswaImport, $request->file('file')->store('user'));
+        Excel::import(new UsersImport, $request->file('file')->store('user'));
 
         return redirect()->back()->with([
             'success_message' => 'Data telah Tersimpan',

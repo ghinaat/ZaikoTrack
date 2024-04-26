@@ -17,12 +17,17 @@ class UsersImport implements ToModel, WithStartRow
 
     public function model(array $row)
     {
-        $name = $row[1];
-        $nis = $row[2];
+        $name = $row[0];
+        $nis = $row[1];
 
         if (empty($name)) {
             return null; // Or handle the empty value as needed, like skipping the User creation
         }
+
+        if (empty($nis)) {
+            return null; // Or handle the empty value as needed, like skipping the User creation
+        }
+
 
         // Use the email from the imported data if available, otherwise create a unique one
         $email = Str::slug($name).'@cibinong.com';
