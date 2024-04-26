@@ -56,7 +56,7 @@ Detail Pembelian
                         @if($dp->barang->jenisbarang->id_jenis_barang == 3)
                           <h6 class="mb-3 text-sm">{{$dp->barang->nama_barang}}</h6>
                         @else
-                          <h6 class="mb-3 text-sm">{{$dp->barang->nama_barang}} - {{$dp->barang->kode_barang}}</h6>
+                          <h6 class="mb-3 text-sm">{{$dp->barang->nama_barang}} - <span class="text-sm text-secondary"> {{$dp->barang->kode_barang}}</span></h6>
                         @endif
                         <div class="flex-column d-flex">
                           @if($dp->barang->jenisbarang->id_jenis_barang == 3)
@@ -257,11 +257,10 @@ Detail Pembelian
                             </div>
                         </div>
                         <div class="col-5 col-md-5 d-flex align-items-center justify-content-end">
-                          <div class="text-primary text-gradient text-sm font-weight-bold">
+                          <div class="text-primary text-sm font-weight-bold">
                               @if ($pembelian->nota_pembelian)
-                                <a href="{{ asset('/storage/nota_pembelian/'. $pembelian->nota_pembelian) }}" target="_blank">
-                                  <button class="btn btn-link text-sm mb-0 px-0 ms-4">{{$pembelian->nota_pembelian}}</button>
-                                </a>
+                              <a href="{{ asset('/storage/nota_pembelian/'. $pembelian->nota_pembelian) }}" target="_blank" class="btn btn-link text-sm mb-0 px-0 ms-4">{{$pembelian->nota_pembelian}}</a>
+
                               @else
                                 -
                               @endif

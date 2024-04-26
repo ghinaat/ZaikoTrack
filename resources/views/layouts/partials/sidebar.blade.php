@@ -20,6 +20,7 @@
                     <span class="nav-link-text ms-1">Home</span>
                 </a>
             </li>
+            @can('isTeknisi')
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
                     href="{{route('user.index')}}">
@@ -50,6 +51,40 @@
                     <span class="nav-link-text ms-1">Pembelian</span>
                 </a>
             </li>
+            @endcan
+            @can('isKabeng')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
+                    href="{{route('user.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">User</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('barang.index') ? 'active' : '' }} "
+                    href="{{route('barang.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-app text-info text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1"> Barang</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('pembelian.index') ? 'active' : '' }} "
+                    href="{{route('pembelian.index')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-cart text-warning text-sm opacity-10"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Pembelian</span>
+                </a>
+            </li>
+            @endcan
+
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('inventaris.index') ? 'active' : '' }} "
                     href="{{route('inventaris.index')}}">
@@ -82,6 +117,30 @@
                 </a>
             </li>
             @can('isTeknisi')
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laporan</h6>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('laporan-peminjaman') ? 'active' : '' }} "
+                    href="{{route('laporan-peminjaman')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Peminjaman</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('laporan.pemakaian') ? 'active' : '' }} "
+                    href="{{route('laporan.pemakaian')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Pemakaian</span>
+                </a>
+            </li>
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>
             </li>
@@ -135,18 +194,12 @@
                     <span class="nav-link-text ms-1">Email Configuration</span>
                 </a>
             </li>
+           
+
+            @endcan
+            @can('isKabeng')
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laporan</h6>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('ruangan.index') ? 'active' : '' }} "
-                    href="{{route('ruangan.index')}}">
-                    <div
-                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
-                    </div>
-                    <span class="nav-link-text ms-1">Laporan Pembelian</span>
-                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('laporan-peminjaman') ? 'active' : '' }} "
@@ -159,8 +212,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::routeIs('ruangan.index') ? 'active' : '' }} "
-                    href="{{route('ruangan.index')}}">
+                <a class="nav-link {{ Request::routeIs('laporan.pemakaian') ? 'active' : '' }} "
+                    href="{{route('laporan.pemakaian')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Pemakaian</span>
+                </a>
+            </li>
+            @endcan
+            @can('isKaprog')
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Laporan</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('laporan-peminjaman') ? 'active' : '' }} "
+                    href="{{route('laporan-peminjaman')}}">
+                    <div
+                        class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Laporan Peminjaman</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::routeIs('laporan.pemakaian') ? 'active' : '' }} "
+                    href="{{route('laporan.pemakaian')}}">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-building text-sm opacity-10" style="color: rgb(219, 149, 99)">></i>

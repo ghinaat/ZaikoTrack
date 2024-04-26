@@ -39,38 +39,7 @@ Peminjaman
                 <div class="card-body m-0">
                     <div class="row align-items-end">
                       
-                            <form action="{{ route('peminjaman.index') }}" method="GET" class="row align-items-end">
-                               <div class="form-group">
-                                    <label for="id_barang" class="form-label">Barang:</label>
-                                    <select id="id_barang" name="id_barang"
-                                        class="form-select @error('id_barang') is-invalid @enderror">
-                                        <option value="0" @if(session('selected_id_barang', 0)==0) selected @endif>All
-                                        </option>
-                                        @foreach ($barang as $barang)
-                                        <option value="{{ $barang->id_barang }}" @if($barang->id_barang ==
-                                            session('selected_id_barang')) selected @endif>{{ $barang->nama_barang }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <div class="form-group">
-                                    <label for="tanggal_awal" class="form-label">Tanggal Awal:</label>
-                                    <input type="date" id="tanggal_awal" name="tanggal_awal" class="form-control"
-                                        value="{{ request()->input('tanggal_awal') }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-lg-3">
-                                    <div class="form-group">
-                                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir:</label>
-                                    <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="form-control"
-                                        value="{{ request()->input('tanggal_akhir') }}">
-                                        </div>
-                                </div>
-                
-                                <div class="col-md-4 col-lg-3 mt-md-0 mt-3">
-                                    <button type="submit" class="btn btn-primary mt-md-4">Tampilkan</button>
-                                </div>
-                            </form>
+                            
                         
                     </div>
                 
@@ -80,14 +49,7 @@ Peminjaman
                                 <button class="btn btn-primary mb-2"
                                     onclick="notificationBeforeAdds(event, this)">Tambah</button>
                             </div>
-                            <div class="col-8 col-md-6 mb-2">
-                                <div class="d-flex justify-content-md-end">
-                                    <a href="{{ route('peminjaman.export', [
-                                        'tglawal' => request()->input('tglawal'),
-                                        'tglakhir' => request()->input('tglakhir'),
-                                        'id_barang' => request()->input('id_barang') ]) }}" class="btn btn-danger">Export Data</a>
-                                </div>
-                            </div>
+                         
                         </div>
 
                     </div>

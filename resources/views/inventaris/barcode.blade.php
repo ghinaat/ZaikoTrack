@@ -71,7 +71,7 @@ Tambah Barang
                             @enderror
                         </div>
                         <div class="button-row d-flex justify-content-end mt-4">
-                            <button class="btn btn-secondary mr-4" type="button" title="Prev">Batal</button>
+                            <button class="btn btn-secondary mr-4" type="button" onclick="history.go(-1);" title="Prev">Batal</button>
                             <button class="btn btn-primary" type="submit" title="Prev">Simpan</button>
                         </div>
                     </form>

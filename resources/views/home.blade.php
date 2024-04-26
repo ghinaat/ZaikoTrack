@@ -66,7 +66,509 @@
 Home
 @endsection
 @section('content')
-@can('isTeknisi', 'isKaprog', 'isKabeng')
+@can('isTeknisi')
+<div class="container-fluid pt-4 pb-2">
+    <div class="row">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8" style="padding-right: 0px">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-primary mt-2" style="font-size: 26px">
+                                    {{$inventaris}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                    <i class="ni ni-box-2 text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-danger mt-2" style="font-size: 26px">
+                                        {{$peminjaman}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Dipinjam</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                    <i class="fa-solid fa-people-carry-box text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-success mt-2" style="font-size: 26px">
+                                        {{$barangRusak}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Kondisi Rusak</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                    <i class="fa-solid fa-screwdriver-wrench text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-warning mt-2" style="font-size: 26px">
+                                        {{$users}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Pengguna</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                    <i class="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+            <div class="card" >
+                <div class="card-header pb-0 p-3">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-3"></i> &nbsp;Jadwal Pengembalian</h6>
+                        </div>
+                </div>
+                @if ($jadwals->isEmpty())    
+                <div class="card-body pt-4 p-3">
+                    <div class="container" style="height:100px;" >
+                    <ul class="list-group">
+                      <li class="list-group-item border-0 p-3 bg-gray-100 border-radius-lg">
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-3 text-sm"></h6>
+                          <p class="text-center">No data available</p>                   
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                @else
+                <div class="table-responsive">
+                    <table class="table align-items-center ">
+                        <tbody>
+                            @foreach($jadwals as $peminjaman => $detailPeminjamans)
+                                @php
+                                    $tglKembali = \Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_kembali);
+                                    $tglSekarang = \Carbon\Carbon::now();
+                                    $melebihiBatas = $tglKembali->isPast();
+                                @endphp
+                                <tr>
+                                    <td class="w-25">
+                                        <div class="d-flex align-items-center">
+                                            {{-- <div>
+                                                <img src="../assets/img/icons/flags/US.png" alt="Country flag">
+                                            </div> --}}
+                                            <div class="ms-4">
+                                                <p class="text-xs font-weight-bold mb-0">Nama:</p>
+                                                <h6 class="text-sm mb-0 truncate" style="max-width: 120px;"> <!-- Menerapkan gaya langsung -->
+                                                    @if ($detailPeminjamans->first()->peminjaman->status === 'guru')
+                                                        {{ $detailPeminjamans->first()->peminjaman->guru->nama_guru }}
+                                                    @elseif ($detailPeminjamans->first()->peminjaman->status === 'karyawan')
+                                                        {{ $detailPeminjamans->first()->peminjaman->karyawan->nama_karyawan }}
+                                                    @else
+                                                        {{ $detailPeminjamans->first()->peminjaman->users->name }}
+                                                    @endif
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Jumlah:</p>
+                                            <h6 class="text-sm mb-0">{{ $detailPeminjamans->count() }}</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Dipinjam:</p>
+                                            <h6 class="text-sm mb-0">{{\Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_pinjam)->format('d M Y')}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-sm">
+                                        <div class="col text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Dikembalikan:</p>
+                                            <h6 class="text-sm mb-0">{{\Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_kembali)->format('d M Y')}}</h6>
+                                        </div>
+                        
+                                    </td>
+                                    <td>  
+                                        <a href="{{ route('peminjaman.showDetail', $detailPeminjamans->first()->peminjaman->id_peminjaman) }}" class="btn btn-link btn-icon-only btn-rounded btn-md text-dark icon-move-right my-auto">
+                                            
+                                            <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Kategori </h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-desktop text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Alat Praktik</h6>
+                                    <span class="text-xs">{{$alatPraktik}} Barang</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{{ route('barang.index') }}" class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
+                                    <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-box-open text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Bahan Praktik</h6>
+                                    <span class="text-xs">{{$bahanPraktik}} stok</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <button
+                                    class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
+                                        class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-book text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Perlengkapan</h6>
+                                    <span class="text-xs">{{$perlengkapan}} Barang</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <button
+                                    class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
+                                        class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer pt-3">
+        <div class="container-fluid pb-0">
+            <div class=" align-items-start">
+                    <div class="copyright text-start text-sm text-muted ">
+                        ©2024 SIJA STUDENT
+                    </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+@endcan
+
+@can('isKaprog')
+<div class="container-fluid pt-4 pb-2">
+    <div class="row">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8" style="padding-right: 0px">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-primary mt-2" style="font-size: 26px">
+                                    {{$inventaris}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                    <i class="ni ni-box-2 text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-danger mt-2" style="font-size: 26px">
+                                        {{$peminjaman}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Dipinjam</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                    <i class="fa-solid fa-people-carry-box text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-4 mb-4">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-success mt-2" style="font-size: 26px">
+                                        {{$barangRusak}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Kondisi Rusak</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                    <i class="fa-solid fa-screwdriver-wrench text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <h5 class="font-weight-bolder text-warning mt-2" style="font-size: 26px">
+                                        {{$users}}
+                                    </h5>
+                                    <p class="text-xs mb-0 text-uppercase font-weight-bold">Pengguna</p>
+
+                                </div>
+                            </div>
+                            <div class="col-4 d-flex d-flex align-items-center justify-content-end" style="padding-left: 0; padding-right; 15px;">
+                                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                                    <i class="fa-solid fa-users text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+            <div class="card" >
+                <div class="card-header pb-0 p-3">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-3"></i> &nbsp;Jadwal Pengembalian</h6>
+                        </div>
+                </div>
+                @if ($jadwals->isEmpty())    
+                <div class="card-body pt-4 p-3">
+                    <div class="container" style="height:100px;" >
+                    <ul class="list-group">
+                      <li class="list-group-item border-0 p-3 bg-gray-100 border-radius-lg">
+                        <div class="d-flex flex-column">
+                          <h6 class="mb-3 text-sm"></h6>
+                          <p class="text-center">No data available</p>                   
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                @else
+                <div class="table-responsive">
+                    <table class="table align-items-center ">
+                        <tbody>
+                            @foreach($jadwals as $peminjaman => $detailPeminjamans)
+                                @php
+                                    $tglKembali = \Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_kembali);
+                                    $tglSekarang = \Carbon\Carbon::now();
+                                    $melebihiBatas = $tglKembali->isPast();
+                                @endphp
+                                <tr>
+                                    <td class="w-25">
+                                        <div class="d-flex align-items-center">
+                                            {{-- <div>
+                                                <img src="../assets/img/icons/flags/US.png" alt="Country flag">
+                                            </div> --}}
+                                            <div class="ms-4">
+                                                <p class="text-xs font-weight-bold mb-0">Nama:</p>
+                                                <h6 class="text-sm mb-0 truncate" style="max-width: 120px;"> <!-- Menerapkan gaya langsung -->
+                                                    @if ($detailPeminjamans->first()->peminjaman->status === 'guru')
+                                                        {{ $detailPeminjamans->first()->peminjaman->guru->nama_guru }}
+                                                    @elseif ($detailPeminjamans->first()->peminjaman->status === 'karyawan')
+                                                        {{ $detailPeminjamans->first()->peminjaman->karyawan->nama_karyawan }}
+                                                    @else
+                                                        {{ $detailPeminjamans->first()->peminjaman->users->name }}
+                                                    @endif
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Jumlah:</p>
+                                            <h6 class="text-sm mb-0">{{ $detailPeminjamans->count() }}</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Dipinjam:</p>
+                                            <h6 class="text-sm mb-0">{{\Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_pinjam)->format('d M Y')}}</h6>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-sm">
+                                        <div class="col text-center">
+                                            <p class="text-xs font-weight-bold mb-0">Dikembalikan:</p>
+                                            <h6 class="text-sm mb-0">{{\Carbon\Carbon::parse($detailPeminjamans->first()->peminjaman->tgl_kembali)->format('d M Y')}}</h6>
+                                        </div>
+                        
+                                    </td>
+                                    <td>  
+                                        <a href="{{ route('peminjaman.showDetail', $detailPeminjamans->first()->peminjaman->id_peminjaman) }}" class="btn btn-link btn-icon-only btn-rounded btn-md text-dark icon-move-right my-auto">
+                                            
+                                            <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header pb-0 p-3">
+                    <h6 class="mb-0">Kategori </h6>
+                </div>
+                <div class="card-body p-3">
+                    <ul class="list-group">
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-desktop text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Alat Praktik</h6>
+                                    <span class="text-xs">{{$alatPraktik}} Barang</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{{ route('barang.index') }}" class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
+                                    <i class="ni ni-bold-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-box-open text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Bahan Praktik</h6>
+                                    <span class="text-xs">{{$bahanPraktik}} stok</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <button
+                                    class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
+                                        class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
+                                    <i class="fa-solid fa-book text-white opacity-10"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">Perlengkapan</h6>
+                                    <span class="text-xs">{{$perlengkapan}} Barang</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <button
+                                    class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i
+                                        class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer pt-3">
+        <div class="container-fluid pb-0">
+            <div class=" align-items-start">
+                    <div class="copyright text-start text-sm text-muted ">
+                        ©2024 SIJA STUDENT
+                    </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+@endcan
+
+@can('isKabeng')
 <div class="container-fluid pt-4 pb-2">
     <div class="row">
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 mb-4 mb-4">
@@ -324,8 +826,10 @@ Home
         <div class="row align-items-center">
                 <div class="col-12 col-md-8 welcome-card">
                     <h3>Welcome {{ implode(' ', array_slice(explode(' ', $user->name), 0, 2)) }}!</h3>
-
-                    <p style="text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic dolorem autem ab at rerum eumsit? Delectus enim animi id aliquam porro!</p>
+                    <p style="text-sm">
+                        <strong>ZaikoTrack</strong> is an application designed to streamline the inventory management process, from recording to updating stock items.
+                    </p>
+                    
                     <a href="{{ route('barang.index') }}" class="btn bg-gradient-primary btn-sm text-sm">Lihat Barang</a>
                 </div>
                 <div class="col-md-4 mt-1 p-1 welcome-img">

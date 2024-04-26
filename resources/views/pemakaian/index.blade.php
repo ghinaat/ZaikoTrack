@@ -28,48 +28,12 @@ Pemakaian
                     <h4 class="m-0 text-dark">List Pemakaian</h4>
                 </div>
                 <div class="card-body m-0">
-                    <form method="get" action="{{ route('pemakaian.index')}}" class=" mb-2">
-                        <div class="form-group">
-                            <label for="id_barang" class="form-label">Barang:</label>
-                            <select id="id_barang" name="id_barang" class="form-select @error('id_barang') is-invalid @enderror">
-                                <option value="0" @if(session('selected_id_barang', 0)==0) selected @endif>All
-                                </option>
-                                @foreach ($barang as $barang)
-                                <option value="{{ $barang->id_barang }}" @if($barang->id_barang ==
-                                    session('selected_id_barang')) selected @endif>{{ $barang->barang->nama_barang }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="row">
-                                    <div class="col-6 col-md-6 no-padding-co">
-                                        <div class="form-group">
-                                            <label for="start_date">Tanggal Awal</label>
-                                            <input type="date" class="form-control input-date"  id="start_date" name="start_date" value="{{ request()->input('start_date') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-6 col-md-6 no-padding-co">
-                                        <div class="form-group">
-                                            <label for="end_date">Tanggal Akhir</label>
-                                            <input type="date" class="form-control input-date" id="end_date" name="end_date" value="{{ request()->input('end_date') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-10 col-md-4 d-flex align-items-end mt-0">
-                                <button type="submit" class="btn btn-primary" style="margin-right: 10px">Tampilkan</button>
-                            </div>
-                        </div>
-                        
-
-                    </form>
-                    
+                
                     
                     
                     <div class="d-flex justify-content-between mt-1" style="margin-right: 7px;">
                         <a class="btn btn-primary" href="{{ route('pemakaian.create') }}">Tambah</a>
-                        <a href="{{ route('pemakaian.export', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date')]) }}" class="btn btn-danger">Export Data</a>
+                       
                     </div>
 
                     <div class="table-responsive ">

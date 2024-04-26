@@ -96,13 +96,13 @@ Pembelian
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="stok_barang">Stok Barang</label>
-                                <input type="number" name="stok_barang" id="stok_barang" class="form-control" required>
+                                <input type="number" name="stok_barang" id="stok_barang" class="form-control" min="0" required>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
-                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran"
+                        <input type="text" name="keterangan_anggaran" id="keterangan_anggaran"
                             class="form-control" required></textarea>
                     </div>
                     <div class="form-group">
@@ -115,7 +115,7 @@ Pembelian
                         @error('nota_pembelian') <span class="textdanger">{{$message}}</span> @enderror
                     </div>
                     <div class="modal-footer">
-                        <button type="click" class="btn btn-primary js-btn-save">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
                     </div>
                 </form>
@@ -290,36 +290,36 @@ subtotal_pembelian_inputs.forEach(function(total_pembelian_edit) {
     }
 });
 
-$("#addForm").on('click', '.js-btn-save', function(e) {
-    e.preventDefault();
-    var form = $(this).closest('form#addForm');
-    var url = form.attr('action');
-    var method = form.attr('method');
-    var data = form.serialize();
-    $.ajax({
-        type: method,
-        url: url,
-        data: data,
-    })
-    .done(function(response) {
-        Swal.fire({
-                    icon: 'success',
-                    title: 'Sukses!',
-                    text: response.message,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/detailpembelian/' + response.id_pembelian;
-                    } else {
-                        window.location.href = '/pembelian';
-                    }
-                });
-    });
-});
+// $("#addForm").on('click', '.js-btn-save', function(e) {
+//     e.preventDefault();
+//     var form = $(this).closest('form#addForm');
+//     var url = form.attr('action');
+//     var method = form.attr('method');
+//     var data = form.serialize();
+//     $.ajax({
+//         type: method,
+//         url: url,
+//         data: data,
+//     })
+//     .done(function(response) {
+//         Swal.fire({
+//                     icon: 'success',
+//                     title: 'Sukses!',
+//                     text: response.message,
+//                     showCancelButton: true,
+//                     confirmButtonColor: '#3085d6',
+//                     cancelButtonColor: '#d33',
+//                     confir mButtonText: 'Ya',
+//                     cancelButtonText: 'Tidak',
+//                 }).then((result) => {
+//                     if (result.isConfirmed) {
+//                         window.location.href = '/detailpembelian/' + response.id_pembelian;
+//                     } else {
+//                         window.location.href = '/pembelian';
+//                     }
+//                 });
+//     });
+// });
 
 
 

@@ -27,7 +27,7 @@ class PembelianController extends Controller
             'keterangan_anggaran' => 'required',
             'nota_pembelian' => 'mimes:jpg,jpng,png',
         ]);
-        dd($request);
+        // dd($request);
 
         $pembelian = new Pembelian;
         $pembelian->tgl_pembelian = $request->tgl_pembelian;
@@ -39,7 +39,7 @@ class PembelianController extends Controller
         $totalPembelian = str_replace(".", "",  $total_pembelian);
         $totalPembelians = str_replace("Rp", "", $totalPembelian);
         $pembelian->total_pembelian = $totalPembelians;
-
+    
 
         if($request->hasFile('nota_pembelian')) {
             $file = $request->file('nota_pembelian');
@@ -50,25 +50,8 @@ class PembelianController extends Controller
         }
 
         $pembelian->save();
-        return response()->json([
+        return redirect()->route('pembelian.showDetail', ['id_pembelian' => $pembelian->id_pembelian])->with('success_message', 'Data telah tersimpan.');
 
-            'message' => 'Data telah tersimpan. Teruskan mengisi detail pembelian?',
-            'id_pembelian' => $pembelian->id_pembelian,
-        ]);
-
-        // Swal.fire({
-        //     icon: 'success',
-        //     title: 'Sukses!',
-        //     text: 'Data telah tersimpan. Teruskan mengisi detail pembelian?',
-        //     showCancelButton: true,
-        //     confirmButtonColor: '#3085d6',
-        //     cancelButtonColor: '#d33',
-        //     confirmButtonText: 'Ya'
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         return redirect()->route('pembelian.showDetail');
-        // });
-        // return redirect()->route('pembelian.showDetail', ['id_pembelian' => $pembelian->id_pembelian])->with(['success_message' => 'Data telah tersimpan.']);
     }
 
     public function update(Request $request, $id_pembelian){
