@@ -113,7 +113,7 @@ class BarangController extends Controller
         
         if (!empty($kode_barang)) {
             $qrCode = QrCode::create($kode_barang)->setSize(200)->setMargin(5);
-            $storagePath = public_path('storage/barcode/' . $ImageName . '.png');
+            $storagePath = public_path('storage/qrcode/' . $ImageName . '.png');
             
             // Create a PngWriter instance
             $writer = new PngWriter();
