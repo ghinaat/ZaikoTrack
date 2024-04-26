@@ -44,8 +44,7 @@ class PembelianController extends Controller
         if($request->hasFile('nota_pembelian')) {
             $file = $request->file('nota_pembelian');
             $fileName = Str::random(10).'.'.$file->getClientOriginalExtension();
-            $file->storeAs('nota_pembelian', $fileName, 'public');
-            
+            $file->move(public_path('/storage/nota_pembelian'), $fileName);            
             $pembelian->nota_pembelian = $fileName;
         }
 

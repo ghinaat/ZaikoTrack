@@ -39,11 +39,14 @@ Tambah Peminjaman
                                 <div class="multisteps-form__form">
                                     <form id='formPeminjaman' action="{{route('peminjaman.store') }}" method="post">
                                         @csrf
-
                                         <div class="multisteps-form__panel js-active" data-animation="scaleIn">
                                             <h4 class="multisteps-form__title">Data Diri</h4>
                                             <div class="multisteps-form__content">
                                                 <div class="form-row mt-3">
+                                                    @if($id_users->level == "siswa")
+                                                        <input type="hidden" name="id_users" value={{ Auth::user()->id_users }}>
+                                                        <input type="hidden" name="status" value="siswa">
+                                                        @else
                                                     <div class="form-group">
                                                         <label for="exampleInputstatus">Status</label>
                                                         <select
@@ -84,7 +87,6 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-
                                                     <div class="form-group" id="guruForm" style="display: none;">
                                                         <label for="id_guru">Nama Guru</label>
                                                         <select class="form-select" name="id_guru" id="id_guru">
@@ -118,7 +120,7 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-
+                                                    @endif
                                                     <div class="row">
                                                         <div class="col-md-6 col-sm-6">
                                                             <div class="form-group">
@@ -138,31 +140,29 @@ Tambah Peminjaman
 
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_pemakaian">Keterangan
-                                                            Peminjaman</label>
-                                                        <input type="text" name="keterangan_peminjaman"
+                                                            Pemakaian</label>
+                                                        <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
-                                                   <div class="row">
-                                                    <div class="col-md-6 col-sm-6">
-                                                        <div class="form-group">
-                                                                <label for="tgl_pinjam" class="form-label">Tanggal
-                                                                    Pinjam</label>
-                                                                <input type="date" name="tgl_pinjam" id="tgl_pinjam"
-                                                                    class="form-control" required>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                    <label for="tgl_pinjam" class="form-label">Tanggal
+                                                                        Pinjam</label>
+                                                                    <input type="date" name="tgl_pinjam" id="tgl_pinjam"
+                                                                        class="form-control" required>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-6">
-                                                                <div class="form-group">
-                                                                <label for="tgl_kembali" class="form-label">Tanggal
-                                                                    Kembali</label>
-                                                                <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                                    class="form-control" required>
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                    <label for="tgl_kembali" class="form-label">Tanggal
+                                                                        Kembali</label>
+                                                                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                                                                        class="form-control" required>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-
-
                                                 <div class="button-row d-flex justify-content-end mt-4">
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
