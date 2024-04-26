@@ -53,14 +53,12 @@ class DetailPeminjamanController extends Controller
         $detailPeminjaman = new DetailPeminjaman([
             'id_peminjaman' => $request->id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
-            'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
+            'ket_tidak_lengkap_awal' => $inventaris->ket_barang,
             'status' => 'dipinjam',
-         
+            'tgl_kembali' => $peminjaman->tgl_kembali,
         ]);
         $detailPeminjaman->save();
-        $detail_peminjaman = DetailPeminjaman::all();
-        // dd($detail_peminjaman);
-        event(new NotifPeminjaman($detail_peminjaman));
+       
 
         // Mengambil nama barang dan ruangan
         $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();

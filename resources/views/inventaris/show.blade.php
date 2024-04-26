@@ -48,7 +48,12 @@ Inventaris / List Barang
                 <div id="tableAlatPerlengkapan" class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">
-                            @can('isTeknisi', 'isKabeng')
+                            @can('isTeknisi')
+                            <div class="mb-2">
+                                <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
+                            </div>
+                            @endcan
+                            @can('isKabeng')
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
@@ -62,7 +67,10 @@ Inventaris / List Barang
                                         <th>Kondisi</th>
                                         <th>Status</th>
                                         <th style="width:130px;">Keterangan</th>
-                                        @can('isTeknisi', 'isKabeng')
+                                        @can('isTeknisi')
+                                        <th>Opsi</th>
+                                        @endcan
+                                        @can('isKabeng')
                                         <th>Opsi</th>
                                         @endcan
                                     </tr>
@@ -99,7 +107,17 @@ Inventaris / List Barang
                                             </div>
                                             @endif
                                         </td>
-                                        @can('isTeknisi', 'isKabeng')
+                                        @can('isTeknisi')
+                                        <td>
+                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('pemakaian.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </a>
+                                        </td>
+                                        @endcan
+                                        @can('isKabeng')
                                         <td>
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
@@ -125,7 +143,19 @@ Inventaris / List Barang
                 <div id="tableBahanPraktik" class="card-body m-0">
                     <div class="table-container">
                         <div class="table-responsive">
-                            @can('isTeknisi', 'isKabeng')
+                            @can('isTeknisi')
+                            <div class="mb-2">
+                                <button class="btn btn-primary mb-2" data-toggle="modal"
+                                    data-target="#addModalBahan">Tambah</button>
+                            </div>
+                            @endcan
+                            @can('isTeknisi')
+                            <div class="mb-2">
+                                <button class="btn btn-primary mb-2" data-toggle="modal"
+                                    data-target="#addModalBahan">Tambah</button>
+                            </div>
+                            @endcan
+                            @can('isKabeng')
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" data-toggle="modal"
                                     data-target="#addModalBahan">Tambah</button>
@@ -139,7 +169,10 @@ Inventaris / List Barang
                                         <th>Stok</th>
                                         <th>Kondisi</th>
                                         <th style="width:130px;">Keterangan</th>
-                                        @can('isTeknisi', 'isKabeng')
+                                        @can('isTeknisi')
+                                        <th>Opsi</th>
+                                        @endcan
+                                        @can('isKabeng')
                                         <th>Opsi</th>
                                         @endcan
                                     </tr>
@@ -169,7 +202,21 @@ Inventaris / List Barang
                                             </div>
                                             @endif
                                         </td>
-                                        @can('isTeknisi', 'isKabeng')
+                                        @can('isTeknisi')
+                                        <td>
+                                            <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
+                                                data-target="#editModalBahan{{$barang->id_inventaris}}"
+                                                data-id="{{$barang->id_inventaris}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
+                                                onclick="notificationBeforeDelete(event, this, {{$key+1}})"
+                                                class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                        @endcan
+                                        @can('isKabeng')
                                         <td>
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal"
                                                 data-target="#editModalBahan{{$barang->id_inventaris}}"

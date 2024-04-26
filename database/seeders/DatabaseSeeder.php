@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'id_users' => '5',
             'name' => 'Siswa',
-            'email' => 'siswa@siswa.com',
+            'email' => 'ghina.athaya05@gmail.com',
             'password' => '12345678',
             'level' => 'siswa',
         ]);
@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         
-        \App\Models\Pembelian::factory(5)->create();
+        // \App\Models\Pembelian::factory(5)->create();
         // \App\Models\DetailPembelian::factory(20)->create();
         // \App\Models\Inventaris::factory(10)->create();
         // \App\Models\Peminjaman::factory(10)->create();
