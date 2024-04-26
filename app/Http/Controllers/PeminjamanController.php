@@ -72,6 +72,7 @@ class PeminjamanController extends Controller
     {
       
         $peminjaman = Peminjaman::all();
+        $id_users = $user = Auth::user();
         
         // Get the maximum id_inventaris for each id_ruangan
         $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
@@ -114,6 +115,7 @@ class PeminjamanController extends Controller
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'barang' => $barang,
+            'id_users' => $id_users,
         
             
         ]);
@@ -169,6 +171,8 @@ class PeminjamanController extends Controller
     {
       
         $peminjaman = Peminjaman::all();
+        $id_users = $user = Auth::user();
+        
         
         // Get the maximum id_inventaris for each id_ruangan
         $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
@@ -203,6 +207,7 @@ class PeminjamanController extends Controller
             'ruangan' => $ruangan,
             'id_barang_options' => $id_barang_options,
             'idPeminjaman' => $idPeminjaman,
+            'id_users' => $id_users
             
         ]);
     }
@@ -242,6 +247,7 @@ class PeminjamanController extends Controller
         ->get();
         
         $ruangans = Ruangan::all();
+        $id_users = $user = Auth::user();
       
     
         return view('peminjaman.show', [
@@ -252,6 +258,7 @@ class PeminjamanController extends Controller
             'id_barang_edit' => $id_barang_edit,
             'ruangan' => $ruangan,
             'ruangans' => $ruangans,
+            'id_users' => $id_users
             
            
         ]);

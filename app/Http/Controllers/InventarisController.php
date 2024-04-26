@@ -87,7 +87,7 @@ class InventarisController extends Controller
     public function update(Request $request, $id_inventaris){
         
         $request->validate([
-            'id_barang' => 'required',
+        'id_barang' => 'required',
             'id_ruangan' => 'required',
             'jumlah_barang' => 'nullable',
             'kondisi_barang' => 'required',
@@ -140,7 +140,7 @@ class InventarisController extends Controller
 
         // dd($request);
             $request->validate([
-                'kode_barang' => 'required|unique:inventaris,kode_barang', // Ensure kode_barang is unique in the inventaris table
+                'kode_barang' => 'required', // Ensure kode_barang is unique in the inventaris table
                 'kondisi_barang' => 'required',
                 'ket_barang' => 'nullable',
             ]);

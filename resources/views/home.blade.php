@@ -830,7 +830,7 @@ Home
                         <strong>ZaikoTrack</strong> is an application designed to streamline the inventory management process, from recording to updating stock items.
                     </p>
                     
-                    <a href="{{ route('barang.index') }}" class="btn bg-gradient-primary btn-sm text-sm">Lihat Barang</a>
+                    <a href="{{ route('inventaris.index') }}" class="btn bg-gradient-primary btn-sm text-sm">Lihat Barang Tersedia</a>
                 </div>
                 <div class="col-md-4 mt-1 p-1 welcome-img">
                     <img src="{{ asset('/img/humans.png') }}" alt="animasi" style="width: 270px;">
