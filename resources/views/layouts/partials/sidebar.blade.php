@@ -20,7 +20,9 @@
                     <span class="nav-link-text ms-1">Home</span>
                 </a>
             </li>
+
             @can('isTeknisi')
+
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
                     href="{{route('user.index')}}">
@@ -52,6 +54,7 @@
                 </a>
             </li>
             @endcan
+
             @can('isKabeng')
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('user.index') ? 'active' : '' }} "
@@ -84,6 +87,7 @@
                 </a>
             </li>
             @endcan
+
 
             <li class="nav-item">
                 <a class="nav-link {{ Request::routeIs('inventaris.index') ? 'active' : '' }} "

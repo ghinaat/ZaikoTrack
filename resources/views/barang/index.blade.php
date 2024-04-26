@@ -51,9 +51,6 @@ Barang
                         <div>
                             <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
                         </div>
-                        <div class="text-end">
-                            <a href="{{ route('barang.exportAlatPerlengkapan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
-                        </div>
                     </div>
                     
                         <div class="table-responsive ">
@@ -119,9 +116,6 @@ Barang
                     <div class="mb-2 d-flex justify-content-between">
                         <div>
                             <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
-                        </div>
-                        <div class="text-end">
-                            <a href="{{ route('barang.exportBahan') }}" class="btn btn-danger mb-2">Unduh PDF</a>
                         </div>
                     </div>
                         <div class="table-responsive ">
