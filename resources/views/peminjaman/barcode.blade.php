@@ -44,6 +44,10 @@ Tambah Peminjaman
                                             <h4 class="multisteps-form__title">Data Diri</h4>
                                             <div class="multisteps-form__content">
                                                 <div class="form-row mt-3">
+                                                    @if($id_users->level == "siswa")
+                                                        <input type="hidden" name="id_users" value={{ Auth::user()->id_users }}>
+                                                        <input type="hidden" name="status" value="siswa">
+                                                        @else
                                                     <div class="form-group">
                                                         <label for="exampleInputstatus">Status</label>
                                                         <select
@@ -117,7 +121,7 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-
+                                                    @endif
                                                     <div class="row">
                                                         <div class="col-md-6 col-sm-6">
                                                             <div class="form-group">
