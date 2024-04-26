@@ -140,7 +140,7 @@ Barang
                                         <td>{{$key+1}}</td>
                                         <td>{{$br->nama_barang}}</td>
                                         <td>{{$br->merek}}</td>
-                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? 0}}</td>   
+                                        <td>{{ $updatedStokBarang[$br->id_barang] ?? $br->stok_barang}}</td>   
                                         <td>{{$br->stok_barang}}</td>
                                         <td>{{ $totals[$br->id_barang] ?? '-'}}</td>
                                         {{-- <td>{{$br->jenisbarang->nama_jenis_barang}}</td> --}}

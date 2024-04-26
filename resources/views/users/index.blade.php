@@ -28,6 +28,7 @@ Users
                                     </div>
                                     <div class="mb-2 mb-md-0">
                                         <button type="submit" class="btn btn-success" id="importButton">Import</button>
+                                        <p><a href="https://docs.google.com/spreadsheets/d/1rZCIr4wTUS9CO8xWw6ktgn4RxlmsGigmyFVzbgqh4TI/edit#gid=0">Format Excel</a></p>
                                     </div>
                                 </div>
                             </form>

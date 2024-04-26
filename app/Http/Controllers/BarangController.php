@@ -50,63 +50,53 @@ class BarangController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_barang' => 'required',
-            'merek' => 'required',
-            'kode_barang' => 'nullable',
-            'stok_barang' => 'nullable',
-            'id_jenis_barang' => 'nullable',
-        ]);
 
-        dd($request);
-        $barangs = Barang::where('id_jenis_barang', '!=', 3);
-        foreach ($barangs as $br){
-            if($request->kode_baarang)
-            if ($request->kode_barang === $br->kode_barang){
-                return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
-            }else{
-                $barang = new Barang();
-                if ($request->id_jenis_barang){
-                    $barang->id_jenis_barang = $request->id_jenis_barang;
-                    $barang->nama_barang = $request->nama_barang;
-                    $barang->merek = $request->merek;
-                    $barang->stok_barang = $request->stok_barang;
-                    $barang->kode_barang = $request->kode_barang;
-                    $imageName = $barang->kode_barang ? $this->generateBarcode($barang->kode_barang) : null;
-                    $barang->qrcode_image = $imageName;
-                }else{
-                    $barang->id_jenis_barang = $request->id_jenis_barang;
-                    $barang->nama_barang = $request->nama_barang;
-                    $barang->merek = $request->merek;
-                    $barang->stok_barang = $request->stok_barang;
-                    $barang->kode_barang = null;
-                    $barang->qrcode_image = null;
-                }
-        
-                // dd($barang);
-                if($request->id_jenis_barang !== '3' && $request->kode_barang == null){
-                    return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
-                }else{
-                $barang->save();
-        
-                $pengguna = auth()->user();
-        
-                $notifikasi = new Notifikasi();
-                $notifikasi->judul = 'Data Barang';
-                $notifikasi->pesan = 'Barang Baru Telah Berhasil Ditambahkan';
-                $notifikasi->is_dibaca = 'tidak_dibaca';
-                $notifikasi->send_email = 'yes';
-                $notifikasi->label = 'info';
-                $notifikasi->link = '/Barang';
-                $notifikasi->id_users = $pengguna->id_users;
-                $notifikasi->save();
-        
-                return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);}
+            public function store(Request $request)
+        {
+            $request->validate([
+                'nama_barang' => 'required',
+                'merek' => 'required',
+                'kode_barang' => 'nullable',
+                'stok_barang' => 'nullable',
+                'id_jenis_barang' => 'nullable',
+            ]);
+
+            // Check if both kode_barang and id_jenis_barang are null
+            if ($request->kode_barang === null && $request->id_jenis_barang === null) {
+                return redirect()->back()->with(['error_message' => 'Data belum terisi.']);
+            }
+
+            if ($request->kode_barang !== null) {
+                $existingBarang = Barang::where('kode_barang', $request->kode_barang)->first();
+            
+                if ($existingBarang) {
+                    return redirect()->back()->with(['error' => 'Kode barang sudah tersedia.']);
                 }
             }
+            
+
+            $barang = new Barang();
+            $barang->nama_barang = $request->nama_barang;
+            $barang->merek = $request->merek;
+            $barang->stok_barang = $request->stok_barang;
+
+            // Check if id_jenis_barang is provided, if not set it to a default value
+            $barang->id_jenis_barang = $request->id_jenis_barang ?? '3';
+
+            if ($request->kode_barang) {
+                $barang->kode_barang = $request->kode_barang;
+                $imageName = $this->generateBarcode($request->kode_barang);
+                $barang->qrcode_image = $imageName;
+            } else {
+                $barang->kode_barang = null;
+                $barang->qrcode_image = null;
+            }
+
+            $barang->save();
+
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
         }
+
 
     public function generateBarcode($kode_barang)
     {
