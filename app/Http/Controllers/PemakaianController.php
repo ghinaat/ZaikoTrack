@@ -265,11 +265,11 @@ class PemakaianController extends Controller
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
             $pemakaian = new Pemakaian();
+            $pemakaian->status = $request->status;
             $pemakaian->tgl_pakai = $request->tgl_pakai;
             $pemakaian->id_users = $id_users;
             $pemakaian->id_guru = $id_guru;
             $pemakaian->id_karyawan = $id_karyawan;
-            $pemakaian->status = $request->status;
             $pemakaian->kelas = $request->kelas;
             $pemakaian->jurusan = $request->jurusan;
             $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;

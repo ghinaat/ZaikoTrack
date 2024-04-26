@@ -35,6 +35,11 @@ Tambah Pemakaian
                                                         <h4 class="multisteps-form__title">Data Diri</h4>
                                                         <div class="multisteps-form__content">
                                                             <div class="form-row mt-3">
+                                                                @can('isSiswa')
+                                                                <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
+                                                                <input type="hidden" name="status" value="siswa">
+                                                                @endcan
+                                                                @can('isTeknisi', 'isKaprog', 'isKabeng')
                                                                 <div class="form-group">
                                                                     <label for="status">Status</label>
                                                                         <select class="form-select" name="status" id="status">
@@ -65,6 +70,7 @@ Tambah Pemakaian
                                                                             @endforeach
                                                                         </select>                                
                                                                 </div>
+                                                                @endcan
                                                                 <div class="form-group " style="display: none;" id="id_karyawan">
                                                                     <label for="id_karyawan">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan" >
@@ -468,12 +474,10 @@ $(document).ready(function() {
 
                 const panelOrderList = document.getElementById('panel_order_list');
                 let panelOrderListIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelOrderList);
-      
+        
                 setActiveStep(panelOrderListIndex);
                 setActivePanel(panelOrderListIndex);
                 return;
-
-                    // form[0].reset();
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
