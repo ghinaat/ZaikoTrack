@@ -295,21 +295,22 @@ class DetailPeminjamanController extends Controller
 
             $peminjaman = Peminjaman::findOrFail($detailPeminjaman->id_peminjaman);
   
-            // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
+          
+            
+                    // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
             $inventaris = Inventaris::whereHas('barang', function ($query) use ($request) {
                 $query->where('kode_barang', $request->kode_barang);
             })->first();
-            
+
             if (!$inventaris) {
-                $inventaris = new Inventaris([
-                    'id_barang' => $detailPeminjaman->inventaris->id_barang,
-                    'id_ruangan' => $request->id_ruangan,
-                    'kondisi_barang' => $request->kondisi_barang_akhir,
-                    'ket_barang' => $request->ket_tidak_lengkap_akhir,
-                    
-                ]);
-                $inventaris ->save();
+                return redirect()->back()->with('error', 'Inventaris tidak ditemukan');
             }
+
+            // Update id_ruangan inventaris ke id_ruangan yang baru
+            $inventaris->id_ruangan = $request->id_ruangan;
+            $inventaris->kondisi_barang = $request->kondisi_barang_akhir;
+            $inventaris->ket_barang = $request->ket_tidak_lengkap_akhir;
+            $inventaris->save();
 
 
             

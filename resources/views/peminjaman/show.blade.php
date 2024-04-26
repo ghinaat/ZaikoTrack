@@ -146,6 +146,7 @@ Peminjaman / List Barang
                                     <tr>
                                         <th class="center-th">No.</th>
                                         <th class="center-th">Nama<br>Barang</th>
+                                        <th class="center-th">Kode<br>Barang</th>
                                         <th class="center-th">Status</th>
                                         <th class="center-th">Kondisi<br>Awal</th>
                                         <th class="center-th">Kondisi<br>Akhir</th>
@@ -157,6 +158,7 @@ Peminjaman / List Barang
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{$barang->inventaris->barang->nama_barang}}</td>
+                                        <td>{{$barang->inventaris->barang->kode_barang}}</td>
                                         <td>
                                             @if($barang->status == 'dipinjam')
                                             <span class="badge bg-gradient-danger">Dipinjam</span>

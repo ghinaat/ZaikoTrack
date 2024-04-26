@@ -437,7 +437,7 @@ $(document).ready(function() {
                 let errorMessage;
                 try {
                     const responseJson = JSON.parse(jqXHR.responseText);
-                    errorMessage = responseJson.error || 'An error occurred.';
+                    errorMessage = responseJson.error || 'Data Tidak Sesuai.';
                 } catch (error) {
                     errorMessage = 'Data Belum Terisi.';
                 }
@@ -508,7 +508,7 @@ $(document).ready(function() {
                         let errorMessage;
                         try {
                             const responseJson = JSON.parse(jqXHR.responseText);
-                            errorMessage = responseJson.error || 'An error occurred.';
+                            errorMessage = responseJson.error || 'Data Tidak Sesuai.';
                         } catch (error) {
                             errorMessage = 'Data Belum Terisi.';
                         }
