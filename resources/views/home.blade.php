@@ -886,11 +886,11 @@ Home
             <h6>Riwayat Peminjaman</h6>
         </div>
         
+        @if($jadwals->isNotEmpty())
+        @foreach ($jadwals as $jadwal)
+            @foreach ($jadwal->detailPeminjaman as $detailPeminjaman)
+                @foreach ($detailPeminjaman->inventarisis as $inventaris)
         <div class="body mt-2">
-            @if($jadwals->isNotEmpty())
-            @foreach ($jadwals as $jadwal)
-                @foreach ($jadwal->detailPeminjaman as $detailPeminjaman)
-                    @foreach ($detailPeminjaman->inventarisis as $inventaris)
                     <div class="card">
                         <div class="table-responsive">
                             <table class="table align-items-center mb-0 px-2">
