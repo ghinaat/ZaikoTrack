@@ -107,7 +107,7 @@ Tambah Pemakaian
                                                             </div>
                                                             <div class="form-group text-end justify-content-end mb-0 mt-4" >
                                                                 <button class="btn btn-danger js-btn-cancel mx-2" type="click" title="Prev">Batal</button>
-                                                                <button class="btn btn-primary js-btn-save" type="click" title="Next">Selnjutnya</button>
+                                                                <button class="btn btn-primary js-btn-save" type="click" title="Next">Selanjutnya</button>
                                                             </div>
                                                         </div>
                                                     </div>

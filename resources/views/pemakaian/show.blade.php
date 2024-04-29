@@ -117,7 +117,12 @@ Detail Pemakaian
                                 <th>Nama Barang</th>
                                 <th>Ruangan</th>
                                 <th>Stok</th>
+                                @can('isTeknisi')
                                 <th style="width:120px;">Opsi</th>
+                                @endcan
+                                @can('isKabeng')
+                                <th style="width:120px;">Opsi</th>
+                                @endcan
                             </tr>
                         </thead>
                         <tbody>
@@ -135,6 +140,7 @@ Detail Pemakaian
                                   <td>{{$dp->inventaris->barang->nama_barang}}</td>
                                   <td>{{$dp->inventaris->ruangan->nama_ruangan}}</td>
                                   <td>{{$dp->jumlah_barang}}</td>
+                                  @can('isTeknisi')
                                   <td>
                                     <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pemakaian}}"
                                       data-id="{{$dp->id_detail_pemakaian}}">
@@ -144,6 +150,18 @@ Detail Pemakaian
                                           <i class="fa fa-trash"></i>
                                       </a>
                                   </td>
+                                  @endcan
+                                  @can('isKabeng')
+                                  <td>
+                                    <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$dp->id_detail_pemakaian}}"
+                                      data-id="{{$dp->id_detail_pemakaian}}">
+                                      <i class="fa fa-edit"></i>
+                                    </a>
+                                      <a href="{{ route('pemakaian.destroyDetail', $dp->id_detail_pemakaian) }}" onclick="notificationBeforeDelete(event, this, {{$loop->iteration}})" class="btn btn-danger btn-xs mx-1">
+                                          <i class="fa fa-trash"></i>
+                                      </a>
+                                  </td>
+                                  @endcan
                               </tr>
                           @endforeach
                       </tbody>

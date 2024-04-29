@@ -15,11 +15,11 @@
             border-collapse: collapse;
         }
         table th, table td {
-            border: 1px solid #ddd;
+            border: 1px solid #000000;
             padding: 8px;
         }
         table th {
-            background-color: #f2f2f2;
+            background-color: #3b9fdd;
         }
         .kopsurat {
             position: absolute;
@@ -38,9 +38,9 @@
 <body>
     <h2 align="center">Laporan Data Peminjaman Barang SIJA</h2>
     @if($tglawal && $tglakhir)
-    <p>Periode:</p>
-    <p>Tanggal Awal: {{ \Carbon\Carbon::parse($tglawal)->format('d F Y') }}</p>
-    <p>Tanggal Akhir: {{ \Carbon\Carbon::parse($tglakhir)->format('d F Y') }}</p>
+    Periode:
+    <p>Tanggal Awal: {{ \Carbon\Carbon::parse($tglawal)->format('d F Y') }} <br>
+    Tanggal Akhir: {{ \Carbon\Carbon::parse($tglakhir)->format('d F Y') }}</p>
     @endif
     @if($id_barang)
     <p>Barang: {{ $nama_barang }}</p>
@@ -74,11 +74,22 @@
                                     {{ $peminjaman->karyawan->nama_karyawan}}
                                 @endif
                             </td>
+                            @if($peminjaman->id_karyawan !== 1) 
+                            <p align='center'>-</p>
+                            @else
                             <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                            @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
-                            <td>{{ $detail['status'] }}</td>
+                            <td>
+                                @if($detail['status'] == 'dipinjam')
+                                    Dipinjam
+                                @else
+                                    Sudah Dikembalikan
+                                @endif
+                            </td>
+
                         </tr>
                     @endif
                 @endforeach

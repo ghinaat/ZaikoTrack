@@ -112,7 +112,7 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('pemakaian.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
                                             </a>
                                         </td>
@@ -122,7 +122,7 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('pemakaian.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
                                             </a>
                                         </td>
@@ -486,6 +486,7 @@ Inventaris / List Barang
                                     @endforeach
                                 @endif
                             </select>
+                            
                             @error('id_barang')
                             <div class="invalid-feedback">
                                 {{ $message }}
