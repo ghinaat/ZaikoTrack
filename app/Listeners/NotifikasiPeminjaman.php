@@ -67,7 +67,7 @@ class NotifikasiPeminjaman
                         $notifikasi->is_dibaca = 'tidak_dibaca';
                         $notifikasi->label = 'info';
                         $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
-                        $notifikasi->send_email = 'no';
+                        $notifikasi->send_email = 'yes';
                         $notifikasi->id_users = $na->id_users;
                         $notifikasi->save();
 

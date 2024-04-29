@@ -100,9 +100,7 @@ Barang
                                                     class="btn btn-danger btn-xs" style="margin-left: 5px; margin-right: 5px;">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
-                                                <a href="{{ route('barang.print', $br->id_barang) }}" class="btn btn-success btn-xs">
-                                                    <i class="fa-solid fa-print"></i>
-                                                </a>
+                                              
 
                                             </div>
                                         </td>
