@@ -17,8 +17,6 @@ return new class extends Migration
             $table->unsignedInteger('id_guru');
             $table->unsignedInteger('id_karyawan');
             $table->enum('status', ['siswa', 'karyawan', 'guru']);
-            $table->string('kelas', 50)->nullable();
-            $table->string('jurusan', 50)->nullable();
             $table->date('tgl_pakai');
             $table->string('keterangan_pemakaian')->nullable();
             $table->foreign('id_users')->references('id_users')->on('users')->onDelete('cascade');
