@@ -135,19 +135,19 @@ Profile
                     <div class="form-group">
                         <label for="nis">NIS</label>
                         <input type="text" name="nis" id="nis" class="form-control"
-                            value="{{ old('nis', $profile->nis) }}" >
+                            value="{{ old('nis', $profile->nis ?? '') }}" >
                     </div>
                     <div class="row">
                         <div class="col-6 col-md-6 kelas">
                             <div class="form-group">
                                 <label for="kelas" class="mb-0">Kelas</label>
-                                <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas"  value="{{ old('kelas', $profile->kelas) }}">
+                                <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas"  value="{{ old('kelas', $profile->kelas ?? '') }}">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 jurusan">
                             <div class="form-group">
                                 <label for="jurusan" class="mb-0">Jurusan</label>
-                                <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan"  value="{{ old('jurusan', $profile->jurusan) }}">
+                                <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan"  value="{{ old('jurusan', $profile->jurusan ?? '') }}">
                             </div>
                         </div>
                     </div>

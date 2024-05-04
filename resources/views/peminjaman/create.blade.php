@@ -2,6 +2,13 @@
 @section('title', 'Tambah Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('css\style.css')}}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<style>
+    .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+</style>
 @endsection
 @section('breadcrumb-name')
 Tambah Peminjaman
@@ -72,15 +79,13 @@ Tambah Peminjaman
                                                     </div>
                                                     <div class="form-group" id="siswaForm" style="display: block;">
                                                         <label for="id_users">Nama Siswa</label>
-                                                        <select class="form-select" name="id_users" id="id_users">
-                                                            <option value="0" selected disabled>Pilih Nama</option>
-                                                            @foreach($users as $user)
-                                                            @if($user->level == 'siswa')
-                                                            <option value="{{ $user->id_users }}">{{ $user->name }}
-                                                            </option>
-                                                            @endif
-                                                            @endforeach
-                                                        </select>
+                                                        <select class="form-select select2" aria-label="Select">
+                                                            <option selected>Select an option</option>
+                                                            <option value="1">Option 1</option>
+                                                            <option value="2">Option 2</option>
+                                                            <option value="3">Option 3</option>
+                                                            <!-- Add more options as needed -->
+                                                          </select>
                                                         @error('id_users')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
@@ -320,6 +325,13 @@ $(document).ready(function() {
         }
     });
 });
+
+
+$(document).ready(function() {
+        $('.select2').select2();
+    });
+
+
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
     const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector('select[name=kondisi_barang]');
