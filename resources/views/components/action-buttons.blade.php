@@ -8,8 +8,8 @@
         <i class="fa fa-trash"></i>
     </a>
     @if(isset($showAdmin))
-    <a href="{{ route($route . '.showAdmin', $id) }}" class="btn btn-secondary btn-xs mx-1">
-        <i class="fa fa-user"></i>
+    <a href="{{ route($route . '.showAdmin', $id) }}" class="btn btn-secondary btn-xs ">
+        <i class="fa fa-user "></i>
     </a>
     @endif
     @if(isset($showDetail))
