@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profile', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id_profile');
+            $table->string('nis', 100)->nullable();
+            $table->string('kelas', 50)->nullable();
+            $table->string('jurusan', 50)->nullable();
+            $table->string('image', 255)->nullable();
+            $table->unsignedInteger('id_users');
+            $table->foreign('id_users')->references('id_users')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
