@@ -1,9 +1,9 @@
 @extends('layouts.demo')
-@section('title', 'Profile')
+@section('title', 'Change Password')
 @section('css')
 @endsection
 @section('breadcrumb-name')
-Profile
+Change Password
 @endsection
 @section('content')
 <div class="container-fluid py-4">
@@ -12,8 +12,18 @@ Profile
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                         <div class="text-center">
-                            <img class="profile-user-img img-fluid img-thumbnail"
-                                src="{{ asset( '/img/no_pp.png')  }}" alt="User profile picture">
+                            @if ($profile)
+                            @if ($profile->image == null)
+                                <img class="profile-user-img img-fluid img-rounded"
+                                    src="{{ asset( '/img/no_pp.png') }}" alt="User profile picture">
+                            @else
+                                <img class="profile-user-img img-fluid img-rounded"
+                                    src="{{ asset('../storage/profile/' . $profile->image) }}" alt="User profile picture">
+                            @endif
+                        @else
+                            <img class="profile-user-img img-fluid img-rounded"
+                                src="{{ asset( '/img/no_pp.png') }}" alt="User profile picture">
+                        @endif
                                 <br><br>
                             <h3 class="profile-username text-center">{{ $user->name }}</h3>
                         </div>
@@ -21,10 +31,8 @@ Profile
                 </div>
             </div>
             <div class="col-md-9">
+                @include('layouts.partials.nav-pills')
             <div class="card mb-4">
-                <div class="card-header m-0">
-                    <h2 class="m-0 text-dark fs-3">Profile</h1>
-                </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('user.saveChangePassword', $user->id_users ) }}">
                         @if (session()->has('success'))
@@ -35,38 +43,6 @@ Profile
                         @endif
                         @csrf
                         @method('PUT')
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control @error('$user->name') is-invalid @enderror"
-                                id="name" name="name" value="{{$user->name}}" required>
-                            @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                id="email" name="email" value="{{$user->email}}" autofocus required>
-                            @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                         @can('isSiswa')
-                        <div class="mb-3">
-                            <label for="email" class="form-label">NIS</label>
-                            <input type="text" class="form-control @error('nis') is-invalid @enderror"
-                                id="nis" name="nis" value="{{$user->nis}}" >
-                            @error('nis')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        @endcan
                         <div class="mb-3">
                             <label for="old_password" class="form-label">Password Lama</label>
                             <input type="password" class="form-control @error('old_password') is-invalid @enderror"

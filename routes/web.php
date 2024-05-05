@@ -4,6 +4,7 @@
 use App\Http\Controllers\PemakaianController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
 use App\Http\Controllers\NotifikasiController;
@@ -34,15 +35,21 @@ Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name
 });
 
 Route::group(['middleware' => ['auth']], function () {
+Route::get('/user/profile/{id_users}', [ProfileController::class, 'showAdmin'])->name('user.showAdmin');
 Route::put('/user/update/{id_users}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
 Route::post('/user/import', [ App\Http\Controllers\UserController::class, 'import'])->name('user.import');
 Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
+Route::get('/users/profile', [ProfileController::class, 'index'])->name('users.profile');
 Route::put('/user/change-password/{id_users}', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
+Route::put('/users/profile/{id_users}', [ProfileController::class, 'update'])->name('profile.update');
+
+
 });
 
 Route::group(['middleware' => ['auth']], function () {
+
 Route::resource('/ruangan', App\Http\Controllers\RuanganController::class);
 Route::get('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'index'])->name('jenisbarang.index');
 Route::post('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'store'])->name('jenisbarang.store');

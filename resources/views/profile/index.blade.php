@@ -12,7 +12,7 @@ Users
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <div>
-                        <h5 class="mb-0">Data User</h5>
+                        <h5 class="mb-0">Profile Siswa</h5>
                     </div>
                 </div>
                 
@@ -42,15 +42,14 @@ Users
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Nama User</th>
-                                    <th>Email</th>
-                                    <th>level</th>
+                                    <th>Nama Siswa</th>
+                                    <th>NIS</th>
+                                    <th>Kelas</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php $showAdmin = true; @endphp
-                                @foreach($user as $key => $user)
+                                @foreach($profile as $key => $user)
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$user->name}}</td>
@@ -113,6 +112,11 @@ Users
                                                             {{ $message }}
                                                         </div>
                                                         @enderror
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nis">NIS</label>
+                                                        <input type="text" name="nis"
+                                                            id="exampleInputPassword" class="form-control"   value="{{ old('nis', $user->nis) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword">Password</label>
@@ -182,7 +186,11 @@ Users
                         </div>
                         @enderror
                     </div>
-                   
+                    <div class="form-group">
+                        <label for="nis">NIS</label>
+                        <input type="text" name="nis" id="nis"
+                            class="form-control" required>
+                    </div>
                     <div class="form-group">
                         <label for="exampleInputPassword">Password</label>
                         <input type="password" name="password" id="exampleInputPasword" class="form-control" required>

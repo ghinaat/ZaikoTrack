@@ -41,8 +41,8 @@
                             <!-- <div class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                                 aria-labelledby="dropdownMenuButton"> -->
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md {{ Request::routeIs('user.changePassword') ? 'active' : '' }} "
-                                    href="{{route('user.changePassword')}}">
+                                <a class="dropdown-item border-radius-md {{ Request::routeIs('users.profile') ? 'active' : '' }} "
+                                    href="{{route('users.profile')}}">
                                     <div class="d-flex py-1">
                                         <div class="my-auto">
                                             <i class="ni ni-settings me-3 "> </i>
