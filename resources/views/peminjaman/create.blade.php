@@ -2,6 +2,11 @@
 @section('title', 'Tambah Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('css\style.css')}}">
+<link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
+
+<style>
+  =
+</style>
 @endsection
 @section('breadcrumb-name')
 Tambah Peminjaman
@@ -70,26 +75,44 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-                                                    <div class="form-group" id="siswaForm" style="display: block;">
+                                                    <div id="siswaForm" style="display: block;">
+                                                    <div class="form-group" >
                                                         <label for="id_users">Nama Siswa</label>
-                                                        <select class="form-select" name="id_users" id="id_users">
-                                                            <option value="0" selected disabled>Pilih Nama</option>
+                                                        <select id="normalize" name="id_users" >                                                            <option selected>Select an option</option>
+                                                            <option value="" selected disabled>Pilih Nama</option>
                                                             @foreach($users as $user)
                                                             @if($user->level == 'siswa')
                                                             <option value="{{ $user->id_users }}">{{ $user->name }}
                                                             </option>
                                                             @endif
                                                             @endforeach
-                                                        </select>
+                                                          </select>
                                                         @error('id_users')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}
                                                         </div>
                                                         @enderror
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="kelas" class="form-label">Kelas</label>
+                                                                    <input type="text" name="kelas" id="kelas" class="form-control" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="nis" class="form-label">NIS</label>
+                                                                    <input type="text" name="nis" id="nis" class="form-control" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group" id="guruForm" style="display: none;">
+                                        
+                                                    <div  id="guruForm" style="display: none;">
+                                                    <div class="form-group">
                                                         <label for="id_guru">Nama Guru</label>
-                                                        <select class="form-select" name="id_guru" id="id_guru">
+                                                        <select name="id_guru" id="normalize1">
                                                             <option value="" selected disabled>Pilih Nama</option>
                                                             @foreach($guru as $key => $g)
                                                             <option value="{{ $g->id_guru }}">
@@ -103,10 +126,26 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="nip" class="form-label">NIP</label>
+                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="jurusan" class="form-label">Jurusan</label>
+                                                                        <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
 
                                                     <div class="form-group" id="karyawanForm" style="display: none;">
                                                         <label for="id_karyawan">Nama Karyawan</label>
-                                                        <select class="form-select" name="id_karyawan" id="id_karyawan">
+                                                        <select  name="id_karyawan" id="normalize2">
                                                             <option value="" selected disabled>Pilih Nama</option>
                                                             @foreach($karyawan as $key => $k)
                                                             <option value="{{ $k->id_karyawan }}">
@@ -121,22 +160,8 @@ Tambah Peminjaman
                                                         @enderror
                                                     </div>
                                                     @endif
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <div class="form-group">
-                                                                <label for="kelas" class="form-label">Kelas</label>
-                                                                <input type="text" name="kelas" id="kelas"
-                                                                    class="form-control" required>
-                                                            </div>
-                                                        </div>
-                                                            <div class="col-md-6 col-sm-6">
-                                                                <div class="form-group">
-                                                                <label for="jurusan" class="form-label">Jurusan</label>
-                                                                <input type="text" name="jurusan" id="jurusan"
-                                                                    class="form-control" required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
+                                          
 
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_pemakaian">Keterangan
@@ -308,6 +333,8 @@ Tambah Peminjaman
 </form>
 
 <script src="../js/script.js"></script>
+
+<script src="../dist/js/selectize.js"></script>
 <script>
 $(document).ready(function() {
     $('#myTable1').DataTable({
@@ -320,6 +347,41 @@ $(document).ready(function() {
         }
     });
 });
+$('#normalize').selectize({
+
+});
+$('#normalize1').selectize({
+
+});
+$('#normalize2').selectize({
+
+});
+
+document.querySelectorAll('select[name=id_users]').forEach(select => select.addEventListener('change', function() {
+    const selectedIdUsers = this.value;
+    const nisInput = document.querySelector('input[name=nis]');
+    const siswaInput = document.querySelector('input[name=kelas]');
+    
+    // Now you can make an AJAX request to fetch data based on selectedIdUsers
+    // For example:
+    fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+        .then(response => response.json())
+        .then(data => {
+            // Debug: Check the data received
+            console.log('Data received:', data);
+            // Display the corresponding nama_barang in the input element
+            nisInput.value = $nis;
+            siswaInput.value = $kelas + ' ' + $jurusan; // Corrected line
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Clear the input and possibly display an error message to the user
+            nisInput.value = '';
+        });
+}));
+
+
+
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
     const selectedIdBarang = this.value;
     const kondisiSelect = this.closest('.form-group').nextElementSibling.querySelector('select[name=kondisi_barang]');
@@ -332,7 +394,7 @@ document.querySelectorAll('select[name=id_barang]').forEach(select => select.add
         .then(response => response.json())
         .then(data => {
             // Clear existing options
-            idRuanganSelect.innerHTML = '';
+            idRuanganSelect.innerHTML =
 
             // Populate options based on the received data
             data.forEach(option => {
@@ -696,44 +758,62 @@ $(document).ready(function() {
 
 document.getElementById('exampleInputstatus').addEventListener('click', function() {
     const selectedStatus = this.value;
-    const siswaElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#siswaForm');
-    const guruElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#guruForm');
-    const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#karyawanForm');
+    const siswaElement = document.getElementById('siswaForm');
+    const guruElement = document.getElementById('guruForm');
+    const karyawanElement = document.getElementById('karyawanForm');
+    const kelasInput = siswaElement.querySelector('#kelas');
+    const nisInput = siswaElement.querySelector('#nis');
+    const nipInput = guruElement.querySelector('#nip');
+    const jurusanInput = guruElement.querySelector('#jurusan');
+    
+    kelasInput.value = '';
+    nisInput.value = '';
+    nipInput.value = '';
+    jurusanInput.value = '';
 
-    const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#kelas');
-    const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
-        '#jurusan');
-
+  
     // Hide all forms
     siswaElement.style.display = 'block';
     guruElement.style.display = 'none';
     karyawanElement.style.display = 'none';
     // NamaElement.style.display = 'block';
-    jurusanElement.removeAttribute('readonly');
-    kelasElement.removeAttribute('readonly');
-
+   
 
     // Show the selected form
     if (selectedStatus === 'siswa') {
         siswaElement.style.display = 'block';
-        // siswaElement.style.display = 'none';
 
     } else if (selectedStatus === 'guru') {
         guruElement.style.display = 'block';
         siswaElement.style.display = 'none';
-        kelasElement.setAttribute('readonly', 'true');
+      
     } else if (selectedStatus === 'karyawan') {
         karyawanElement.style.display = 'block';
         siswaElement.style.display = 'none';
-        kelasElement.setAttribute('readonly', 'true');
-        jurusanElement.setAttribute('readonly', 'true');
-
+      
     }
+
+    
 });
+
+
+
+document.querySelectorAll('select[name=id_guru]').forEach(select => select.addEventListener('change', function() {
+    const selectedIdGuru = this.value;
+
+    // Now you can make an AJAX request to fetch data based on selectedIdGuru
+    // For example:
+    $.ajax({
+        url: '/fetch-id-guru/' + selectedIdGuru,
+        type: 'GET',
+        success: function(data) {
+            // Handle the success response
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}));
 </script>
 
 

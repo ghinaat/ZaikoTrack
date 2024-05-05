@@ -37,7 +37,11 @@ Tambah Barang
                             <label for="ket_barang">Kode Barang</label>
                             <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                         </div>
-                       
+                        <div class="form-group">
+                            <label for="nama_barang">Nama Barang</label>
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                            value="{{old('nama_barang')}}" readonly>
+                        </div>
                         <div class="form-group">
                             <label for="exampleInputkondisi_barang">Kondisi Barang</label>
                             <select class="form-select @error('kondisi_barang') is-invalid @enderror"

@@ -287,6 +287,40 @@ class PeminjamanController extends Controller
         return response()->json($namaBarangOptions);
     }
 
+    public function fetchSiswa($id_users)
+    {
+        // Fetch the user along with their profile
+        $siswaOptions = Users::with('profile')->findOrFail($id_users);
+    
+        // Assuming 'profile' is loaded eagerly
+        $nis = $siswaOptions->profile->nis;
+        $kelas = $siswaOptions->profile->kelas;
+        $jurusan = $siswaOptions->profile->jurusan;
+
+    
+        return response()->json([
+            'nis' => $nis,
+            'kelas' => $kelas,
+            'jurusan' => $jurusan
+        ]);
+    }
+
+        public function fetchGuru($id_guru)
+    {
+        // Fetch the guru based on id_guru
+        $guru = Guru::findOrFail($id_guru);
+
+        // Extract the required details
+        $nip = $guru->nip;
+        $jurusan = $guru->jurusan;
+
+        return response()->json([
+            'nip' => $nip,
+            'jurusan' => $jurusan
+        ]);
+    }
+
+
   
 
     public function store(Request $request)
