@@ -39,7 +39,7 @@ Tambah Barang
                         </div>
                         <div class="form-group">
                             <label for="nama_barang">Nama Barang</label>
-                            <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" 
                             value="{{old('nama_barang')}}" readonly>
                         </div>
                         <div class="form-group">
@@ -95,6 +95,43 @@ Tambah Barang
 
 @push('js')
 <script>
+// Assuming the input name for kode_barang is kode_barang, replace it accordingly if different
+document.querySelectorAll('input[name=kode_barang]').forEach(input => {
+    input.addEventListener('input', function() {
+        const kodeBarangValue = this.value;
+        
+        // Check if the input for nama_barang exists
+        const namaBarangInput = document.querySelector('input[name=nama_barang]');
+        if (!namaBarangInput) {
+            console.error('Input element for nama_barang not found.');
+            return;
+        }
+
+        // Fetch data based on kode_barang value
+        fetch(`/inventaris/fetch-kode-barang/${kodeBarangValue}`)
+            .then(response => response.json())
+            .then(data => {
+                // Debug: Check the data received
+                console.log('Data received:', data);
+
+                // Check if data.barang and data.barang.nama_barang are present
+                if (data && data.nama_barang) {
+                    // Display the corresponding nama_barang in the input element
+                    namaBarangInput.value = data.nama_barang;
+                } else {
+                    // Clear the input if data is missing or incomplete
+                    namaBarangInput.value = '';
+                    console.warn('Received data is missing or incomplete.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Clear the input and possibly display an error message to the user
+                namaBarangInput.value = '';
+            });
+    });
+});
+
 
 </script>
 @endpush

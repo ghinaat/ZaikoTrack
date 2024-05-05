@@ -86,14 +86,14 @@ Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisCon
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
 Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
 Route::get('/inventaris/fetch-id-barang/{id_barang}', [App\Http\Controllers\InventarisController::class, 'fetchIdBarang'])->name('inventaris.fetchIdBarang');
-
+Route::get('/inventaris/fetch-kode-barang/{id_barang}', [InventarisController::class, 'fetchKodeBarang'])->name('fetch-kode-barang');
 
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
-Route::get('/fetch-id-siswa/{id_siswa}', [App\Http\Controllers\PeminjamanController::class, 'fetchSiswa'])->name('peminjaman.fetchIdSiswa');
+Route::get('/fetch-id-siswa/{id_users}', [App\Http\Controllers\PeminjamanController::class, 'fetchSiswa'])->name('peminjaman.fetchIdSiswa');
 Route::get('/fetch-id-guru/{id_guru}', [App\Http\Controllers\PeminjamanController::class, 'fetchGuru'])->name('peminjaman.fetchIdGuru');
 
 

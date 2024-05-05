@@ -493,7 +493,16 @@ Inventaris / List Barang
                             </div>
                             @enderror
                         </div>
-                    
+                        <div class="form-group">
+                            <label for="nama_barang">Nama Barang</label>
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                          
+                            @error('nama_barang')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                     <div class="form-group">
                         <label for="exampleInputkondisi_barang">Kondisi Barang</label>
                         <select class="form-select @error('kondisi_barang') is-invalid @enderror"
@@ -651,7 +660,6 @@ $(document).ready(function() {
 
 
 function showAddModal() {
-
     $("#add-modal").modal('show');
     console.log("Menampilkan modal tambah");
 }
