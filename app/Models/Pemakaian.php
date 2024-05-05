@@ -35,7 +35,15 @@ class Pemakaian extends Model
         return $this->belongsTo(Karyawan::class, 'id_karyawan', 'id_karyawan');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($model) {
+            $model->tgl_pakai = now();
+        });
+
+    }
     
 
   

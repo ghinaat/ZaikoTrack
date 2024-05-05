@@ -78,7 +78,7 @@ Tambah Peminjaman
                                                     <div id="siswaForm" style="display: block;">
                                                     <div class="form-group" >
                                                         <label for="id_users">Nama Siswa</label>
-                                                        <select id="normalize" name="id_users" >                                                            <option selected>Select an option</option>
+                                                        <select name="id_users" id="normalize"  >                                                            <option selected>Select an option</option>
                                                             <option value="" selected disabled>Pilih Nama</option>
                                                             @foreach($users as $user)
                                                             @if($user->level == 'siswa')
@@ -126,7 +126,7 @@ Tambah Peminjaman
                                                         </div>
                                                         @enderror
                                                     </div>
-                                                            <div class="row">
+                                                    <div class="row">
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="nip" class="form-label">NIP</label>
@@ -140,8 +140,8 @@ Tambah Peminjaman
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                </div>
+                                                    </div>
+                                      
 
                                                     <div class="form-group" id="karyawanForm" style="display: none;">
                                                         <label for="id_karyawan">Nama Karyawan</label>
@@ -161,7 +161,6 @@ Tambah Peminjaman
                                                     </div>
                                                     @endif
                                                    
-                                          
 
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_pemakaian">Keterangan
@@ -169,25 +168,13 @@ Tambah Peminjaman
                                                         <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <div class="form-group">
-                                                                    <label for="tgl_pinjam" class="form-label">Tanggal
-                                                                        Pinjam</label>
-                                                                    <input type="date" name="tgl_pinjam" id="tgl_pinjam"
-                                                                        class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 col-sm-6">
-                                                                    <div class="form-group">
-                                                                    <label for="tgl_kembali" class="form-label">Tanggal
-                                                                        Kembali</label>
-                                                                    <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                                        class="form-control" required>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="tgl_kembali" class="form-label">Tanggal
+                                                            Kembali</label>
+                                                        <input type="date" name="tgl_kembali" id="tgl_kembali"
+                                                            class="form-control" required>
                                                     </div>
+                                                   
                                                 <div class="button-row d-flex justify-content-end mt-4">
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
@@ -360,25 +347,33 @@ $('#normalize2').selectize({
 document.querySelectorAll('select[name=id_users]').forEach(select => select.addEventListener('change', function() {
     const selectedIdUsers = this.value;
     const nisInput = document.querySelector('input[name=nis]');
-    const siswaInput = document.querySelector('input[name=kelas]');
+    const kelasInput = document.querySelector('input[name=kelas]');
     
     // Now you can make an AJAX request to fetch data based on selectedIdUsers
-    // For example:
     fetch(`/fetch-id-siswa/${selectedIdUsers}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
         .then(data => {
             // Debug: Check the data received
             console.log('Data received:', data);
-            // Display the corresponding nama_barang in the input element
-            nisInput.value = $nis;
-            siswaInput.value = $kelas + ' ' + $jurusan; // Corrected line
+            
+            // Display the corresponding data in the input elements
+            nisInput.value = data.nis || '';
+            kelasInput.value = data.kelas || '';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
             // Clear the input and possibly display an error message to the user
             nisInput.value = '';
+            kelasInput.value = '';
         });
 }));
+
+
 
 
 
@@ -798,22 +793,6 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
 
 
 
-document.querySelectorAll('select[name=id_guru]').forEach(select => select.addEventListener('change', function() {
-    const selectedIdGuru = this.value;
-
-    // Now you can make an AJAX request to fetch data based on selectedIdGuru
-    // For example:
-    $.ajax({
-        url: '/fetch-id-guru/' + selectedIdGuru,
-        type: 'GET',
-        success: function(data) {
-            // Handle the success response
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-}));
 </script>
 
 

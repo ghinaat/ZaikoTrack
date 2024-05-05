@@ -131,7 +131,9 @@ Profile
                             class="form-control"
                             value="{{ old('email', $user->email) }}" required>
                     </div>
+
                     @can('isTeknisi')
+                    @if($user->level == "siswa")
                     <div class="form-group">
                         <label for="nis">NIS</label>
                         <input type="text" name="nis" id="nis" class="form-control"
@@ -151,6 +153,7 @@ Profile
                             </div>
                         </div>
                     </div>
+                    @endif
                     @endcan
                     <div class="form-group">
                         <label for="image" class="form-label">Image Profile</label>
