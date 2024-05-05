@@ -93,6 +93,11 @@ Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailP
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
 
+Route::get('/fetch-id-siswa/{id_siswa}', [App\Http\Controllers\PeminjamanController::class, 'fetchSiswa'])->name('peminjaman.fetchIdSiswa');
+Route::get('/fetch-id-guru/{id_guru}', [App\Http\Controllers\PeminjamanController::class, 'fetchGuru'])->name('peminjaman.fetchIdGuru');
+
+
+
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman/notifikasi', [App\Http\Controllers\PeminjamanController::class, 'notifikasi'])->name('peminjaman.notifikasi');
 
