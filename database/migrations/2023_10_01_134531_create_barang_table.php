@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('kode_barang')->nullable()->unique();
             $table->string('qrcode_image')->nullable();
             $table->unsignedInteger('id_jenis_barang');
+            $table->unsignedInteger('id_detail_pembelian');
             $table->foreign('id_jenis_barang')->references('id_jenis_barang')->on('jenis_barang')->onDelete('cascade');
+            $table->foreign('id_detail_pembelian')->references('id_detail_pembelian')->on('detail_pembelian')->onDelete('cascade');
             $table->timestamps();
         });
     }

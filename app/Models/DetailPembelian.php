@@ -19,7 +19,12 @@ class DetailPembelian extends Model
         'harga_perbarang',
     ];
 
-    public function barang(){
-        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang' );
-    }    
+    public function barang() {
+        return $this->hasMany(Barang::class, 'id_detail_pembelian', 'id_detail_pembelian');
+    }
+
+    public function pembelian(){
+        return $this->belongsTo(Pembelian::class, 'id_pembelian', 'id_pembelian');
+    }
+    
 }
