@@ -62,6 +62,7 @@ Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class,
 Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
 Route::get('/barang/exportalat', [App\Http\Controllers\BarangController::class, 'exportAlatPerlengkapan'])->name('barang.exportAlatPerlengkapan');
 Route::get('/barang/exportbahan', [App\Http\Controllers\BarangController::class, 'exportBahan'])->name('barang.exportBahan');
+Route::post('/barang/print', [App\Http\Controllers\BarangController::class, 'selectPrint'])->name('barang.selectPrint');
 Route::get('/barang/print/{id_barang}', [App\Http\Controllers\BarangController::class, 'print'])->name('barang.print');
 
 Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
@@ -160,4 +161,3 @@ Route::get('/laporan-peminjaman', [LaporanController::class, 'index'])->name('la
 Route::get('/laporan/pdf', [LaporanController::class, 'exportPDF'])->name('downloadpdf');
 Route::get('/laporan-pemakaian', [LaporanController::class, 'pemakaian'])->name('laporan.pemakaian');
 Route::get('/laporan/pdf/pemakaian', [LaporanController::class, 'exportPDFPemakaian'])->name('downloadPemakaian');
-

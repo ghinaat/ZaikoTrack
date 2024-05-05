@@ -15,7 +15,7 @@ return new class extends Migration
             CREATE TRIGGER Update_stok_barang AFTER UPDATE on detail_pembelian FOR EACH ROW
                 BEGIN
                     UPDATE barang SET stok_barang = stok_barang - old.jumlah_barang + new.jumlah_barang
-                    WHERE id_barang = old.id_barang;
+                    WHERE id_detail_pembelian = old.id_detail_pembelian;
                 END
         ');
     }

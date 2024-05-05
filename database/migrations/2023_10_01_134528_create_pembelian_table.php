@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('id_pembelian');
             $table->date('tgl_pembelian');
             $table->string('nama_toko', 100);
-            $table->integer('total_pembelian');
-            $table->integer('stok_barang');
+            // $table->integer('total_pembelian');
+            // $table->integer('stok_barang');
             $table->string('keterangan_anggaran');
             $table->string('nota_pembelian', 255)->nullable();
             $table->timestamps();

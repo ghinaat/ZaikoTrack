@@ -121,14 +121,14 @@ class DatabaseSeeder extends Seeder
             'nama_ruangan' => 'Ruang Penyimpanan',
         ]);
 
-        Barang::create([
-            'id_barang' => '3',
-            'nama_barang' => 'Kabel UTP',
-            'merek' => 'Belden',
-            'stok_barang' => '10',
-            'kode_barang' => null,
-            'id_jenis_barang' => '3',
-        ]);
+        // Barang::create([
+        //     'id_barang' => '3',
+        //     'nama_barang' => 'Kabel UTP',
+        //     'merek' => 'Belden',
+        //     'stok_barang' => '10',
+        //     'kode_barang' => null,
+        //     'id_jenis_barang' => '3',
+        // ]);
 
         // Barang::create([
         //     'id_barang' => '5',
@@ -139,14 +139,14 @@ class DatabaseSeeder extends Seeder
         //     'id_jenis_barang' => '3',
         // ]);
 
-        Barang::create([
-            'id_barang' => '6',
-            'nama_barang' => 'Accsess Point',
-            'merek' => 'Mikrotik',
-            'stok_barang' => null,
-            'kode_barang' => 'AP-313892023',
-            'id_jenis_barang' => '2',
-        ]);
+        // Barang::create([
+        //     'id_barang' => '6',
+        //     'nama_barang' => 'Accsess Point',
+        //     'merek' => 'Mikrotik',
+        //     'stok_barang' => null,
+        //     'kode_barang' => 'AP-313892023',
+        //     'id_jenis_barang' => '2',
+        // ]);
 
         
         Guru::create([
@@ -158,6 +158,23 @@ class DatabaseSeeder extends Seeder
         Karyawan::create([
             'id_karyawan' => '1',
             'nama_karyawan' => '-',
+        ]);
+
+        Pembelian::create([
+            'id_pembelian' => '1',
+            'tgl_pembelian' => '2024-01-01',
+            'nama_toko' => '-',
+            'keterangan_anggaran' => '-',
+            'nota_pembelian' => null,
+        ]);
+
+        DetailPembelian::create([
+            'id_detail_pembelian' => '1',
+            'id_pembelian' => '1',
+            'id_barang' => null,
+            'jumlah_barang' => null,
+            'subtotal_pembelian' => null,
+            'harga_perbarang' => '1',
         ]);
 
         
