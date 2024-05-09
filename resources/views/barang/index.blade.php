@@ -53,7 +53,7 @@ Barang
                         </div>
                         <div>
                             <button class="btn btn-success mb-2" data-toggle="modal" data-target="#modalPrint">Print Label</button>
-                            <button class="btn btn-danger mb-2">Export Excel</button>
+                            <a href="{{route('barang.exportAlatPerlengkapan')}}" class="btn btn-danger mb-2">Export Excel</a>
                         </div>
                     </div>
                     <div class="modal fade" id="modalPrint" role="dialog" >
@@ -174,7 +174,10 @@ Barang
                 <div id="tableBahanPraktik" class="card-body m-0">
                     <div class="mb-2 d-flex justify-content-between">
                         <div>
-                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
+                        </div>
+                        <div>
+                            <a href="{{route('barang.exportBahan')}}" class="btn btn-danger mb-2">Export Excel</a>
                         </div>
                     </div>
                         <div class="table-responsive ">

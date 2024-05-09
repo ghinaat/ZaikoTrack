@@ -107,8 +107,7 @@ class DetailPembelianController extends Controller
             $jumlahDataBarang = Barang::max('id_barang') ?? 0;
             $tahunPembelian = Pembelian::where('id_pembelian', $detailPembelian->id_pembelian)->value(DB::raw('YEAR(tgl_pembelian)'));
             $barangData = [];
-            for ($i = 1; $i <= $request->jumlah_barang; $i++) {
-                $id_barang_perlengkapan = $request->id_barang_perlengkapan;
+            for ($i = 1; $i <= $request->jumlah_barang; $i++) {                $id_barang_perlengkapan = $request->id_barang_perlengkapan;
                 $firstChar = substr($id_barang_perlengkapan, 0, 1);
                 $withoutVowels = preg_replace('/[aeiou]/i', '', substr($id_barang_perlengkapan, 1));
                 $nextTwoChars = substr($withoutVowels, 0, 2);

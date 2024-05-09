@@ -60,9 +60,10 @@ Detail Pembelian
                             @endif
                           @endforeach
                         @else
-                          @foreach($dp->barang as $barang)
-                          <h6 class="mb-3 text-sm"><a href="{{ route('barang.index') }}" onclick="scrollToTable()">{{ $barang->nama_barang }}</a></h6>
-                          @endforeach
+                          @php
+                            $firstBarang = $dp->barang->first(); // Mendapatkan barang pertama saja
+                          @endphp
+                          <h6 class="mb-3 text-sm"><a href="{{ route('barang.index') }}" onclick="scrollToTable()">{{ $firstBarang->nama_barang }}</a></h6>
                         @endif
                         <div class="flex-column d-flex">
                           <span class="mb-2 text-xs">Jumlah Barang <span class="text-dark font-weight-bold ms-sm-2 value-css">{{$dp->jumlah_barang}}</span></span>

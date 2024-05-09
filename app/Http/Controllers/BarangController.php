@@ -5,20 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\DetailPembelian;
 use App\Models\JenisBarang;
-use App\Models\Notifikasi;
 use App\Models\Inventaris;
+use App\Exports\AlatPerlengkapanExport;
+use App\Exports\BahanExport;
 use Endroid\QrCode\QrCode;
 use PDF;
 use Illuminate\Http\Request;
-use Picqer\Barcode\BarcodeGeneratorPNG;
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\Label\Label;
-use Endroid\QrCode\Logo\Logo;
-use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BarangController extends Controller
 {
@@ -152,33 +146,16 @@ class BarangController extends Controller
     }
 
     public function exportAlatPerlengkapan(){
-        $barang = Barang::with(['jenisbarang'])->where('id_jenis_barang', '!=', 3)->get();
-        
-        $pdf = PDF::loadView('barang.export.alat', [
-            'barang' => $barang,
-        ]);
-        return $pdf->download('Alat & Perlengkapan Sija.pdf');    
+        $barangs = Barang::with(['jenisbarang'])->where('id_jenis_barang', '!=', 3)->get();
+        return Excel::download((new AlatPerlengkapanExport)
+            ->setAlatPerlengkapan($barangs), 'Alat & Perlengkapan.xlsx');
     }
     
     public function exportBahan(){
-        $barang = Barang::with(['jenisbarang'])->where('id_jenis_barang', 3)->get();
-        $inventaris = Inventaris::all();
-        $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
-            return $group->sum('jumlah_barang');
-        });
-          // Create an associative array where keys are id_barang and values are updated stok_barang
-        $updatedStokBarang = $barang->mapWithKeys(function ($barangItem) use ($totals) {
-            $id_barang = $barangItem->id_barang;
-            $total = $totals->get($id_barang, 0); // Get the total or default to 0
-            return [$id_barang => $barangItem->stok_barang - $total];
-        }); 
-        $pdf = PDF::loadView('barang.export.bahan', [
-            'barang' => $barang,
-            'updatedStokBarang' => $updatedStokBarang,
-            'totals' => $totals,
-        ]);
+        $bahans = Barang::with(['jenisbarang'])->where('id_jenis_barang', 3)->get();
+        return Excel::download((new BahanExport)
+        ->setBahan($bahans), 'Bahan Praktik.xlsx');
 
-        return $pdf->download('Bahan Praktik Sija.pdf');    
     }
 
     public function print($id_barang){
