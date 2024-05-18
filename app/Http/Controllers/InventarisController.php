@@ -84,6 +84,22 @@ class InventarisController extends Controller
         return response()->json($barang);
     }
 
+    public function fetchKodeBarang($kode_barang)
+{
+    // Find the record in the database based on the kode_barang
+    $barang = Barang::where('kode_barang', $kode_barang)->first();
+
+    // Check if the record exists
+    if ($barang) {
+        // If the record exists, return the id_barang
+        return response()->json(['id_barang' => $barang->id_barang]);
+    } else {
+        // If the record doesn't exist, return an error response
+        return response()->json(['error' => 'Barang not found for the given kode_barang.'], 404);
+    }
+}
+
+
     public function update(Request $request, $id_inventaris){
         
         $request->validate([

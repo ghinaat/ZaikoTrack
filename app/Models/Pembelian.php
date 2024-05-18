@@ -20,4 +20,8 @@ class Pembelian extends Model
         'nota_pembelian',
     ];
     protected $date = ['tgl_pembelian'];
+
+    public function detailPembelian(){
+        return $this->hasMany(DetailPembelian::class, 'id_pembelian', 'id_pembelian' );
+    }
 }

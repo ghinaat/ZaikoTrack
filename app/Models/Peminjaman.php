@@ -39,5 +39,14 @@ class Peminjaman extends Model
         return $this->belongsTo(Guru::class, 'id_guru', 'id_guru');
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->tgl_pinjam = now();
+        });
+
+    }
    
 }

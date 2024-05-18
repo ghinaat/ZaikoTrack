@@ -11,8 +11,11 @@ Users
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <h4 class="m-0 text-dark">List User</h4>
+                    <div>
+                        <h5 class="mb-0">Data User</h5>
+                    </div>
                 </div>
+                
                 <div class="card-body m-0">
                     <div class="d-flex">
                         <div class="col-md-6 mb-3">
@@ -28,7 +31,7 @@ Users
                                     </div>
                                     <div class="mb-2 mb-md-0">
                                         <button type="submit" class="btn btn-success" id="importButton">Import</button>
-                                        <p><a href="https://docs.google.com/spreadsheets/d/1rZCIr4wTUS9CO8xWw6ktgn4RxlmsGigmyFVzbgqh4TI/edit#gid=0">Format Excel</a></p>
+                                        <p><a href="https://docs.google.com/spreadsheets/d/1BkSPwDEJDwLAae41dmfyjsd9cdP8Z34ehdk-lmHUpDU/edit?usp=sharing" target="_blank">Format Excel</a></p>
                                     </div>
                                 </div>
                             </form>
@@ -46,6 +49,7 @@ Users
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $showAdmin = true; @endphp
                                 @foreach($user as $key => $user)
                                 <tr>
                                     <td>{{$key+1}}</td>
@@ -109,11 +113,6 @@ Users
                                                             {{ $message }}
                                                         </div>
                                                         @enderror
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="nis">NIS</label>
-                                                        <input type="text" name="nis"
-                                                            id="exampleInputPassword" class="form-control"   value="{{ old('nis', $user->nis) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword">Password</label>
@@ -183,11 +182,7 @@ Users
                         </div>
                         @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="nis">NIS</label>
-                        <input type="text" name="nis" id="nis"
-                            class="form-control" required>
-                    </div>
+                   
                     <div class="form-group">
                         <label for="exampleInputPassword">Password</label>
                         <input type="password" name="password" id="exampleInputPasword" class="form-control" required>

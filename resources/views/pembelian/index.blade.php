@@ -38,8 +38,8 @@ Pembelian
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pb->tgl_pembelian)->format('d F Y')}}</td>
                                     <td>{{$pb->nama_toko}}</td>
-                                    <td>Rp. {{number_format($pb->total_pembelian, 0, ',', '.')}}</td>
-                                    <td>{{$pb->stok_barang}}</td>
+                                    <td>Rp. {{ isset($subtotalPembelian[$pb->id]) ? number_format($subtotalPembelian[$pb->id], 0, ',', '.') : 0 }}</td>
+                                    <td>{{ isset($stoklPembelian[$pb->id]) ? $stoklPembelian[$pb->id] : 0 }}</td>
                                     <td>{{$pb->keterangan_anggaran}}</td>
                                     <td style="text-align: center; ">
                                         @if($pb->nota_pembelian)
@@ -85,20 +85,6 @@ Pembelian
                     <div class="form-group">
                         <label for="nama_toko">Nama Toko</label>
                         <input type="text" name="nama_toko" id="nama_toko" class="form-control" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="total_pembelian">Total Pembelian</label>
-                                <input type="text" name="total_pembelian" id="total_pembelian" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="stok_barang">Stok Barang</label>
-                                <input type="number" name="stok_barang" id="stok_barang" class="form-control" min="0" required>
-                            </div>
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
@@ -150,16 +136,6 @@ Pembelian
                         <label for="nama_toko">Nama Toko</label>
                         <input type="text" name="nama_toko" id="nama_toko" class="form-control"
                             value="{{old('nama_toko', $pb->nama_toko)}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="total_pembelian">Total Pembelian</label>
-                        <input type="text" name="total_pembelian" id="total_pembelian_edit" class="form-control"
-                            value="{{old('total_pembelian', $pb->total_pembelian)}}" data-format="rupiah" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control"
-                            value="{{old('stok_barang', $pb->stok_barang)}}" required>
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>

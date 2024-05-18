@@ -4,6 +4,7 @@
 use App\Http\Controllers\PemakaianController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
 use App\Http\Controllers\NotifikasiController;
@@ -34,15 +35,21 @@ Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name
 });
 
 Route::group(['middleware' => ['auth']], function () {
+Route::get('/user/profile/{id_users}', [ProfileController::class, 'showAdmin'])->name('user.showAdmin');
 Route::put('/user/update/{id_users}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 Route::delete('/user/{id_users}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/user', [App\Http\Controllers\UserController::class, 'store'])->name('user.store');
 Route::post('/user/import', [ App\Http\Controllers\UserController::class, 'import'])->name('user.import');
 Route::get('/user/change-password', [UserController::class, 'changePassword'])->name('user.changePassword');
+Route::get('/users/profile', [ProfileController::class, 'index'])->name('users.profile');
 Route::put('/user/change-password/{id_users}', [UserController::class, 'saveChangePassword'])->name('user.saveChangePassword');
+Route::put('/users/profile/{id_users}', [ProfileController::class, 'update'])->name('profile.update');
+
+
 });
 
 Route::group(['middleware' => ['auth']], function () {
+
 Route::resource('/ruangan', App\Http\Controllers\RuanganController::class);
 Route::get('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'index'])->name('jenisbarang.index');
 Route::post('/jenisbarang', [App\Http\Controllers\JenisBarangController::class, 'store'])->name('jenisbarang.store');
@@ -55,6 +62,7 @@ Route::put('/barang/{id_barang}', [App\Http\Controllers\BarangController::class,
 Route::delete('/barang/{id_barang}', [App\Http\Controllers\BarangController::class, 'destroy'])->name('barang.destroy');
 Route::get('/barang/exportalat', [App\Http\Controllers\BarangController::class, 'exportAlatPerlengkapan'])->name('barang.exportAlatPerlengkapan');
 Route::get('/barang/exportbahan', [App\Http\Controllers\BarangController::class, 'exportBahan'])->name('barang.exportBahan');
+Route::post('/barang/print', [App\Http\Controllers\BarangController::class, 'selectPrint'])->name('barang.selectPrint');
 Route::get('/barang/print/{id_barang}', [App\Http\Controllers\BarangController::class, 'print'])->name('barang.print');
 
 Route::get('/pembelian', [App\Http\Controllers\PembelianController::class, 'index'])->name('pembelian.index');
@@ -78,12 +86,17 @@ Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisCon
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
 Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
 Route::get('/inventaris/fetch-id-barang/{id_barang}', [App\Http\Controllers\InventarisController::class, 'fetchIdBarang'])->name('inventaris.fetchIdBarang');
-
+Route::get('/inventaris/fetch-kode-barang/{id_barang}', [InventarisController::class, 'fetchKodeBarang'])->name('fetch-kode-barang');
 
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
 Route::put('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'update'])->name('detailpembelian.update');
 Route::delete('/detailpembelian/{id_detail_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'destroy'])->name('detailpembelian.destroy');
+
+Route::get('/fetch-id-siswa/{id_users}', [App\Http\Controllers\PeminjamanController::class, 'fetchSiswa'])->name('peminjaman.fetchIdSiswa');
+Route::get('/fetch-id-guru/{id_guru}', [App\Http\Controllers\PeminjamanController::class, 'fetchGuru'])->name('peminjaman.fetchIdGuru');
+
+
 
 Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::get('/peminjaman/notifikasi', [App\Http\Controllers\PeminjamanController::class, 'notifikasi'])->name('peminjaman.notifikasi');
@@ -153,4 +166,3 @@ Route::get('/laporan-peminjaman', [LaporanController::class, 'peminjaman'])->nam
 Route::get('/laporan/pdf', [LaporanController::class, 'exportPDFPeminjaman'])->name('downloadpdf');
 Route::get('/laporan-pemakaian', [LaporanController::class, 'pemakaian'])->name('laporan.pemakaian');
 Route::get('/laporan/pdf/pemakaian', [LaporanController::class, 'exportPDFPemakaian'])->name('downloadPemakaian');
-

@@ -5,27 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\DetailPembelian;
 use App\Models\JenisBarang;
-use App\Models\Notifikasi;
 use App\Models\Inventaris;
+use App\Exports\AlatPerlengkapanExport;
+use App\Exports\BahanExport;
 use Endroid\QrCode\QrCode;
 use PDF;
 use Illuminate\Http\Request;
-use Picqer\Barcode\BarcodeGeneratorPNG;
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\Label\Label;
-use Endroid\QrCode\Logo\Logo;
-use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BarangController extends Controller
 {
     public function index(){
 
         $alatdanperlengkapan = Barang::with('inventaris')->where('id_jenis_barang', '!=', 3)->get();
-
         $bahan = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::all();
         $inventaris = Inventaris::all();
@@ -76,6 +69,7 @@ class BarangController extends Controller
             
 
             $barang = new Barang();
+            $barang->id_detail_pembelian = 1;
             $barang->nama_barang = $request->nama_barang;
             $barang->merek = $request->merek;
             $barang->stok_barang = $request->stok_barang;
@@ -109,14 +103,11 @@ class BarangController extends Controller
             // Create a PngWriter instance
             $writer = new PngWriter();
             $qrCodeData = $writer->write($qrCode)->getString();
-            // dd($qrCodeData);
     
             file_put_contents($storagePath, $qrCodeData);
     
-            // Return the filename (including the extension) for further use if needed
             return $ImageName . '.png';
         } else {
-            // Jika kode barang kosong, kembalikan null
             return null;
         }
 
@@ -155,46 +146,41 @@ class BarangController extends Controller
     }
 
     public function exportAlatPerlengkapan(){
-        $barang = Barang::with(['jenisbarang'])->where('id_jenis_barang', '!=', 3)->get();
-        
-        $pdf = PDF::loadView('barang.export.alat', [
-            'barang' => $barang,
-        ]);
+        $barangs = Barang::with(['jenisbarang'])->where('id_jenis_barang', '!=', 3)->get();
+        return Excel::download((new AlatPerlengkapanExport)
+            ->setAlatPerlengkapan($barangs), 'Alat & Perlengkapan.xlsx');
+    }
+    
+    public function exportBahan(){
+        $bahans = Barang::with(['jenisbarang'])->where('id_jenis_barang', 3)->get();
+        return Excel::download((new BahanExport)
+        ->setBahan($bahans), 'Bahan Praktik.xlsx');
 
-        return $pdf->download('Alat & Perlengkapan Sija.pdf');    
     }
 
     public function print($id_barang){
         $barang = Barang::with(['detailPembelian.pembelian'])->where('id_barang', $id_barang)->get();
         $tahunPembelian = DetailPembelian::with(['pembelian'])->where('id_barang', $id_barang)->get();
 
-        // dd($barang);
         $pdf = PDF::loadView('barang.export.print', [
             'barang' => $barang,
             'tahunPembelian' => $tahunPembelian,
-        ]);
-
+        ])->setPaper('a4', 'potrait');
         return $pdf->download('LabelQRcode.pdf');   
     } 
-    public function exportBahan(){
-        $barang = Barang::with(['jenisbarang'])->where('id_jenis_barang', 3)->get();
-        $inventaris = Inventaris::all();
-        $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
-            return $group->sum('jumlah_barang');
-        });
-        // dd($alatdanperlengkapan);
-          // Create an associative array where keys are id_barang and values are updated stok_barang
-        $updatedStokBarang = $barang->mapWithKeys(function ($barangItem) use ($totals) {
-            $id_barang = $barangItem->id_barang;
-            $total = $totals->get($id_barang, 0); // Get the total or default to 0
-            return [$id_barang => $barangItem->stok_barang - $total];
-        }); 
-        $pdf = PDF::loadView('barang.export.bahan', [
-            'barang' => $barang,
-            'updatedStokBarang' => $updatedStokBarang,
-            'totals' => $totals,
-        ]);
+    public function selectPrint(Request $request){
 
-        return $pdf->download('Bahan Praktik Sija.pdf');    
-    }
+        $selectedData = $request->input('id_barang');
+        if (!$selectedData) {
+            return redirect()->back()->with(['error' => 'Tidak ada data yang di pilih.']);
+        }
+
+        $barang = Barang::with(['detailPembelian.pembelian'])->whereIn('id_barang', $selectedData)->get();
+        $pdf = PDF::loadView('barang.export.selectPrint', [
+            'barang' => $barang,
+            // 'tahunPembelian' => $tahunPembelian,
+        ])->setPaper('a4', 'potrait');
+        return $pdf->download('LabelQRcode.pdf');   
+        // dd($selectedData);
+    } 
 }

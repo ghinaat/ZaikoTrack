@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\DetailPembelian;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,9 +13,21 @@ use Illuminate\Support\Str;
 class PembelianController extends Controller
 {
     public function index(){
-        $pembelian = Pembelian::all();
+        $pembelian = Pembelian::all()->except(1);
+
+        $subtotalPembelian = [];
+        foreach ($pembelian as $pb) {
+            $subtotalPembelian[$pb->id] = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('subtotal_pembelian');
+        }
+        
+        $stoklPembelian = [];
+        foreach ($pembelian as $pb) {
+            $stoklPembelian[$pb->id] = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('jumlah_barang');
+        }
         return view("pembelian.index",[
-            'pembelian' => $pembelian
+            'pembelian' => $pembelian,
+            'subtotalPembelian' => $subtotalPembelian,
+            'stoklPembelian' => $stoklPembelian
         ]);
     }
 
@@ -22,8 +35,6 @@ class PembelianController extends Controller
         $request->validate([
             'tgl_pembelian' => 'required',
             'nama_toko' => 'required',
-            'total_pembelian' => 'required',
-            'stok_barang' => 'required',
             'keterangan_anggaran' => 'required',
             'nota_pembelian' => 'mimes:jpg,jpeg,png',
         ]);
@@ -32,14 +43,7 @@ class PembelianController extends Controller
         $pembelian = new Pembelian;
         $pembelian->tgl_pembelian = $request->tgl_pembelian;
         $pembelian->nama_toko = $request->nama_toko;
-        $pembelian->stok_barang = $request->stok_barang;
         $pembelian->keterangan_anggaran = $request->keterangan_anggaran;
-        
-        $total_pembelian = $request->total_pembelian;
-        $totalPembelian = str_replace(".", "",  $total_pembelian);
-        $totalPembelians = str_replace("Rp", "", $totalPembelian);
-        $pembelian->total_pembelian = $totalPembelians;
-    
 
         if($request->hasFile('nota_pembelian')) {
             $file = $request->file('nota_pembelian');

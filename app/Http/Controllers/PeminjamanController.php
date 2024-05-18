@@ -287,6 +287,40 @@ class PeminjamanController extends Controller
         return response()->json($namaBarangOptions);
     }
 
+    public function fetchSiswa($id_users)
+    {
+        // Fetch the profile data based on the id_users
+        $profile = Profile::where('id_users', $id_users)->first();
+    
+        if ($profile) {
+            // If profile exists, return its data
+            return response()->json([
+                'nis' => $profile->nis,
+                'kelas' => $profile->kelas,
+                'jurusan' => $profile->jurusan
+            ]);
+        } else {
+            // If profile doesn't exist, return an error response
+            return response()->json(['error' => 'Profile not found for the given user.'], 404);
+        }
+    }
+
+        public function fetchGuru($id_guru)
+    {
+        // Fetch the guru based on id_guru
+        $guru = Guru::findOrFail($id_guru);
+
+        // Extract the required details
+        $nip = $guru->nip;
+        $jurusan = $guru->jurusan;
+
+        return response()->json([
+            'nip' => $nip,
+            'jurusan' => $jurusan
+        ]);
+    }
+
+
   
 
     public function store(Request $request)
@@ -296,11 +330,8 @@ class PeminjamanController extends Controller
                 'id_users' => 'nullable',
                 'id_karyawan' => 'nullable',
                 'id_guru' => 'nullable',
-                'jurusan' => 'nullable',
-                'kelas' => 'nullable',
                 'status' => 'nullable',
                 'keterangan_peminjaman' => 'nullable',
-                'tgl_pinjam' => 'required|date',
                 'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             ]);
         } catch (ValidationException $e) {
@@ -321,9 +352,6 @@ class PeminjamanController extends Controller
             'id_guru' => $id_guru,
             'id_karyawan' => $id_karyawan,
             'status' => $request->status,
-            'jurusan' => $request->jurusan,
-            'kelas' => $request->kelas,
-            'tgl_pinjam' => $request->tgl_pinjam,
             'tgl_kembali' => $request->tgl_kembali,
             'keterangan_peminjaman' => $request->keterangan_peminjaman,
         ]);
@@ -347,8 +375,6 @@ class PeminjamanController extends Controller
                 'id_users' => 'nullable',
                 'id_karyawan' => 'nullable',
                 'id_guru' => 'nullable',
-                'jurusan' => 'nullable',
-                'kelas' => 'nullable',
                 'status' => 'nullable',
                 'keterangan_pemakaian' => 'nullable',
                 'tgl_pinjam' => 'required|date',
@@ -374,8 +400,6 @@ class PeminjamanController extends Controller
             'id_guru' => $id_guru,
             'id_karyawan' => $id_karyawan,
             'status' => $request->status,
-            'jurusan' => $request->jurusan,
-            'kelas' => $request->kelas,
             'tgl_pinjam' => $request->tgl_pinjam,
             'tgl_kembali' => $request->tgl_kembali,
             'keterangan_pemakaian' => $request->keterangan_pemakaian,

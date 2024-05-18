@@ -51,8 +51,68 @@ Barang
                         <div>
                             <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
                         </div>
+                        <div>
+                            <button class="btn btn-success mb-2" data-toggle="modal" data-target="#modalPrint">Print Label</button>
+                            <a href="{{route('barang.exportAlatPerlengkapan')}}" class="btn btn-danger mb-2">Export Excel</a>
+                        </div>
                     </div>
-                    
+                    <div class="modal fade" id="modalPrint" role="dialog" >
+                        <div class="modal-dialog modal-lg modal-dialog-centered  modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel">Pilih Barang</h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                        <i class="fa fa-close" style="color: black;"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body form">
+                                    <form action='{{route("barang.selectPrint")}}' method="POST" id="form" class="form-horizontal" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="table-responsive">
+                                                    <div class="form-check form-switch" style="display: flex; justify-content: flex-end;">
+                                                        <input class="form-check-input" type="checkbox" role="switch" id="selectAll">
+                                                        <label class="form-check-label" for="selectAll">
+                                                            Pilih Semua
+                                                        </label>
+                                                      </div>
+                                                    <table id="selectTable" class="table table-bordered table-striped align-items-center mb-0" id="example2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>Nama Barang</th>
+                                                                <th>Kode Barang</th>
+                                                                <th>Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($alatdanperlengkapan as $key => $ap)
+                                                                <tr>
+                                                                    <td>{{$key+1}}</td>
+                                                                    <td>{{$ap->nama_barang}}
+                                                                    <td>{{$ap->kode_barang}}
+                                                                    <td class="align-items-center">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input" type="checkbox" value="{{$ap->id_barang}}" name="id_barang[]" id="flexCheckDefault">
+                                                                      </div>                                                                    
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Print</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                         <div class="table-responsive ">
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
                                 <thead>
@@ -61,7 +121,7 @@ Barang
                                         <th>Nama Barang</th>
                                         <th>Merek</th>
                                         <th>Kode Barang</th>
-                                        <th>Barcode</th>
+                                        <th>Qrcode</th>
                                         <th style="text-align: center;">
                                             Terinventarisasi <a href="{{ route('inventaris.index') }}" class="fas fa-link"></a>
                                         </th>
@@ -78,7 +138,7 @@ Barang
                                         <td>{{$br->kode_barang}}</td>
                                         <td>
                                             <a href="{{ asset('/storage/qrcode/'. $br->qrcode_image) }}" download>
-                                                <img  src="{{ asset('/storage/qrcode/' . $br->qrcode_image) }}" style="width: 80px;">
+                                                <img  src="{{ asset('/storage/qrcode/' . $br->qrcode_image) }}" style="width: 50px;">
                                             </a>
                                         </td>
                                         <td style="text-align: center">
@@ -100,8 +160,9 @@ Barang
                                                     class="btn btn-danger btn-xs" style="margin-left: 5px; margin-right: 5px;">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
-                                              
-
+                                                <a href="{{ route('barang.print', $br->id_barang) }}" class="btn btn-success btn-xs">
+                                                    <i class="fa-solid fa-print"></i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -113,7 +174,10 @@ Barang
                 <div id="tableBahanPraktik" class="card-body m-0">
                     <div class="mb-2 d-flex justify-content-between">
                         <div>
-                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalBahan">Tambah</button>
+                            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#addModalPeralatan">Tambah</button>
+                        </div>
+                        <div>
+                            <a href="{{route('barang.exportBahan')}}" class="btn btn-danger mb-2">Export Excel</a>
                         </div>
                     </div>
                         <div class="table-responsive ">
@@ -252,7 +316,7 @@ Barang
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
+                    <h5 class="modal-title" id="editModalLabel">Edit Barang</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <i class="fa fa-close" style="color: black;"></i>
                     </button>
@@ -299,58 +363,60 @@ Barang
     </div>
     @endforeach
 
-@foreach($bahan as $key => $br)
-<div class="modal fade" id="editModalBahan{{$br->id_barang}}" tabindex="-1" role="dialog"
-    aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Jenis Barang</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <i class="fa fa-close" style="color: black;"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group">
-                        <label for="nama_barang">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="nama_barang" class="form-control"
-                            value="{{old('nama_barang', $br->nama_barang)}}">
-                    </div>
-                    <div class="form-group">
-                        <label for="merek">Merek</label>
-                        <input type="text" name="merek" id="merek" class="form-control"
-                            value="{{old('merek', $br->merek)}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="stok_barang">Stok Barang</label>
-                        <input type="number" name="stok_barang" id="stok_barang" class="form-control"
-                            value="{{old('stok_barang', $br->stok_barang)}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="jenis_barang">Jenis Barang</label>
-                        <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
-                            @foreach($jenisBarang as $key => $jb)
-                            <option value="{{$jb->id_jenis_barang}}" @if($jb->id_jenis_barang ==
-                                old('id_jenis_barang', $jb->id_jenis_barang) ) selected @endif>
-                                {{$jb->nama_jenis_barang}}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-                    </div>
-                </form>
+    @foreach($bahan as $key => $br)
+    <div class="modal fade" id="editModalBahan{{$br->id_barang}}" tabindex="-1" role="dialog"
+        aria-labelledby="editModalLabel{{$br->id_barang}}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Barang</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color: black;"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm" action="{{route('barang.update', $br->id_barang)}}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label for="nama_barang">Nama Barang</label>
+                            <input type="text" name="nama_barang" id="nama_barang" class="form-control"
+                                value="{{old('nama_barang', $br->nama_barang)}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="merek">Merek</label>
+                            <input type="text" name="merek" id="merek" class="form-control"
+                                value="{{old('merek', $br->merek)}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stok_barang">Stok Barang</label>
+                            <input type="number" name="stok_barang" id="stok_barang" class="form-control"
+                                value="{{old('stok_barang', $br->stok_barang)}}" required>
+                        </div>
+                        {{-- <div class="form-group">
+                            <label for="jenis_barang">Jenis Barang</label>
+                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
+                                @foreach($jenisBarang as $key => $jb)
+                                <option value="{{$jb->id_jenis_barang}}" @if($jb->id_jenis_barang ==
+                                    old('id_jenis_barang', $jb->id_jenis_barang) ) selected @endif>
+                                    {{$jb->nama_jenis_barang}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-@endforeach
+    @endforeach
+
+
 @stop
 @push('js')
 
@@ -360,6 +426,7 @@ Barang
 </form>
 <script>
 $(document).ready(function() {
+
     $('#myTable').DataTable({
         "fixedHeader": true,
         "responsive": true,
@@ -380,9 +447,24 @@ $(document).ready(function() {
             }
         }
     });
-});
-</script>
-<script>
+    $('#selectTable').DataTable({
+        "responsive": true,
+        "info": false,
+        "ordering": false,
+        "paging": false
+    });
+    function toggleCheckboxes() {
+        var checkboxes = document.querySelectorAll('#selectTable tbody input[type="checkbox"]');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = document.getElementById('selectAll').checked;
+        });
+    }
+
+    // Tambahkan event listener ke checkbox "Pilih Semua"
+    document.getElementById('selectAll').addEventListener('change', toggleCheckboxes);
+    });
+
+    
     document.addEventListener('DOMContentLoaded', function () {
         // Simpan referensi ke elemen-elemen yang diperlukan
         const option1 = document.getElementById('option1');
@@ -418,5 +500,14 @@ $(document).ready(function() {
             handleRadioChange();
         });
     });
+
+    function scrollToTable() {
+        // Temukan elemen tabel target berdasarkan ID
+        var targetTable = document.getElementById('myTable2');
+        consol.log(targetTable);
+        // Lakukan scroll ke tabel target
+        targetTable.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
 </script>
 @endpush
