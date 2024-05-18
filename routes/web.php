@@ -148,9 +148,9 @@ Route::get('/notifikasi/{id_notifikasi}/detail', [NotifikasiController::class, '
 Route::get('/email-configuration', [EmailConfigurationController::class, 'show'])->name('emailConfiguration.show');
 Route::post('/email-configuration', [EmailConfigurationController::class, 'update'])->name('emailConfiguration.update');
 
-Route::get('/laporan-peminjaman', [LaporanController::class, 'index'])->name('laporan-peminjaman');
+Route::get('/laporan-peminjaman', [LaporanController::class, 'peminjaman'])->name('laporan-peminjaman');
 
-Route::get('/laporan/pdf', [LaporanController::class, 'exportPDF'])->name('downloadpdf');
+Route::get('/laporan/pdf', [LaporanController::class, 'exportPDFPeminjaman'])->name('downloadpdf');
 Route::get('/laporan-pemakaian', [LaporanController::class, 'pemakaian'])->name('laporan.pemakaian');
 Route::get('/laporan/pdf/pemakaian', [LaporanController::class, 'exportPDFPemakaian'])->name('downloadPemakaian');
 

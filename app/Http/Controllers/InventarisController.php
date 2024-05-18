@@ -224,8 +224,8 @@ class InventarisController extends Controller
 
         $inventarisAlat->each(function ($item) {
             $item->status_pinjam = DetailPeminjaman::where('id_inventaris', $item->id_inventaris)
-                                               ->where('status', 'dipinjam')
-                                               ->exists();
+                ->where('status', 'dipinjam')
+                ->exists();
         });
         
         return view('inventaris.show', [
@@ -267,10 +267,4 @@ class InventarisController extends Controller
             return redirect()->back()->with(['error' => 'Data tidak ditemukan.']);
         }
     }
-    
-    
-    
-
-    
-
 }

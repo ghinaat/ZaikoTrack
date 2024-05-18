@@ -394,21 +394,13 @@ Peminjaman / List Barang
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                        <button class="btn btn-danger" type="button" onclick="history.go();" title="Prev">Batal</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
 @stop
 @push('js')
 <form action="" id="delete-form" method="post">

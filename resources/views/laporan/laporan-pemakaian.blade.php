@@ -51,6 +51,17 @@ Laporan Pemakaian
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <label for="nama_peminjam" class="form-label">Nama Peminjam:</label>
+                                    <select id="nama_peminjam" name="nama_peminjam" class="form-select @error('nama_peminjam') is-invalid @enderror">
+                                        <option value="" @if(session('selected_nama_peminjam', '') == '') selected @endif>All</option>
+                                        @foreach (session('all_peminjam_names', []) as $peminjam_name)
+                                            @if ($peminjam_name != '-')
+                                                <option value="{{ $peminjam_name }}" @if(session('selected_nama_peminjam') == $peminjam_name) selected @endif>{{ $peminjam_name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-4 col-lg-3">
                                     <div class="form-group">
                                     <label for="start_date" class="form-label">Tanggal Awal:</label>
@@ -63,7 +74,7 @@ Laporan Pemakaian
                                     <label for="end_date" class="form-label">Tanggal Akhir:</label>
                                     <input type="date" id="end_date" name="end_date" class="form-control"
                                         value="{{ request()->input('end_date') }}">
-                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 mt-md-0 mt-3">
                                 <div class="d-flex align-items-center">
@@ -72,7 +83,8 @@ Laporan Pemakaian
                                     <a href="{{ route('downloadPemakaian', [
                                         'start_date' => request()->input('start_date'),
                                         'end_date' => request()->input('end_date'),
-                                        'id_barang' => request()->input('id_barang') ]) }}" class="btn btn-danger mt-md-4 ml-2 ml-md-auto" style="min-width: 150px;">Unduh PDF
+                                        'id_barang' => request()->input('id_barang'), 
+                                        'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger mt-md-4 ml-2 ml-md-auto" style="min-width: 150px;">Unduh PDF
                                     </a>
                                 </div>
                             </div>
@@ -80,7 +92,7 @@ Laporan Pemakaian
                     </div>            
                 </div>
             </div>
-            @if(request()->filled('id_barang') || request()->filled('tglawal') || request()->filled('tglakhir'))
+            @if(request()->filled('id_barang') || request()->filled('start_date') || request()->filled('end_date') || request()->filled('nama_peminjam'))
             @if(isset($groupedPemakaians) && count($groupedPemakaians) > 0)
             <div class="card">
                 <div class="card-body">

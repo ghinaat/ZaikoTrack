@@ -112,9 +112,9 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a>
+                                            </a> -->
                                         </td>
                                         @endcan
                                         @can('isKabeng')
@@ -122,9 +122,9 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a>
+                                            </a> -->
                                         </td>
                                         @endcan
                                     </tr>
@@ -204,11 +204,11 @@ Inventaris / List Barang
                                                 data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
+                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
                                                 onclick="notificationBeforeDelete(event, this, {{$key+1}})"
                                                 class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa fa-trash"></i>
-                                            </a>
+                                            </a> -->
                                         </td>
                                         @endcan
                                         @can('isKabeng')
@@ -218,11 +218,11 @@ Inventaris / List Barang
                                                 data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
+                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
                                                 onclick="notificationBeforeDelete(event, this, {{$key+1}})"
                                                 class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa fa-trash"></i>
-                                            </a>
+                                            </a> -->
                                         </td>
                                         @endcan
                                     </tr>
@@ -247,7 +247,7 @@ Inventaris / List Barang
 </div>
 
 
-<!-- Modal Edit Pegawai -->
+<!-- Modal Edit Inventarisasi -->
 @foreach($inventarisAlat as $key => $barang)
 <div class="modal fade" id="editModal{{$barang->id_inventaris}}" tabindex="-1" role="dialog"
     aria-labelledby="editModalLabel" aria-hidden="true">
@@ -270,8 +270,7 @@ Inventaris / List Barang
                         <label for="id_barang">Kode Barang</label>
                         <select class="form-select" name="id_barang" id="id_barang" required>
                             @foreach($barangEdit as $b)
-                            <option value="{{ $b ->id_barang }}" @if($b->id_barang ==
-                             old('id_barang', $b->id_barang) ) selected @endif>
+                            <option value="{{ $b ->id_barang }}" @if($b->id_barang == old('id_barang', $b->id_barang) ) selected @endif>
                                 {{ $b ->kode_barang }}</option>
                             @endforeach
                         </select>
@@ -284,10 +283,16 @@ Inventaris / List Barang
 
                     <div class="form-group">
                         <label for="id_barang">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" readonly>
+                        <select class="form-select" name="id_barang" id="id_barang" required>
+                            @foreach($BarangAlat as $b)
+                            <option value="{{ $b ->id_barang }}" @if($b->id_barang ==
+                             old('id_barang', $b->id_barang) ) selected @endif>
+                                {{ $b ->nama_barang }}</option>
+                            @endforeach
+                        </select>
                         @error('id_barang')
                         <div class="invalid-feedback">
-                            {{ $message }}
+                            {{ $message }} 
                         </div>
                         @enderror
                     </div>
@@ -330,7 +335,7 @@ Inventaris / List Barang
                     </div>
 
                     <div class="form-group">
-                        <label for="ket_barang">Ketarangan Barang</label>
+                        <label for="ket_barang">Keterangan Barang</label>
                         <input type="text" name="ket_barang" id="ket_barang" class="form-control"
                             value="{{old('ket_barang', $barang->ket_barang)}}">
                         <small class="form-text text-muted">*wajib diisi
@@ -434,7 +439,7 @@ Inventaris / List Barang
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="ket_barang">Ketarangan Barang</label>
+                        <label for="ket_barang">Keterangan Barang</label>
                         <input type="text" name="ket_barang" id="ket_barang" class="form-control"
                             value="{{old('ket_barang', $barang->ket_barang)}}">
                         <small class="form-text text-muted">*wajib diisi
@@ -463,9 +468,9 @@ Inventaris / List Barang
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah Inventaris</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
             </div>
             <div class=" modal-body">
                 <form id="addForm" action="{{ route('inventaris.store') }}" method="post">
@@ -524,8 +529,8 @@ Inventaris / List Barang
                         @enderror
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                        <button class="btn btn-primary" type="submit" title="Save">Simpan</button>
+                        <button class="btn btn-danger" type="button" onclick="history.go();" title="Prev">Batal</button>
                     </div>
                 </form>
             </div>
@@ -746,7 +751,18 @@ document.addEventListener('DOMContentLoaded', function() {
         handleRadioChange();
     });
 
+    function fillNamaBarang() {
+        var select = document.getElementById('kode_barang');
+        var kodeBarang = select.value;
+        var namaBarangInput = document.getElementById('nama_barang');
 
+        // Cari nama barang yang sesuai berdasarkan kode barang yang dipilih
+        var selectedOption = select.options[select.selectedIndex];
+        var namaBarang = selectedOption.text;
+
+        // Isi nilai nama barang ke dalam input
+        namaBarangInput.value = namaBarang;
+    }
 
 });
 
