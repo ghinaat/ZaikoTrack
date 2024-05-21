@@ -2,6 +2,7 @@
 @section('title', 'Tambah Pemakaian')
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/pemakaian.css') }}">
+<link rel="stylesheet" href="{{ asset('css/search.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 @endsection
 @section('breadcrumb-name')
@@ -70,7 +71,6 @@ Tambah Pemakaian
                                                                             @endforeach
                                                                         </select>                                
                                                                 </div>
-                                                                @endcan
                                                                 <div class="form-group " style="display: none;" id="id_karyawan">
                                                                     <label for="id_karyawan">Nama Lengkap</label>
                                                                         <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan" >
@@ -96,13 +96,10 @@ Tambah Pemakaian
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                @endcan
                                                                 <div class="form-group">
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                    <input type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></input>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="tgl_pakai">Tanggal Pakai</label>
-                                                                    <input type="date" name="tgl_pakai" id="tgl_pakai" class="multisteps-form__input form-control" ></input>
+                                                                    <textarea type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group text-end justify-content-end mb-0 mt-4" >
@@ -149,24 +146,38 @@ Tambah Pemakaian
                                                         <div class="multisteps-form__content">
                                                             <div class="form-row mt-2"> 
                                                                 <div class="row">
+                                                                    <input type="hidden" name="id_barang" value="">
+                                                                    <div class="dropdownsearch">
+                                                                        <div class="options">
+                                                                            <label for="id_barang">Nama Barang</label>
+                                                                            <select name="" id="dynamic_select" name="id_barang" class="custom-select">
+                                                                                @foreach($barang as $key => $br)
+                                                                                <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                                                                    {{$br->barang->nama_barang}}
+                                                                                </option>
+                                                                                @endforeach  
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="form-group">
                                                                         <label for="id_barang">Nama Barang</label>
-                                                                        <select class="form-select" name="id_barang" id="id_barang">
-                                                                            @foreach($barang as $key => $br)
-                                                                            <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
-                                                                                {{$br->barang->nama_barang}}
-                                                                            </option>
-                                                                            @endforeach
-                                                                        </select>                                
+                                                                            <select name="" id="dynamic_select" name="id_barang" class="custom-select">
+                                                                                @foreach($barang as $key => $br)
+                                                                                <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
+                                                                                    {{$br->barang->nama_barang}}
+                                                                                </option>
+                                                                                @endforeach  
+                                                                            </select>
                                                                     </div>
                                                                     <div class="col-md-6 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label for="id_ruangan">Ruangan</label>
-                                                                            <select class="form-select" name="id_ruangan" id="id_ruangan">
-                                                                                
+                                                                            <select class="form-select" name="id_ruangan" id="id_ruangan" style="display: block;">
+                                                                                <!-- Tambahkan opsi ruangan di sini -->
                                                                             </select>                                
                                                                         </div>
                                                                     </div>
+                                                                    
                                                                     <div class="col-md-6 col-sm-6">
                                                                         <div class="form-group">
                                                                             <label for="jumah_barang">Stok Barang</label>
@@ -192,6 +203,11 @@ Tambah Pemakaian
                                                     <h4 class="multisteps-form__title">Data Diri</h4>
                                                     <div class="multisteps-form__content">
                                                         <div class="form-row mt-2">
+                                                            @can('isSiswa')
+                                                            <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
+                                                            <input type="hidden" name="status" value="siswa">
+                                                            @endcan
+                                                            @can('isTeknisi', 'isKaprog', 'isKabeng')
                                                             <div class="form-group">
                                                                 <label for="status">Status</label>
                                                                     <select class="form-select" name="status" id="status_upd">
@@ -247,13 +263,10 @@ Tambah Pemakaian
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            @endcan
                                                             <div class="form-group">
                                                                 <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                <input type="text" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></input>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="tgl_pakai">Tanggal Pakai</label>
-                                                                <input type="date" name="tgl_pakai" id="tgl_pakai_update" class="multisteps-form__input form-control"  ></input>
+                                                                <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="form-group mt-2" style="text-align: right;">
@@ -277,6 +290,7 @@ Tambah Pemakaian
 @stop
 @push('js')
 <script src="{{ asset('js/pemakaian.js ') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <form action="" id="delete-form" method="post">
     @method('delete')
@@ -284,17 +298,7 @@ Tambah Pemakaian
 </form>
 
 <script>
-$(document).ready(function() {
-    $('#myTable').DataTable({
-        "responsive": true,
-        "language": {
-            "paginate": {
-                "previous": "<",
-                "next": ">"
-            }
-        }
-    });
-});
+
 
 
 //untuk select ruangan 
@@ -304,9 +308,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const stokValue = document.getElementById('stok_value');
 
     // Fetch ruangan options for the selected barang
-    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
+    document.querySelectorAll('div.dropdown-select wide costum-select').forEach(div => div.addEventListener('click', function() {
         const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
-        const selectedIdBarang = this.value;
+        const selectedIdBarang = this.querySelector('.current').getAttribute('data-value');
+        console.log("Selected Barang ID:", selectedIdBarang);
 
         // Fetch ruangan options for the selected barang
         fetch(`/get-ruangan-options/${selectedIdBarang}`)
@@ -399,10 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set readonlyValue menjadi true jika karyawan dipilih
         readonlyValue = true;
     }
-
-   
-
-
     // Atur atribut readonly untuk elemen kelas
     kelasElement.readOnly = readonlyValue;
 
@@ -410,47 +411,6 @@ document.addEventListener('DOMContentLoaded', function() {
     jurusanElement.readOnly = (this.value === 'karyawan');
 }));
 
-
-// document.getElementById('status').addEventListener('click', function() {
-//     const selectedStatus = this.value;
-//     const siswaElement = this.parentNode.parentNode.parentNode.querySelector(
-//         '#id_siswa');
-//     const guruElement = this.parentNode.parentNode.parentNode.querySelector(
-//         '#id_guru');
-//     const karyawanElement = this.parentNode.parentNode.parentNode.querySelector(
-//         '#id_karyawan');
-
-//     const kelasElement = this.parentNode.parentNode.parentNode.querySelector(
-//         '#kelas');
-//     const jurusanElement = this.parentNode.parentNode.parentNode.querySelector(
-//         '#jurusan');
-
-//     // Hide all forms
-//     siswaElement.style.display = 'block';
-//     guruElement.style.display = 'none';
-//     karyawanElement.style.display = 'none';
-//     // NamaElement.style.display = 'block';
-//     jurusanElement.removeAttribute('readonly');
-//     kelasElement.removeAttribute('readonly');
-
-
-//     // Show the selected form
-//     if (selectedStatus === 'siswa') {
-//         siswaElement.style.display = 'block';
-//         // siswaElement.style.display = 'none';
-
-//     } else if (selectedStatus === 'guru') {
-//         guruElement.style.display = 'block';
-//         siswaElement.style.display = 'none';
-//         kelasElement.setAttribute('readonly', 'true');
-//     } else if (selectedStatus === 'karyawan') {
-//         karyawanElement.style.display = 'block';
-//         siswaElement.style.display = 'none';
-//         kelasElement.setAttribute('readonly', 'true');
-//         jurusanElement.setAttribute('readonly', 'true');
-
-//     }
-// });
 
 $(document).ready(function() {
 
@@ -632,95 +592,94 @@ $(document).ready(function() {
                 data: data,
             })
             .done(function(response) {
-                const namaSiswaElement = document.querySelector('#id_siswa_update');
-                const namaGuruElement = document.querySelector('#id_guru_update' );
-                const namaKaryawanElement = document.querySelector('#id_karyawan_update');
-                const kelasElement = document.querySelector('#kelas_update');
-                const jurusanElement = document.querySelector('#jurusan_update');
-                let readonlyValue = false;
+                if(response.status !== 'siswa'){
+                    const namaSiswaElement = document.querySelector('#id_siswa_update');
+                    const namaGuruElement = document.querySelector('#id_guru_update' );
+                    const namaKaryawanElement = document.querySelector('#id_karyawan_update');
+                    const kelasElement = document.querySelector('#kelas_update');
+                    const jurusanElement = document.querySelector('#jurusan_update');
+                    let readonlyValue = false;
 
-                namaSiswaElement.style.display = 'none';
-                namaGuruElement.style.display = 'none';
-                namaKaryawanElement.style.display = 'none';
-
-            document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
-
-                if (this.value === 'siswa') {
-                    namaSiswaElement.style.display = 'block';
-                    namaGuruElement.style.display = 'none';
-                    namaKaryawanElement.style.display = 'none';
-                    readonlyValue = false;
-                } else if (this.value === 'guru') {
-                    namaSiswaElement.style.display = 'none';
-                    namaGuruElement.style.display = 'block';
-                    namaKaryawanElement.style.display = 'none';
-                    kelasElement.value = null;
-                    readonlyValue = true;
-                } else if (this.value === 'karyawan') {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
-                    namaKaryawanElement.style.display = 'block';
-                    kelasElement.value = null; // Atur nilai input kelas menjadi null
-                    jurusanElement.value = null;
-                    readonlyValue = true;
-                }
+                    namaKaryawanElement.style.display = 'none';
 
-                // Atur atribut readonly untuk elemen kelas
-                kelasElement.readOnly = readonlyValue;
+                    document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
 
-                // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
-                jurusanElement.readOnly = (this.value === 'karyawan');
-            
-            }));
-
-                if (response.id_users !== 1) {
-                    namaSiswaElement.style.display = 'block';
-                    var selectSiswa = document.getElementById('id_siswa_upd');
-                    var statusSiswa = document.getElementById('status_upd');
-                    $('#status_upd').val('siswa');
-
-                    for (var i = 0; i < selectSiswa.options.length; i++) {
-                        if (selectSiswa.options[i].value == response.id_users) {
-                            selectSiswa.selectedIndex = i;
-                            break;
-                        }
+                    if (this.value === 'siswa') {
+                        namaSiswaElement.style.display = 'block';
+                        namaGuruElement.style.display = 'none';
+                        namaKaryawanElement.style.display = 'none';
+                        readonlyValue = false;
+                    } else if (this.value === 'guru') {
+                        namaSiswaElement.style.display = 'none';
+                        namaGuruElement.style.display = 'block';
+                        namaKaryawanElement.style.display = 'none';
+                        kelasElement.value = null;
+                        readonlyValue = true;
+                    } else if (this.value === 'karyawan') {
+                        namaSiswaElement.style.display = 'none';
+                        namaGuruElement.style.display = 'none';
+                        namaKaryawanElement.style.display = 'block';
+                        kelasElement.value = null; // Atur nilai input kelas menjadi null
+                        jurusanElement.value = null;
+                        readonlyValue = true;
                     }
-                    // $('#id_siswa_update').prop('value', response.id_siswa);
-                } else if(response.id_guru !== 1){
-                    namaGuruElement.style.display = 'block';
-                    readonlyValue = true;
-                    var selectGuru = document.getElementById('id_guru_upd');
-                    var statusGuru = document.getElementById('status_upd' );
-                    $('#status_upd').val('guru');
-    
-                    for (var i = 0; i < selectGuru.options.length; i++) {
-                        if (selectGuru.options[i].value == response.id_guru) {
-                            selectGuru.selectedIndex = i;
-                            break;
-                        }
-                    }                
-                } else if (response.id_karyawan !== 1) {
-                    namaKaryawanElement.style.display = 'block';
-                    readonlyValue = true;
-                    var statusKaryawan = document.getElementById('status_upd');
-                    $('#status_upd').val('karyawan');
+                    
+                    kelasElement.readOnly = readonlyValue;
+                    jurusanElement.readOnly = (this.value === 'karyawan');
+                    }));
+                    
+                    if (response.id_users !== 1) {
+                        namaSiswaElement.style.display = 'block';
+                        var selectSiswa = document.getElementById('id_siswa_upd');
+                        var statusSiswa = document.getElementById('status_upd');
+                        $('#status_upd').val('siswa');
 
-                    var selectKaryawan = document.getElementById('id_karyawan_upd');
-    
-                    for (var i = 0; i < selectKaryawan.options.length; i++) {
-                        if (selectKaryawan.options[i].value == response.id_karyawan) {
-                            selectKaryawan.selectedIndex = i;
-                            break;
+                        for (var i = 0; i < selectSiswa.options.length; i++) {
+                            if (selectSiswa.options[i].value == response.id_users) {
+                                selectSiswa.selectedIndex = i;
+                                break;
+                            }
                         }
-                    }         
+                        // $('#id_siswa_update').prop('value', response.id_siswa);
+                    } else if(response.id_guru !== 1){
+                        namaGuruElement.style.display = 'block';
+                        readonlyValue = true;
+                        var selectGuru = document.getElementById('id_guru_upd');
+                        var statusGuru = document.getElementById('status_upd' );
+                        $('#status_upd').val('guru');
+        
+                        for (var i = 0; i < selectGuru.options.length; i++) {
+                            if (selectGuru.options[i].value == response.id_guru) {
+                                selectGuru.selectedIndex = i;
+                                break;
+                            }
+                        }                
+                    } else if (response.id_karyawan !== 1) {
+                        namaKaryawanElement.style.display = 'block';
+                        readonlyValue = true;
+                        var statusKaryawan = document.getElementById('status_upd');
+                        $('#status_upd').val('karyawan');
+
+                        var selectKaryawan = document.getElementById('id_karyawan_upd');
+        
+                        for (var i = 0; i < selectKaryawan.options.length; i++) {
+                            if (selectKaryawan.options[i].value == response.id_karyawan) {
+                                selectKaryawan.selectedIndex = i;
+                                break;
+                            }
+                        }         
+                    }
+                    kelasElement.readOnly = readonlyValue;
+                    jurusanElement.readOnly = (document.getElementById('status_upd').value === 'karyawan');
+                    $('#kelas_update').prop('value', response.kelas);
+                    $('#jurusan_update').prop('value',response.jurusan);
+                    $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
+                    $('#tgl_pakai_update').prop('value',response.tgl_pakai);
+
                 }
-                kelasElement.readOnly = readonlyValue;
-                jurusanElement.readOnly = (document.getElementById('status_upd').value === 'karyawan');
-                $('#kelas_update').prop('value', response.kelas);
-                $('#jurusan_update').prop('value',response.jurusan);
                 $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
-                $('#tgl_pakai_update').prop('value',response.tgl_pakai);
-
                 const panelUpdate = document.getElementById('panel_update');
                 let panelUpdateIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelUpdate);
                 setActivePanel(panelUpdateIndex);
@@ -728,7 +687,7 @@ $(document).ready(function() {
                 activeStepUpdate = --panelUpdateIndex;
                 activeStepUpdate = --panelUpdateIndex;
                 setActiveStep(activeStepUpdate);
-                return;
+            return;
 
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -843,6 +802,166 @@ $(document).ready(function() {
         }
     });
 });
+
+// Search Select Dropdown
+function create_custom_dropdowns() {
+    $('select').each(function (i, select) {
+        if (!$(this).next().hasClass('dropdown-select')) {
+            $(this).after('<div class="dropdown-select wide ' + ($(this).attr('class') || '') + '" tabindex="0"><span class="current" data-value=""></span><div class="list"><ul></ul></div></div>');
+            var dropdown = $(this).next();
+            var options = $(select).find('option');
+            var selected = $(this).find('option:selected');
+            dropdown.find('.current').html(selected.data('display-text') || selected.text());
+            dropdown.find('.current').attr('data-value', selected.val());
+            options.each(function (j, o) {
+                var display = $(o).data('display-text') || '';
+                dropdown.find('ul').append('<li class="option ' + ($(o).is(':selected') ? 'selected' : '') + '" data-value="' + $(o).val() + '" data-display-text="' + display + '">' + $(o).text() + '</li>');
+            });
+        }
+    });
+
+    $('.dropdown-select ul').before('<div class="dd-search"><input id="txtSearchValue" autocomplete="off" onkeyup="filter()" class="dd-searchbox" type="text"></div>');
+}
+
+// Event listener for option click
+$(document).on("click", ".dropdown-select .option", function (event) {
+    $(this).closest(".list").find(".selected").removeClass("selected");
+    $(this).addClass("selected");
+    var text = $(this).data("display-text") || $(this).text();
+    var value = $(this).data("value");
+    var dropdown = $(this).closest(".dropdown-select");
+    
+    dropdown.find(".current").html(text);
+    dropdown.find(".current").attr('data-value', value);
+    
+    dropdown.prev("select").val(value).trigger("change");
+
+   
+
+    const stokInput = document.getElementById('jumlah_barang');
+    const stokInfo = document.getElementById('stok_info');
+    const stokValue = document.getElementById('stok_value');
+    const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
+    fetch(`/get-ruangan-options/${value}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing options
+                id_ruanganSelect.innerHTML = '';
+
+                // Populate options based on the received data
+                data.forEach(option => {
+                    const newOption = document.createElement('option');
+                    newOption.value = option.ruangan.id_ruangan;
+                    newOption.text = option.ruangan.nama_ruangan;
+                    id_ruanganSelect.add(newOption);
+                });
+
+                // Show or hide the ruangan select based on whether options are available
+                id_ruanganSelect.style.display = data.length > 0 ? 'block' : 'none';
+                id_ruanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
+
+                // Set the stock information
+                if (data.length > 0) {
+                    stokInput.disabled = false;
+                    stokInfo.style.display = 'block'; // Show the stock info
+                    stokValue.textContent = data[0].jumlah_barang;
+                } else {
+                    stokInput.disabled = true;
+                    stokInfo.style.display = 'none'; // Hide the stock info
+                }
+
+
+                var hiddenInput = dropdown.closest('.form-row').querySelector('input[name="id_barang"]');
+                hiddenInput.value = value;
+            })
+            .catch(error => console.error('Error:', error));
+
+        $('.dropdown-select').removeClass('open');
+        $('.dropdown-select .option').removeAttr('tabindex');
+});
+
+// Toggle dropdown open/close
+$(document).on("click", ".dropdown-select", function (event) {
+    if ($(event.target).hasClass("dd-searchbox")) {
+        return;
+    }
+    $(".dropdown-select").not($(this)).removeClass("open");
+    $(this).toggleClass("open");
+    if ($(this).hasClass("open")) {
+        $(this).find(".option").attr("tabindex", 0);
+    } else {
+        $(this).find(".option").removeAttr("tabindex");
+    }
+});
+
+// Close when clicking outside
+$(document).on("click", function (event) {
+    if ($(event.target).closest(".dropdown-select").length === 0) {
+        $(".dropdown-select").removeClass("open");
+        $(".dropdown-select .option").removeAttr("tabindex");
+    }
+    event.stopPropagation();
+});
+
+// Filter function for search
+function filter() {
+    var valThis = $("#txtSearchValue").val();
+    $(".dropdown-select.open ul > li").each(function () {
+        var text = $(this).text();
+        text.toLowerCase().indexOf(valThis.toLowerCase()) > -1 ?
+            $(this).show() :
+            $(this).hide();
+    });
+}
+
+// Keyboard events for accessibility
+$(document).on("keydown", ".dropdown-select", function (event) {
+    var focused_option = $(
+        $(this).find(".list .option:focus")[0] ||
+        $(this).find(".list .option.selected")[0]
+    );
+    // Space or Enter
+    //if (event.keyCode == 32 || event.keyCode == 13) {
+    if (event.keyCode == 13) {
+        if ($(this).hasClass("open")) {
+            focused_option.trigger("click");
+        } else {
+            $(this).trigger("click");
+        }
+        return false;
+        // Down
+    } else if (event.keyCode == 40) {
+        if (!$(this).hasClass("open")) {
+            $(this).trigger("click");
+        } else {
+            focused_option.next().focus();
+        }
+        return false;
+        // Up
+    } else if (event.keyCode == 38) {
+        if (!$(this).hasClass("open")) {
+            $(this).trigger("click");
+        } else {
+            var focused_option = $(
+                $(this).find(".list .option:focus")[0] ||
+                $(this).find(".list .option.selected")[0]
+            );
+            focused_option.prev().focus();
+        }
+        return false;
+        // Esc
+    } else if (event.keyCode == 27) {
+        if ($(this).hasClass("open")) {
+            $(this).trigger("click");
+        }
+        return false;
+    }
+});
+
+$(document).ready(function () {
+    create_custom_dropdowns();
+});
+
 
 </script>
 

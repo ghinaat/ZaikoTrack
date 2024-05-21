@@ -61,10 +61,11 @@ Detail Pembelian
                           @endforeach
                         @else
                           @php
-                            $firstBarang = $dp->barang->first(); // Mendapatkan barang pertama saja
+                            $firstBarang = $dp->barang->first();
+                            // dd($firstBarang);  // Mendapatkan barang pertama saja
                           @endphp
-                          <h6 class="mb-3 text-sm"><a href="{{ route('barang.index') }}" onclick="scrollToTable()">{{ $firstBarang->nama_barang }}</a></h6>
-                        @endif
+                          <h6 class="mb-3 text-sm"><a href="{{ route('barang.index') }}" onclick="scrollToTable()">{{ $firstBarang->nama_barang    }}</a></h6>
+                          @endif
                         <div class="flex-column d-flex">
                           <span class="mb-2 text-xs">Jumlah Barang <span class="text-dark font-weight-bold ms-sm-2 value-css">{{$dp->jumlah_barang}}</span></span>
                           <span class="mb-2 text-xs">Subtotal Pembelian <span class="text-dark ms-sm-2 font-weight-bold value-css">Rp. {{number_format($dp->subtotal_pembelian, 0, ',', '.')}}</span></span>
@@ -320,7 +321,10 @@ Detail Pembelian
                   </div>
                   <div class="form-group" style="display: block;" id="alatPerlengkapan_update_{{$dp->id_detail_pembelian}}">
                       <label for="id_barang">Nama Barang</label>
-                      <input type="text" class="form-control" @if(!empty($barangAlat)) value="{{old('nama_barang',$dp->nama_barang)}}" @endif name="id_barang_perlengkapan" id="id_barang_alat">
+                      @php
+                        $firstBarang = $dp->barang->first();
+                      @endphp
+                      <input type="text" class="form-control" value="{{$firstBarang->nama_barang}}"  name="id_barang_perlengkapan" id="id_barang_alat">
                   </div>
                   <div class="form-group" style="display: none;" id="bahanPraktik_update_{{$dp->id_detail_pembelian}}">
                       <label for="id_barang">Nama Barang</label>
