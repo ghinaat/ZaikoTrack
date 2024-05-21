@@ -10,6 +10,7 @@ use App\Models\DetailPembelian;
 use App\Models\Peminjaman;
 use App\Models\DetailPeminjaman;
 use App\Models\Inventaris;
+use App\Models\Profile;
 use App\Models\Ruangan;
 use App\Models\Siswa;
 use App\Models\Guru;
@@ -177,6 +178,14 @@ class DatabaseSeeder extends Seeder
             'harga_perbarang' => '1',
         ]);
 
+        Profile::create([
+            'id_profile' => 1,
+            'nis' => '1020009371',
+            'kelas' => '13',
+            'jurusan' => 'SIJA',
+            'image' => null,
+            'id_users' => 6,
+        ]);
         
         // \App\Models\Pembelian::factory(5)->create();
         // \App\Models\DetailPembelian::factory(20)->create();
