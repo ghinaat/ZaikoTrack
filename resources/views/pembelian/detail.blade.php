@@ -281,7 +281,6 @@ Detail Pembelian
     </div>
 
     @foreach($detailPembelian as $key => $dp)
-
     @php
     $barangBahan = App\Models\Barang::where('id_jenis_barang', 3)->where('nama_barang', $dp->nama_barang)->get();
     $barangAlat = App\Models\Barang::where('id_detail_pembelian', $dp->id_detail_pembelian)->first();
