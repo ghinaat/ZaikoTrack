@@ -1,9 +1,8 @@
 @extends('layouts.demo')
 @section('title', 'Tambah Pemakaian')
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/pemakaian.css') }}">
-<link rel="stylesheet" href="{{ asset('css/search.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="{{ asset('css\pemakaian.css')}}">
+<link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
 @endsection
 @section('breadcrumb-name')
 Tambah Pemakaian
@@ -36,22 +35,22 @@ Tambah Pemakaian
                                                         <h4 class="multisteps-form__title">Data Diri</h4>
                                                         <div class="multisteps-form__content">
                                                             <div class="form-row mt-3">
-                                                                @can('isSiswa')
+                                                                @if( auth()->user()->level == "siswa")
                                                                 <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
                                                                 <input type="hidden" name="status" value="siswa">
-                                                                @endcan
-                                                                @can('isTeknisi', 'isKaprog', 'isKabeng')
+                                                                @else
                                                                 <div class="form-group">
                                                                     <label for="status">Status</label>
-                                                                        <select class="form-select" name="status" id="status">
+                                                                        <select class="form-select"  data-live-search="true" name="status" id="status">
                                                                                 <option value="siswa">Siswa</option>
                                                                                 <option value="guru">Guru</option>
                                                                                 <option value="karyawan">Karyawan</option>
                                                                         </select>                                
-                                                                </div>  
-                                                                <div class="form-group " style="display: block;" id="id_siswa">
-                                                                    <label for="id_siswa">Nama Lengkap</label>
-                                                                        <select class="form-select" data-live-search="true" name="id_users" id="id_siswa" >
+                                                                </div> 
+                                                                <div id="siswaForm" style="display: block;">
+                                                                    <div class="form-group">
+                                                                        <label for="id_siswa">Nama Siswa</label>
+                                                                        <select class="form-select"  name="id_users" id="normalize" >
                                                                             <option value="" selected disabled>Pilih Nama</option>
                                                                             @foreach($siswa as $key => $sw)
                                                                             <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
@@ -59,21 +58,52 @@ Tambah Pemakaian
                                                                             </option>
                                                                             @endforeach
                                                                         </select>                                
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label for="kelas" class="form-label">Kelas</label>
+                                                                                <input type="text" name="kelas" id="kelas" class="form-control" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label for="nis" class="form-label">NIS</label>
+                                                                                <input type="text" name="nis" id="nis" class="form-control" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group " style="display: none;" id="id_guru">
-                                                                    <label for="id_guru">Nama Lengkap</label>
-                                                                        <select class="form-select" data-live-search="true" name="id_guru" id="id_guru" >
-                                                                            <option value="" selected disabled>Pilih Nama</option>
-                                                                            @foreach($guru as $key => $gr)
-                                                                            <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
-                                                                                {{$gr->nama_guru}}
-                                                                            </option>
-                                                                            @endforeach
-                                                                        </select>                                
+                                                                <div  id="guruForm" style="display: none;">
+                                                                    <div class="form-group" id="id_guru">
+                                                                        <label for="id_guru">Nama Guru</label>
+                                                                            <select class="form-select"  name="id_guru" id="normalize1" >
+                                                                                <option value="" selected disabled>Pilih Nama</option>
+                                                                                @foreach($guru as $key => $gr)
+                                                                                <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
+                                                                                    {{$gr->nama_guru}}
+                                                                                </option>
+                                                                                @endforeach
+                                                                            </select>                                
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label for="nip" class="form-label">NIP</label>
+                                                                                <input type="text" name="nip" id="nip" class="form-control" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label for="jurusan" class="form-label">Jurusan</label>
+                                                                                <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group " style="display: none;" id="id_karyawan">
-                                                                    <label for="id_karyawan">Nama Lengkap</label>
-                                                                        <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan" >
+                                                                <div class="form-group " style="display: none;" id="karyawanForm">
+                                                                    <label for="id_karyawan">Nama Karyawan</label>
+                                                                        <select class="form-select" name="id_karyawan" id="normalize2" >
                                                                             <option value="" selected disabled>Pilih Nama</option>
                                                                             @foreach($karyawan as $key => $krywn)
                                                                             <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
@@ -82,21 +112,7 @@ Tambah Pemakaian
                                                                             @endforeach
                                                                         </select>                                
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col-6 col-md-6 kelas">
-                                                                        <div class="form-group">
-                                                                            <label for="kelas" class="mb-0">Kelas</label>
-                                                                            <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-6 col-md-6 jurusan">
-                                                                        <div class="form-group">
-                                                                            <label for="jurusan" class="mb-0">Jurusan</label>
-                                                                            <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan" required>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                @endcan
+                                                                @endif
                                                                 <div class="form-group">
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
                                                                     <textarea type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></textarea>
@@ -290,8 +306,7 @@ Tambah Pemakaian
 @stop
 @push('js')
 <script src="{{ asset('js/pemakaian.js ') }}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="../dist/js/selectize.js"></script>
 <form action="" id="delete-form" method="post">
     @method('delete')
     @csrf
@@ -299,7 +314,15 @@ Tambah Pemakaian
 
 <script>
 
+// $('#normalize').selectize({
 
+// });
+$('#normalize1').selectize({
+
+});
+$('#normalize2').selectize({
+
+}); 
 
 //untuk select ruangan 
 document.addEventListener('DOMContentLoaded', function() {
@@ -345,72 +368,78 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     }));
 
-    // Event listener untuk perubahan pilihan ruangan
-    document.getElementById('id_ruangan').addEventListener('change', function() {
-        const selectedIdRuangan = this.value;
-        updateStok(selectedIdRuangan);
-    });
-
-    // Fungsi untuk memperbarui stok berdasarkan id ruangan yang dipilih
-    function updateStok(idRuangan) {
-        fetch(`/get-stok-options/${idRuangan}`)
-            .then(response => response.json())
-            .then(data => {
-                // Menampilkan informasi stok
-                stokInput.disabled = false;
-                stokInfo.style.display = 'block';
-                stokValue.textContent = data.stok;
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    stokInput.addEventListener('input', function() {
-        const selectedStok = parseInt(this.value);
-        const availableStok = parseInt(stokValue.textContent);
-        if (selectedStok > availableStok) {
-            this.setCustomValidity('Stok yang dimasukkan melebihi stok yang tersedia');
-        } else {
-            this.setCustomValidity('');
-        }
-    });
 });
 
-// untuk select nama berdasarkan status
-    document.querySelectorAll('select[id=status]').forEach(select => select.addEventListener('click', function() {
-    const namaSiswaElement = document.querySelector('#id_siswa');
-    const namaGuruElement = document.querySelector('#id_guru');
-    const namaKaryawanElement = document.querySelector('#id_karyawan');
-    const kelasElement = document.querySelector('#kelas');
-    const jurusanElement = document.querySelector('#jurusan');
+document.getElementById('status').addEventListener('click', function() {
+    const selectedStatus = this.value;
+    const siswaElement = document.getElementById('siswaForm');
+    const guruElement = document.getElementById('guruForm');
+    const karyawanElement = document.getElementById('karyawanForm');
+    const kelasInput = siswaElement.querySelector('#kelas');
+    const nisInput = siswaElement.querySelector('#nis');
+    const nipInput = guruElement.querySelector('#nip');
+    const jurusanInput = guruElement.querySelector('#jurusan');
+    
+    kelasInput.value = '';
+    nisInput.value = '';
+    nipInput.value = '';
+    jurusanInput.value = '';
 
-    // Inisialisasi readonlyValue sebagai false
-    let readonlyValue = false;
+  
+    // Hide all forms
+    siswaElement.style.display = 'block';
+    guruElement.style.display = 'none';
+    karyawanElement.style.display = 'none';
+    // NamaElement.style.display = 'block';
+   
 
-    namaSiswaElement.style.display = 'none';
-    namaGuruElement.style.display = 'none';
-    namaKaryawanElement.style.display = 'none';
+    // Show the selected form
+    if (selectedStatus === 'siswa') {
+        siswaElement.style.display = 'block';
 
-    if (this.value === 'siswa') {
-        namaSiswaElement.style.display = 'block';
-    } else if (this.value === 'guru') {
-        namaGuruElement.style.display = 'block';
-        kelasElement.value = null;
-        // Set readonlyValue menjadi true jika guru dipilih
-        readonlyValue = true;
-    } else if (this.value === 'karyawan') {
-        namaKaryawanElement.style.display = 'block';
-        kelasElement.value = null; // Atur nilai input kelas menjadi null
-        jurusanElement.value = null;
-        // Set readonlyValue menjadi true jika karyawan dipilih
-        readonlyValue = true;
+    } else if (selectedStatus === 'guru') {
+        guruElement.style.display = 'block';
+        siswaElement.style.display = 'none';
+      
+    } else if (selectedStatus === 'karyawan') {
+        karyawanElement.style.display = 'block';
+        siswaElement.style.display = 'none';
+      
     }
-    // Atur atribut readonly untuk elemen kelas
-    kelasElement.readOnly = readonlyValue;
 
-    // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
-    jurusanElement.readOnly = (this.value === 'karyawan');
-}));
-
+    
+});
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('select[id=normalize]').forEach(select => select.addEventListener('click', function() {
+        const selectedIdUsers = this.value;
+        const nisInput = document.querySelector('input[name=nis]');
+        const kelasInput = document.querySelector('input[name=kelas]');
+        console.log('selected:', selectedIdUsers);        
+            
+            // Now you can make an AJAX request to fetch data based on selectedIdUsers
+            fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch profile data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Debug: Check the data received
+                    console.log('Data received:', data);
+                    
+                    // Display the corresponding data in the input elements
+                    nisInput.value = data.nis || '';
+                    kelasInput.value = data.kelas || '';
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Clear the input and possibly display an error message to the user
+                    nisInput.value = '';
+                    kelasInput.value = '';
+                });
+    }));
+});
 
 $(document).ready(function() {
 
@@ -802,166 +831,6 @@ $(document).ready(function() {
         }
     });
 });
-
-// Search Select Dropdown
-function create_custom_dropdowns() {
-    $('select').each(function (i, select) {
-        if (!$(this).next().hasClass('dropdown-select')) {
-            $(this).after('<div class="dropdown-select wide ' + ($(this).attr('class') || '') + '" tabindex="0"><span class="current" data-value=""></span><div class="list"><ul></ul></div></div>');
-            var dropdown = $(this).next();
-            var options = $(select).find('option');
-            var selected = $(this).find('option:selected');
-            dropdown.find('.current').html(selected.data('display-text') || selected.text());
-            dropdown.find('.current').attr('data-value', selected.val());
-            options.each(function (j, o) {
-                var display = $(o).data('display-text') || '';
-                dropdown.find('ul').append('<li class="option ' + ($(o).is(':selected') ? 'selected' : '') + '" data-value="' + $(o).val() + '" data-display-text="' + display + '">' + $(o).text() + '</li>');
-            });
-        }
-    });
-
-    $('.dropdown-select ul').before('<div class="dd-search"><input id="txtSearchValue" autocomplete="off" onkeyup="filter()" class="dd-searchbox" type="text"></div>');
-}
-
-// Event listener for option click
-$(document).on("click", ".dropdown-select .option", function (event) {
-    $(this).closest(".list").find(".selected").removeClass("selected");
-    $(this).addClass("selected");
-    var text = $(this).data("display-text") || $(this).text();
-    var value = $(this).data("value");
-    var dropdown = $(this).closest(".dropdown-select");
-    
-    dropdown.find(".current").html(text);
-    dropdown.find(".current").attr('data-value', value);
-    
-    dropdown.prev("select").val(value).trigger("change");
-
-   
-
-    const stokInput = document.getElementById('jumlah_barang');
-    const stokInfo = document.getElementById('stok_info');
-    const stokValue = document.getElementById('stok_value');
-    const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
-    fetch(`/get-ruangan-options/${value}`)
-            .then(response => response.json())
-            .then(data => {
-                // Clear existing options
-                id_ruanganSelect.innerHTML = '';
-
-                // Populate options based on the received data
-                data.forEach(option => {
-                    const newOption = document.createElement('option');
-                    newOption.value = option.ruangan.id_ruangan;
-                    newOption.text = option.ruangan.nama_ruangan;
-                    id_ruanganSelect.add(newOption);
-                });
-
-                // Show or hide the ruangan select based on whether options are available
-                id_ruanganSelect.style.display = data.length > 0 ? 'block' : 'none';
-                id_ruanganSelect.setAttribute('required', data.length > 0 ? 'true' : 'false');
-
-                // Set the stock information
-                if (data.length > 0) {
-                    stokInput.disabled = false;
-                    stokInfo.style.display = 'block'; // Show the stock info
-                    stokValue.textContent = data[0].jumlah_barang;
-                } else {
-                    stokInput.disabled = true;
-                    stokInfo.style.display = 'none'; // Hide the stock info
-                }
-
-
-                var hiddenInput = dropdown.closest('.form-row').querySelector('input[name="id_barang"]');
-                hiddenInput.value = value;
-            })
-            .catch(error => console.error('Error:', error));
-
-        $('.dropdown-select').removeClass('open');
-        $('.dropdown-select .option').removeAttr('tabindex');
-});
-
-// Toggle dropdown open/close
-$(document).on("click", ".dropdown-select", function (event) {
-    if ($(event.target).hasClass("dd-searchbox")) {
-        return;
-    }
-    $(".dropdown-select").not($(this)).removeClass("open");
-    $(this).toggleClass("open");
-    if ($(this).hasClass("open")) {
-        $(this).find(".option").attr("tabindex", 0);
-    } else {
-        $(this).find(".option").removeAttr("tabindex");
-    }
-});
-
-// Close when clicking outside
-$(document).on("click", function (event) {
-    if ($(event.target).closest(".dropdown-select").length === 0) {
-        $(".dropdown-select").removeClass("open");
-        $(".dropdown-select .option").removeAttr("tabindex");
-    }
-    event.stopPropagation();
-});
-
-// Filter function for search
-function filter() {
-    var valThis = $("#txtSearchValue").val();
-    $(".dropdown-select.open ul > li").each(function () {
-        var text = $(this).text();
-        text.toLowerCase().indexOf(valThis.toLowerCase()) > -1 ?
-            $(this).show() :
-            $(this).hide();
-    });
-}
-
-// Keyboard events for accessibility
-$(document).on("keydown", ".dropdown-select", function (event) {
-    var focused_option = $(
-        $(this).find(".list .option:focus")[0] ||
-        $(this).find(".list .option.selected")[0]
-    );
-    // Space or Enter
-    //if (event.keyCode == 32 || event.keyCode == 13) {
-    if (event.keyCode == 13) {
-        if ($(this).hasClass("open")) {
-            focused_option.trigger("click");
-        } else {
-            $(this).trigger("click");
-        }
-        return false;
-        // Down
-    } else if (event.keyCode == 40) {
-        if (!$(this).hasClass("open")) {
-            $(this).trigger("click");
-        } else {
-            focused_option.next().focus();
-        }
-        return false;
-        // Up
-    } else if (event.keyCode == 38) {
-        if (!$(this).hasClass("open")) {
-            $(this).trigger("click");
-        } else {
-            var focused_option = $(
-                $(this).find(".list .option:focus")[0] ||
-                $(this).find(".list .option.selected")[0]
-            );
-            focused_option.prev().focus();
-        }
-        return false;
-        // Esc
-    } else if (event.keyCode == 27) {
-        if ($(this).hasClass("open")) {
-            $(this).trigger("click");
-        }
-        return false;
-    }
-});
-
-$(document).ready(function () {
-    create_custom_dropdowns();
-});
-
 
 </script>
 
