@@ -7,6 +7,7 @@ use App\Models\Ruangan;
 use App\Models\DetailPeminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 
 class InventarisController extends Controller
@@ -84,6 +85,24 @@ class InventarisController extends Controller
         return response()->json($barang);
     }
 
+    public function getBarangDataByKode(Request $request)
+    {
+      $kodeBarang = $request->validate([
+        'kode_barang' => 'required|string|trim', // Validation example
+      ])['kode_barang'];
+    
+      $barang = Barang::where('kode_barang', $kodeBarang)->first(); // Example query
+    
+      if ($barang) {
+        return response()->json([
+          'nama_barang' => $barang->nama_barang,
+        ]);
+      } else {
+        return response()->json(['message' => 'Barang not found'], 404);
+      }
+    }
+    
+
     public function fetchKodeBarang($kode_barang)
 {
     // Find the record in the database based on the kode_barang
@@ -140,6 +159,74 @@ class InventarisController extends Controller
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
+
+    
+    public function ruangan(Request $request, $id_inventaris){
+        
+        $request->validate([
+            'id_ruangan' => 'required',
+        ]);
+
+        $inventaris = Inventaris::find($id_inventaris);
+       
+        $inventaris->id_ruangan = $request->id_ruangan;
+        $inventaris->save();
+
+        return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
+    }
+    
+    public function ruangans(Request $request) {
+            $request->validate([
+              'id_ruangan' => 'required',
+              'id_inventaris' => 'required',
+            ]);
+          
+            // Debugging: Inspect the submitted data (uncomment if needed)
+            // dd($request->id_inventaris); 
+          
+            $id_inventaris_array = $request->id_inventaris; // Get the string
+          
+            $id_inventaris_array = [];
+            $current_id = "";
+          
+            // Check if id_inventaris is an array and convert it to a string if necessary
+            if (is_array($request->id_inventaris)) {
+              $id_inventaris_array =  $request->id_inventaris; // Join array elements with commas
+            } else {
+              $id_inventaris_array = explode(',', $id_inventaris_string);// Already a string
+            }
+          
+            $id_ruangan = $request->id_ruangan;
+            $success_count = 0; // Count successful updates
+          
+            foreach ($id_inventaris_array as $id) {
+              // Debugging: Inspect the current ID (uncomment if needed)
+            //   dd($id); 
+          
+              $id = intval($id);  // Convert to integer
+          
+              if ($id > 0) {
+                $inventaris = Inventaris::find($id);
+                if ($inventaris) {
+                  $inventaris->id_ruangan = $id_ruangan;
+                  $inventaris->save();
+                  $success_count++; // Increment success count on successful update
+                  // Optionally, display success message for this specific ID
+                } else {
+                  // Log or handle invalid ID (optional)
+                  // Optionally, display error message for this specific ID
+                }
+              } else {
+                // Handle invalid ID (e.g., non-positive integer)
+                // Log or display error message (optional)
+              }
+            }
+          
+            // Craft success message based on the total count
+            $success_message = "Barang Telah Dipindahkan ($success_count berhasil)";
+          
+            return redirect()->back()->with(['success_message' => $success_message]);
+          } 
     public function barcode($id_ruangan)
     {
 
@@ -232,7 +319,13 @@ class InventarisController extends Controller
             // Merge the Barang objects into the main collection
             $barangEdit = $barangEdit->merge($barangEditForItem);
         }
+
+        $inventarisRuangan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+            $query->where('id_ruangan', $id_ruangan)
+                ->where('id_jenis_barang', '!=', 3); 
+        })->get();
         
+        $ruangans = Ruangan::all();
 
         $Barangbahan = Barang::where('id_jenis_barang',  3)->get();
         
@@ -248,9 +341,11 @@ class InventarisController extends Controller
             'inventaris' => $inventaris,
             'inventariss' => $inventariss,
             'ruangan' => $ruangan,
+            'ruangans' => $ruangans,
             'barangsInRuangan' => $barangsInRuangan,
             'barangEdit' => $barangEdit,
             'inventarisAlat' => $inventarisAlat,
+            'inventarisRuangan' => $inventarisRuangan,
             'inventarisBahan' => $inventarisBahan,
             'BarangAlat' => $BarangAlat,
             'barangEdit' => $barangEdit,

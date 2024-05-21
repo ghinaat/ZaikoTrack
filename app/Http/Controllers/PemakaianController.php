@@ -143,13 +143,15 @@ class PemakaianController extends Controller
             
         $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])->get();
         $guru = Guru::all()->except('1');
-        $karyawan = Karyawan::all()->except('1');   
+        $karyawan = Karyawan::all()->except('1');  
+        $id_users = $user = Auth::user(); 
 
         return view('pemakaian.create',[
             'barang' => $bahanPraktik,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
+            'id_users' => $id_users,
         ]);
     }
 

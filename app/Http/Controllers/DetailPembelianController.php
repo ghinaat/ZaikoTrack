@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\DetailPembelian;
 use App\Models\JenisBarang;
+use App\Models\Inventaris;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -139,6 +140,14 @@ class DetailPembelianController extends Controller
             
             // Simpan data barang
             Barang::insert($barangData);
+            foreach ($barangData as $barangItem) {
+                $inventaris = new Inventaris();
+                $inventaris->id_barang = $barangItem['id_barang'];
+                $inventaris->jumlah_barang = null; // Assuming initial quantity is 0
+                $inventaris->kondisi_barang = 'lengkap'; // Assuming default status is 'Baru'
+                $inventaris->id_ruangan = 3;
+                $inventaris->save();
+              }
             // dd($barangData);
         }
 
@@ -239,6 +248,14 @@ class DetailPembelianController extends Controller
             }
 
             Barang::insert($barangData);
+            foreach ($barangData as $barangItem) {
+                $inventaris = new Inventaris();
+                $inventaris->id_barang = $barangItem['id_barang'];
+                $inventaris->jumlah_barang = null; // Assuming initial quantity is 0
+                $inventaris->kondisi_barang = 'lengkap'; // Assuming default status is 'Baru'
+                $inventaris->id_ruangan = 3;
+                $inventaris->save();
+              }
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan']);
 
         }else if($barangAlat && $request->id_jenis_barang == 3){

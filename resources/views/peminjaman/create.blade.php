@@ -2,10 +2,9 @@
 @section('title', 'Tambah Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('css\style.css')}}">
-<link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
 
 <style>
-  =
+
 </style>
 @endsection
 @section('breadcrumb-name')
@@ -168,12 +167,15 @@ Tambah Peminjaman
                                                         <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
-                                                    <div class="form-group mt-2">
+                                                    <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
                                                             Kembali</label>
                                                         <input type="date" name="tgl_kembali" id="tgl_kembali"
                                                             class="form-control" required>
-                                                    </div>
+                                                        
+                                                        </div>
+                                                       
+                                                    </div>   
                                                    
                                                 <div class="button-row d-flex justify-content-end mt-4">
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
@@ -321,7 +323,6 @@ Tambah Peminjaman
 
 <script src="../js/script.js"></script>
 
-<script src="../dist/js/selectize.js"></script>
 <script>
 $(document).ready(function() {
     $('#myTable1').DataTable({
@@ -334,6 +335,7 @@ $(document).ready(function() {
         }
     });
 });
+
 $('#normalize').selectize({
 
 });
@@ -344,12 +346,18 @@ $('#normalize2').selectize({
 
 });
 
-document.querySelectorAll('select[name=id_users]').forEach(select => select.addEventListener('change', function() {
-    const selectedIdUsers = this.value;
+$('#normalize').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIdUsers);
+    
+    // Temukan elemen input untuk nis dan kelas
     const nisInput = document.querySelector('input[name=nis]');
     const kelasInput = document.querySelector('input[name=kelas]');
-    
-    // Now you can make an AJAX request to fetch data based on selectedIdUsers
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIdUsers
     fetch(`/fetch-id-siswa/${selectedIdUsers}`)
         .then(response => {
             if (!response.ok) {
@@ -358,20 +366,68 @@ document.querySelectorAll('select[name=id_users]').forEach(select => select.addE
             return response.json();
         })
         .then(data => {
-            // Debug: Check the data received
+            // Debug: Periksa data yang diterima
             console.log('Data received:', data);
-            
-            // Display the corresponding data in the input elements
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
             nisInput.value = data.nis || '';
-            kelasInput.value = data.kelas || '';
+            kelasInput.value = (data.kelas || '') + ' ' + (data.jurusan || '');
         })
         .catch(error => {
             console.error('Error fetching data:', error);
-            // Clear the input and possibly display an error message to the user
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
             nisInput.value = '';
             kelasInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
         });
-}));
+});
+
+$('#normalize1').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIGuru = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIGuru);
+    
+    // Temukan elemen input untuk nis dan kelas
+    const nipInput = document.querySelector('input[name=nip]');
+    const jurusanInput = document.querySelector('input[name=jurusan]');
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIGuru
+    fetch(`/fetch-id-guru/${selectedIGuru}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Debug: Periksa data yang diterima
+            console.log('Data received:', data);
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
+            nipInput.value = data.nip || '';
+            jurusanInput.value = data.jurusan || '';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
+            nipInput.value = '';
+            jurusanInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
+        });
+});
+
 
 
 
