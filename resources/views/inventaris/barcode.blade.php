@@ -2,6 +2,7 @@
 @section('title', 'Tambah Barang')
 @section('css')
 <link rel="stylesheet" href="{{asset('css\kamera.css')}}">
+
 <style>
 .btn-secondary{
   margin-right: 10px;
@@ -37,11 +38,7 @@ Tambah Barang
                             <label for="ket_barang">Kode Barang</label>
                             <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                         </div>
-                        <div class="form-group">
-                            <label for="nama_barang">Nama Barang</label>
-                            <input type="text" name="nama_barang" id="nama_barang" class="form-control" 
-                            value="{{old('nama_barang')}}" readonly>
-                        </div>
+                       
                         <div class="form-group">
                             <label for="exampleInputkondisi_barang">Kondisi Barang</label>
                             <select class="form-select @error('kondisi_barang') is-invalid @enderror"
@@ -95,6 +92,50 @@ Tambah Barang
 
 @push('js')
 <script>
+
+window.addEventListener('load', function () {
+    
+        const codeReader = new ZXing.BrowserMultiFormatReader();
+        console.log('ZXing code reader initialized');
+
+        codeReader.listVideoInputDevices()
+            .then((videoInputDevices) => {
+                const selectedDeviceId = videoInputDevices[0].deviceId;
+
+                codeReader.decodeFromVideoDevice(selectedDeviceId, 'previewKamera', (result, err) => {
+                    if (result) {
+                        console.log(result);
+                        $('#hasilscan').val(result.text);
+
+                        // Lakukan AJAX request untuk mendapatkan data barang berdasarkan kode_barang
+                        $.ajax({
+                            url: '/barang/data',
+                            method: 'POST', // Use POST instead of GET for security
+                            data: { kode_barang: result.text.trim() }, // Trim whitespace
+                            headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                $('#nama_barang').val(response.nama_barang);
+                                console.log('Nama Barang:', response.nama_barang);
+                            },
+                            error: function() {
+                                alert('Barang not ');
+                            }
+                        });
+                    }
+                    if (err && !(err instanceof ZXing.NotFoundException)) {
+                        console.error(err);
+                        alert('Error reading barcode: ' + err);
+                    }
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                alert('Error initializing barcode scanner: ' + err);
+            });
+    });
+
 // Assuming the input name for kode_barang is kode_barang, replace it accordingly if different
 document.querySelectorAll('input[name=kode_barang]').forEach(input => {
     input.addEventListener('input', function() {

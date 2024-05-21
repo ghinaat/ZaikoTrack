@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\DetailPeminjamanController;
 use App\Http\Controllers\NotifikasiController;
+use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\EmailConfigurationController;
 use App\Http\Controllers\LaporanController;
 
@@ -82,11 +83,15 @@ Route::get('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisC
 Route::post('/inventaris', [App\Http\Controllers\InventarisController::class, 'store'])->name('inventaris.store');
 Route::put('/inventaris/barcode/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'addBarcode'])->name('inventaris.addBarcode');
 Route::put('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
+Route::post('/inventaris/ruangan', [App\Http\Controllers\InventarisController::class, 'ruangans'])->name('inventaris.move');
+Route::put('/inventaris/ruangan/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'ruangan'])->name('inventaris.ruangan');
 Route::delete('/inventaris/{id_inventaris}', [App\Http\Controllers\InventarisController::class, 'destroy'])->name('inventaris.destroy');
 Route::get('/inventaris/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'showDetail'])->name('inventaris.showDetail');
 Route::delete('/inventaris/ruangan/{id_ruangan}', [App\Http\Controllers\InventarisController::class, 'destroyRuangan'])->name('inventaris.destroyRuangan');
 Route::get('/inventaris/fetch-id-barang/{id_barang}', [App\Http\Controllers\InventarisController::class, 'fetchIdBarang'])->name('inventaris.fetchIdBarang');
 Route::get('/inventaris/fetch-kode-barang/{id_barang}', [InventarisController::class, 'fetchKodeBarang'])->name('fetch-kode-barang');
+Route::post('/barang/data', [InventarisController::class, 'getBarangDataByKode']);
+
 
 Route::get('/detailpembelian/{id_pembelian}', [App\Http\Controllers\DetailPembelianController::class, 'showDetail'])->name('pembelian.showDetail');
 Route::post('/detailpembelian/{id_pembelian}    ', [App\Http\Controllers\DetailPembelianController::class, 'store'])->name('detailpembelian.store');
@@ -147,8 +152,7 @@ Route::get('/pemakaian/export', [App\Http\Controllers\PemakaianController::class
 Route::get('/pemakaian/filter', [App\Http\Controllers\PemakaianController::class, 'filter'])->name('pemakaian.filter');
 
 
-Route::resource('/siswa', App\Http\Controllers\SiswaController::class);
-Route::post('/siswa/import', [ App\Http\Controllers\SiswaController::class, 'import'])->name('siswa.import');
+
 Route::resource('/guru', App\Http\Controllers\GuruController::class);
 Route::post('/guru/import', [App\Http\Controllers\GuruController::class, 'import'])->name('guru.import');
 Route::post('/karyawan/import', [ App\Http\Controllers\KaryawanController::class, 'import'])->name('karyawan.import');
@@ -163,8 +167,8 @@ Route::get('/notifikasi/{id_notifikasi}/detail', [NotifikasiController::class, '
 Route::get('/email-configuration', [EmailConfigurationController::class, 'show'])->name('emailConfiguration.show');
 Route::post('/email-configuration', [EmailConfigurationController::class, 'update'])->name('emailConfiguration.update');
 
-Route::get('/laporan-peminjaman', [LaporanController::class, 'index'])->name('laporan-peminjaman');
+Route::get('/laporan-peminjaman', [LaporanController::class, 'peminjaman'])->name('laporan-peminjaman');
 
-Route::get('/laporan/pdf', [LaporanController::class, 'exportPDF'])->name('downloadpdf');
+Route::get('/laporan/pdf', [LaporanController::class, 'exportPDFPeminjaman'])->name('downloadpdf');
 Route::get('/laporan-pemakaian', [LaporanController::class, 'pemakaian'])->name('laporan.pemakaian');
 Route::get('/laporan/pdf/pemakaian', [LaporanController::class, 'exportPDFPemakaian'])->name('downloadPemakaian');

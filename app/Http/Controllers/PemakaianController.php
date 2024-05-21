@@ -150,11 +150,13 @@ class PemakaianController extends Controller
                 ->orderByRaw("LOWER(nama_karyawan)")  
                 ->get();    
 
+
         return view('pemakaian.create',[
             'barang' => $bahanPraktik,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
+            'id_users' => $id_users,
         ]);
     }
 
