@@ -57,7 +57,21 @@ Tambah Pemakaian
                                                                                 {{$sw->name}}
                                                                             </option>
                                                                             @endforeach
-                                                                        </select>                                
+                                                                        </select>    
+                                                                          <div class="row">
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="kelas" class="form-label">Kelas</label>
+                                                                        <input type="text" name="kelas" id="kelas" class="form-control" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for="nis" class="form-label">NIS</label>
+                                                                        <input type="text" name="nis" id="nis" class="form-control" readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                            
                                                                 </div>
                                                                 <div class="form-group " style="display: none;" id="id_guru">
                                                                     <label for="id_guru">Nama Lengkap</label>

@@ -93,7 +93,15 @@ class BarangController extends Controller
             }
 
             $barang->save();
-
+           
+            if ($barang->kode_barang) {
+                $inventaris = new Inventaris();
+                $inventaris->id_barang = $barang->id_barang;
+                $inventaris->jumlah_barang = 0; // Assuming initial quantity is 0
+                $inventaris->kondisi_barang = 'lengkap'; // Assuming default status is 'Baru'
+                $inventaris->id_ruangan = 3; // Assuming default room ID
+                $inventaris->save();
+              }
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
         }
 

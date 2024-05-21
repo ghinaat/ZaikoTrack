@@ -116,7 +116,7 @@ Users
                                                     <div class="form-group">
                                                         <label for="nis">NIS</label>
                                                         <input type="text" name="nis"
-                                                            id="exampleInputPassword" class="form-control"   value="{{ old('nis', $user->nis) }}" required>
+                                                            id="exampleInputPassword" class="form-control"  value="{{ old('nis', $user->nis ?? '') }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="exampleInputPassword">Password</label>

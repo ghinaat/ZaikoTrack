@@ -289,18 +289,27 @@ class PeminjamanController extends Controller
 
     public function fetchSiswa($id_users)
     {
-        // Fetch the profile data based on the id_users
-        $profile = Profile::where('id_users', $id_users)->first();
+       
+        $user = User::find($id_users);
+    
+        if (!$user) {
+          
+            return response()->json(['error' => 'User not found for the given ID.'], 404);
+        }
+    
+        // Fetch the profile associated with the user
+        $profile = $user->profile;
     
         if ($profile) {
-            // If profile exists, return its data
+         
             return response()->json([
                 'nis' => $profile->nis,
                 'kelas' => $profile->kelas,
                 'jurusan' => $profile->jurusan
             ]);
         } else {
-            // If profile doesn't exist, return an error response
+          
+    
             return response()->json(['error' => 'Profile not found for the given user.'], 404);
         }
     }

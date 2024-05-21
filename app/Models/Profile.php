@@ -12,10 +12,10 @@ class Profile extends Model
 
     protected $primaryKey = 'id_profile';
 
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'id_users', 'id_users');
-    }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'id_users');
+}
 
     protected $guarded = ['id_profile'];
 }
