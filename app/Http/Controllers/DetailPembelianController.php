@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\DetailPembelian;
 use App\Models\JenisBarang;
+use App\Models\Inventaris;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -107,28 +108,23 @@ class DetailPembelianController extends Controller
             $jumlahDataBarang = Barang::max('id_barang') ?? 0;
             $tahunPembelian = Pembelian::where('id_pembelian', $detailPembelian->id_pembelian)->value(DB::raw('YEAR(tgl_pembelian)'));
             $barangData = [];
-            for ($i = 1; $i <= $request->jumlah_barang; $i++) {                $id_barang_perlengkapan = $request->id_barang_perlengkapan;
+            for ($i = 1; $i <= $request->jumlah_barang; $i++) {
+                $id_barang_perlengkapan = $request->id_barang_perlengkapan;
                 $firstChar = substr($id_barang_perlengkapan, 0, 1);
                 $withoutVowels = preg_replace('/[aeiou]/i', '', substr($id_barang_perlengkapan, 1));
                 $nextTwoChars = substr($withoutVowels, 0, 2);
                 $cutString = $firstChar . $nextTwoChars;
                 $kode_barang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
+              
 
-                // Periksa apakah kode_barang sudah ada dalam tabel barang
                 if (Barang::where('kode_barang', $kode_barang)->exists()) {
-                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)->max('kode_barang');
-            
-                    $posisi_tanda = strpos($kode_barang_terbesar, '-') + 3; // Mendapatkan posisi dua angka setelah tanda -
-                    $panjang_kode = strlen($kode_barang_terbesar); // Mendapatkan panjang kode barang
-                    $nomor_urut = substr($kode_barang_terbesar, $posisi_tanda, $panjang_kode - $posisi_tanda - 4); // Mengambil nomor urut
-                
-                
-                    // Buat kode barang baru dengan nomor urut yang baru
+                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)
+                    ->max(DB::raw("LPAD(SUBSTRING(kode_barang, 5), 8, '0')"));
+                    $nomor_urut = substr($kode_barang_terbesar, 2, -4); // Mengambil nomor urut
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $nomor_urut + $i . $tahunPembelian;
                 }else{
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
                 }       
-
                 $imageName = $this->generateBarcode($kode_barang);
                 $barangData[] = [
                     'id_detail_pembelian' => $detailPembelian->id_detail_pembelian,
@@ -144,6 +140,14 @@ class DetailPembelianController extends Controller
             
             // Simpan data barang
             Barang::insert($barangData);
+            foreach ($barangData as $barangItem) {
+                $inventaris = new Inventaris();
+                $inventaris->id_barang = $barangItem['id_barang'];
+                $inventaris->jumlah_barang = null; // Assuming initial quantity is 0
+                $inventaris->kondisi_barang = 'lengkap'; // Assuming default status is 'Baru'
+                $inventaris->id_ruangan = 3;
+                $inventaris->save();
+              }
             // dd($barangData);
         }
 
@@ -220,18 +224,16 @@ class DetailPembelianController extends Controller
                 $nextTwoChars = substr($withoutVowels, 0, 2);
                 $cutString = $firstChar . $nextTwoChars;
                 $kode_barang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
+              
 
                 if (Barang::where('kode_barang', $kode_barang)->exists()) {
-                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)->max('kode_barang');
-            
-                    $posisi_tanda = strpos($kode_barang_terbesar, '-') + 3; // Mendapatkan posisi dua angka setelah tanda -
-                    $panjang_kode = strlen($kode_barang_terbesar); // Mendapatkan panjang kode barang
-                    $nomor_urut = substr($kode_barang_terbesar, $posisi_tanda, $panjang_kode - $posisi_tanda - 4); // Mengambil nomor urut
+                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)
+                    ->max(DB::raw("LPAD(SUBSTRING(kode_barang, 5), 8, '0')"));
+                    $nomor_urut = substr($kode_barang_terbesar, 2, -4); // Mengambil nomor urut
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $nomor_urut + $i . $tahunPembelian;
                 }else{
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
                 }       
-
                 $imageName = $this->generateBarcode($kode_barang);
                 $barangData[] = [
                     'id_detail_pembelian' => $detailPembelian->id_detail_pembelian,
@@ -246,6 +248,14 @@ class DetailPembelianController extends Controller
             }
 
             Barang::insert($barangData);
+            foreach ($barangData as $barangItem) {
+                $inventaris = new Inventaris();
+                $inventaris->id_barang = $barangItem['id_barang'];
+                $inventaris->jumlah_barang = null; // Assuming initial quantity is 0
+                $inventaris->kondisi_barang = 'lengkap'; // Assuming default status is 'Baru'
+                $inventaris->id_ruangan = 3;
+                $inventaris->save();
+              }
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan']);
 
         }else if($barangAlat && $request->id_jenis_barang == 3){
@@ -323,18 +333,16 @@ class DetailPembelianController extends Controller
                 $nextTwoChars = substr($withoutVowels, 0, 2);
                 $cutString = $firstChar . $nextTwoChars;
                 $kode_barang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
+              
 
                 if (Barang::where('kode_barang', $kode_barang)->exists()) {
-                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)->max('kode_barang');
-            
-                    $posisi_tanda = strpos($kode_barang_terbesar, '-') + 3; // Mendapatkan posisi dua angka setelah tanda -
-                    $panjang_kode = strlen($kode_barang_terbesar); // Mendapatkan panjang kode barang
-                    $nomor_urut = substr($kode_barang_terbesar, $posisi_tanda, $panjang_kode - $posisi_tanda - 4); // Mengambil nomor urut
+                    $kode_barang_terbesar = Barang::where('nama_barang', $request->id_barang_perlengkapan)
+                    ->max(DB::raw("LPAD(SUBSTRING(kode_barang, 5), 8, '0')"));
+                    $nomor_urut = substr($kode_barang_terbesar, 2, -4); // Mengambil nomor urut
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $nomor_urut + $i . $tahunPembelian;
                 }else{
                     $kodeBarang = $cutString . '-' . '0' . $request->id_jenis_barang . $i . $tahunPembelian;
                 }       
-
                 $imageName = $this->generateBarcode($kode_barang);
                 $barangData[] = [
                     'id_detail_pembelian' => $detailPembelian->id_detail_pembelian,

@@ -52,10 +52,21 @@ Inventaris / List Barang
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
+                            <div class="mb-2">
+                                
+                                <a href="#" class="btn btn-danger moving-button" style="display: none;" data-toggle="modal" data-target="#moveInventarisModal">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Move Inventaris
+                                </a>
+                            </div>
                             @endcan
                             @can('isKabeng')
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
+                            </div>
+                            <div class="mb-2">
+                                <a href="#" class="btn btn-danger moving-button" style="display: none;" data-toggle="modal" data-target="#moveInventarisModal">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Move Inventaris
+                                </a>
                             </div>
                             @endcan
                             <table id="myTable" class="table table-bordered table-striped align-items-center mb-0">
@@ -78,7 +89,7 @@ Inventaris / List Barang
                                 <tbody>
                                     @if($inventaris)
                                     @foreach($inventarisAlat as $key => $barang)
-                                    <tr>
+                                    <tr data-id-inventaris="{{ $barang->id_inventaris }}">
                                         <td>{{$key+1}}</td>
                                         <td>{{$barang->barang->nama_barang}}</td>
                                         <td>{{$barang->barang->kode_barang}}</td>
@@ -112,9 +123,12 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuangan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a> -->
+                                            </a>
+                                            {{-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </a> --}}
                                         </td>
                                         @endcan
                                         @can('isKabeng')
@@ -122,9 +136,12 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-primary btn-xs edit-button" data-toggle="modal" data-target="#editModal{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                            <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuangan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a> -->
+                                            </a>
+                                            {{-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </a> --}}
                                         </td>
                                         @endcan
                                     </tr>
@@ -218,11 +235,12 @@ Inventaris / List Barang
                                                 data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
+                                            
+                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
                                                 onclick="notificationBeforeDelete(event, this, {{$key+1}})"
                                                 class="btn btn-danger btn-xs mx-1">
                                                 <i class="fa fa-trash"></i>
-                                            </a> -->
+                                            </a>
                                         </td>
                                         @endcan
                                     </tr>
@@ -358,6 +376,86 @@ Inventaris / List Barang
 </div>
 @endforeach
 <!-- end -->
+
+@foreach($inventarisRuangan as $key => $ruangan)
+<div class="modal fade" id="editRuangan{{$ruangan->id_inventaris}}" tabindex="-1" role="dialog"
+    aria-labelledby="editRuanganLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRuanganLabel">Edit Ruangan
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('inventaris.ruangan', $ruangan->id_inventaris)}}" method="post">
+                    @csrf
+                    @method('PUT')
+                 
+                    <div class="form-group">
+                        <label for="id_ruangan">Ruangan</label>
+                        <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+                            @foreach($ruangans as $r)
+                            <option value="{{ $r ->id_ruangan }}" @if($ruangan->id_ruangan ===
+                             old('id_ruangan', $r->id_ruangan)) selected @endif>
+                                {{ $r ->nama_ruangan }}</option>
+                            @endforeach
+                        </select>
+                        @error('id_ruangan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<div class="modal fade" id="moveInventarisModal" tabindex="-1" role="dialog" aria-labelledby="moveInventarisModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveInventarisModalLabel">Pindahkan Inventaris</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to select ruangan for moving inventaris -->
+                <form action="{{ route('inventaris.move') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="id_ruangan">Select Ruangan:</label>
+                        <select class="form-control" name="id_ruangan" id="id_ruangan" required>
+                            @foreach($ruangans as $ruangan)
+                                <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nama_ruangan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Hidden input field to store selected inventaris IDs -->
+                    <input type="hidden" name="id_inventaris[]" id="selectedInventarisIds" value="">
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Pindahkan</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @foreach($inventarisBahan as $key => $barang)
 <div class="modal fade" id="editModalBahan{{$barang->id_inventaris}}" tabindex="-1" role="dialog"
     aria-labelledby="editModalLabel" aria-hidden="true">
@@ -639,16 +737,49 @@ Inventaris / List Barang
 
 <script>
 $(document).ready(function() {
-    $('#myTable').DataTable({
-        "responsive": true,
-        "language": {
-            "paginate": {
-                "previous": "<",
-                "next": ">"
+    const table = $('#myTable').DataTable({
+        select: true,
+        responsive: true,
+        language: {
+            paginate: {
+                previous: "<",
+                next: ">"
             }
         }
     });
+
+    // Show or hide the "moving button" based on row selection
+    $('#myTable tbody').on('click', 'tr', function() {
+        $(this).toggleClass('selected');
+
+        // Check if any row is selected
+        var anyRowSelected = table.rows('.selected').data().length > 0;
+
+        // Show or hide the "moving button" based on row selection
+        $('.moving-button').toggle(anyRowSelected);
+
+        // If rows are selected, update the hidden input field with id_inventaris values
+        if (anyRowSelected) {
+            var selectedIds = [];
+            table.rows('.selected').nodes().each(function(row) {
+                var id_inventaris = $(row).data('id-inventaris');
+                selectedIds.push(id_inventaris);
+            });
+            $('#selectedInventarisIds').val(selectedIds.join(','));
+        } else {
+            // If no row is selected, clear the hidden input field value
+            $('#selectedInventarisIds').val('');
+        }
+    });
+
+    // Handle the "moving button" click event
+    $('.moving-button').on('click', function() {
+        $('#moveInventarisModal').modal('show');
+    });
 });
+
+
+
 
 $(document).ready(function() {
     $('#myTable1').DataTable({
@@ -668,7 +799,21 @@ function showAddModal() {
     $("#add-modal").modal('show');
     console.log("Menampilkan modal tambah");
 }
-
+$('#barcode_input').on('change', function() {
+        var kode_barang = $(this).val();
+        $.ajax({
+            url: '/barang/data',
+            method: 'GET',
+            data: { kode_barang: kode_barang },
+            success: function(response) {
+                $('#nama_barang').val(response.nama_barang);
+                $('#kode_barang').val(response.kode_barang);
+            },
+            error: function() {
+                alert('Barang not found');
+            }
+        });
+    });
 document.querySelectorAll('select[name=id_barang]').forEach(select => {
     select.addEventListener('click', function() {
         const selectedIdBarang = this.value;

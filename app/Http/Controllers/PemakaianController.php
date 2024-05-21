@@ -143,13 +143,15 @@ class PemakaianController extends Controller
             
         $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])->get();
         $guru = Guru::all()->except('1');
-        $karyawan = Karyawan::all()->except('1');   
+        $karyawan = Karyawan::all()->except('1');  
+        $id_users = $user = Auth::user(); 
 
         return view('pemakaian.create',[
             'barang' => $bahanPraktik,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,
+            'id_users' => $id_users,
         ]);
     }
 
@@ -200,10 +202,9 @@ class PemakaianController extends Controller
             'id_users' => $getdatapemakaian->id_users,    // Ganti dengan nilai sesuai kebutuhan
             'id_guru' => $getdatapemakaian->id_guru,    // Ganti dengan nilai sesuai kebutuhan
             'id_karyawan' => $getdatapemakaian->id_karyawan, // Ganti dengan nilai sesuai kebutuhan
-            'kelas' => $getdatapemakaian->kelas,             // Ganti dengan nilai sesuai kebutuhan
-            'jurusan' => $getdatapemakaian->jurusan,             // Ganti dengan nilai sesuai kebutuhan
             'tgl_pakai' => $getdatapemakaian->tgl_pakai,             // Ganti dengan nilai sesuai kebutuhan
             'keterangan_pemakaian' => $getdatapemakaian->keterangan_pemakaian,             // Ganti dengan nilai sesuai kebutuhan
+            'status' => $getdatapemakaian->status,             // Ganti dengan nilai sesuai kebutuhan
         ]);
     }
 
@@ -249,13 +250,11 @@ class PemakaianController extends Controller
     public function store(Request $request){
         // dd($request);
         $request->validate([
-            'tgl_pakai' => 'required',
+            // 'tgl_pakai' => 'required',
             'id_users' => 'nullable',
             'id_guru' => 'nullable',
             'id_karyawan' => 'nullable',
             'status' => 'nullable',
-            'kelas' => 'nullable',
-            'jurusan' => 'nullable',
             'keterangan_pemakaian' => 'nullable'
 
         ]);
@@ -266,12 +265,10 @@ class PemakaianController extends Controller
 
             $pemakaian = new Pemakaian();
             $pemakaian->status = $request->status;
-            $pemakaian->tgl_pakai = $request->tgl_pakai;
+            $pemakaian->tgl_pakai = now();
             $pemakaian->id_users = $id_users;
             $pemakaian->id_guru = $id_guru;
             $pemakaian->id_karyawan = $id_karyawan;
-            $pemakaian->kelas = $request->kelas;
-            $pemakaian->jurusan = $request->jurusan;
             $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
             $pemakaian->save();
         
@@ -284,13 +281,10 @@ class PemakaianController extends Controller
     public function update(Request $request){
         // dd($request);
         $request->validate([
-            'tgl_pakai' => 'required',
             'id_users' => 'nullable',
             'id_guru' => 'nullable',
             'id_karyawan' => 'nullable',
             'status' => 'nullable',
-            'kelas' => 'nullable',
-            'jurusan' => 'nullable',
             'keterangan_pemakaian' => 'nullable'
 
         ]);
@@ -314,13 +308,10 @@ class PemakaianController extends Controller
             }
 
             // Update data berdasarkan perubahan pada request
-            $pemakaian->tgl_pakai = $request->tgl_pakai;
             $pemakaian->id_users = $id_users;
             $pemakaian->id_guru = $id_guru;
             $pemakaian->id_karyawan = $id_karyawan;
             $pemakaian->status = $request->status;
-            $pemakaian->kelas = $request->kelas;
-            $pemakaian->jurusan = $request->jurusan;
             $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
             $pemakaian->save();
         }
