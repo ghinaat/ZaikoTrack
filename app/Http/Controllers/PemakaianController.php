@@ -141,10 +141,15 @@ class PemakaianController extends Controller
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
             
-        $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])->get();
-        $guru = Guru::all()->except('1');
-        $karyawan = Karyawan::all()->except('1');  
-        $id_users = $user = Auth::user(); 
+        $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])
+                ->orderByRaw("LOWER(name)")->get();
+        $guru = Guru::where('id_guru', '!=', 1)  
+                ->orderByRaw("LOWER(nama_guru)")  
+                ->get(); 
+        $karyawan = Karyawan::where('id_karyawan', '!=', 1)  
+                ->orderByRaw("LOWER(nama_karyawan)")  
+                ->get();    
+
 
         return view('pemakaian.create',[
             'barang' => $bahanPraktik,
@@ -191,6 +196,23 @@ class PemakaianController extends Controller
         ]);
     }
 
+    public function fetchSiswa($id_users)
+    {
+        // Fetch the profile data based on the id_users
+        $profile = Profile::where('id_users', $id_users)->first();
+    
+        if ($profile) {
+            // If profile exists, return its data
+            return response()->json([
+                'nis' => $profile->nis,
+                'kelas' => $profile->kelas,
+                'jurusan' => $profile->jurusan
+            ]);
+        } else {
+            // If profile doesn't exist, return an error response
+            return response()->json(['error' => 'Profile not found for the given user.'], 404);
+        }
+    }
     public function getPemakaianData($id_pemakaian)
     {
         

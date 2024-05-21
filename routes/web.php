@@ -129,6 +129,8 @@ Route::post('/peminjaman/detailPeminjaman/barcode', [App\Http\Controllers\Detail
 Route::post('/peminjaman/detailPeminjaman/qrcode/{id_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'AddQrcode'])->name('detailPeminjaman.AddQrcode');
 
 
+Route::get('/fetch-id-siswa/{id_users}', [App\Http\Controllers\PemakaianController::class, 'fetchSiswa'])->name('pemakaian.fetchIdSiswa');
+
 Route::get('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'index'])->name('pemakaian.index');
 Route::post('/pemakaian', [App\Http\Controllers\PemakaianController::class, 'store'])->name('pemakaian.store');
 Route::get('/pemakaian/create', [App\Http\Controllers\PemakaianController::class, 'create'])->name('pemakaian.create');
