@@ -179,7 +179,7 @@ Tambah Peminjaman
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
                                                         title="Selanjutnya">Selanjutnya</button>
-                                                </div>
+                                                </div
                                     </form>
                                 </div>
                             </div>
