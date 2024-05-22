@@ -140,7 +140,8 @@ class PemakaianController extends Controller
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
             $query->where('id_jenis_barang', $idJenisBarang);})->select('id_barang', DB::raw('MAX(id_inventaris) as max_id_inventaris'))
             ->groupBy('id_barang')->with(['barang'])->get();
-            
+        
+        $id_users = $user = Auth::user(); 
         $siswa = User::where('level', 'siswa')->whereNotIn('id_users', [1])
                 ->orderByRaw("LOWER(name)")->get();
         $guru = Guru::where('id_guru', '!=', 1)  
@@ -198,18 +199,19 @@ class PemakaianController extends Controller
 
     public function fetchSiswa($id_users)
     {
-        // Fetch the profile data based on the id_users
-        $profile = Profile::where('id_users', $id_users)->first();
+        $user = User::find($id_users);
+        if (!$user) {
+            return response()->json(['error' => 'User not found for the given ID.'], 404);
+        }
     
+        $profile = $user->profile;
         if ($profile) {
-            // If profile exists, return its data
             return response()->json([
                 'nis' => $profile->nis,
                 'kelas' => $profile->kelas,
                 'jurusan' => $profile->jurusan
             ]);
         } else {
-            // If profile doesn't exist, return an error response
             return response()->json(['error' => 'Profile not found for the given user.'], 404);
         }
     }
@@ -272,7 +274,6 @@ class PemakaianController extends Controller
     public function store(Request $request){
         // dd($request);
         $request->validate([
-            // 'tgl_pakai' => 'required',
             'id_users' => 'nullable',
             'id_guru' => 'nullable',
             'id_karyawan' => 'nullable',
@@ -280,7 +281,6 @@ class PemakaianController extends Controller
             'keterangan_pemakaian' => 'nullable'
 
         ]);
-        // dd($request);
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
