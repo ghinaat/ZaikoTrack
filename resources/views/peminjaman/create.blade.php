@@ -263,6 +263,7 @@ Tambah Peminjaman
                                         </div>
                                         @enderror
                                     </div>
+                                    <div style='display:none;'>
                                     <div class="form-group">
 
                                         <label for="id_ruangan">Ruangan</label>
@@ -275,6 +276,7 @@ Tambah Peminjaman
                                         {{ $message }}
                                     </div>
                                     @enderror
+                                </div>
 
                                     
                                     <div class="form-group mt-2">
