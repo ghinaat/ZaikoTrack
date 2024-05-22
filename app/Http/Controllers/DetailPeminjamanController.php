@@ -150,7 +150,7 @@ class DetailPeminjamanController extends Controller
         // dd($request);
         try{
         $request->validate([
-            'id_ruangan' => 'required',
+           
             'id_barang' => 'required',
             'ket_tidak_lengkap_awal' => 'nullable',
         ]);
@@ -160,7 +160,6 @@ class DetailPeminjamanController extends Controller
 
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
         $inventaris = Inventaris::with(['ruangan', 'barang'])
-        ->where('id_ruangan', $request->input('id_ruangan'))
         ->where('id_barang', $request->input('id_barang'))
         ->first();
         
