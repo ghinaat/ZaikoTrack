@@ -52,12 +52,12 @@ Inventaris / List Barang
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
-                            <div class="mb-2">
+                            {{-- <div class="mb-2">
                                 
                                 <a href="#" class="btn btn-danger moving-button" style="display: none;" data-toggle="modal" data-target="#moveInventarisModal">
                                     <i class="fa-solid fa-right-from-bracket"></i> Move Inventaris
                                 </a>
-                            </div>
+                            </div> --}}
                             @endcan
                             @can('isKabeng')
                             <div class="mb-2">
@@ -794,21 +794,7 @@ function showAddModal() {
     $("#add-modal").modal('show');
     console.log("Menampilkan modal tambah");
 }
-$('#barcode_input').on('change', function() {
-        var kode_barang = $(this).val();
-        $.ajax({
-            url: '/barang/data',
-            method: 'GET',
-            data: { kode_barang: kode_barang },
-            success: function(response) {
-                $('#nama_barang').val(response.nama_barang);
-                $('#kode_barang').val(response.kode_barang);
-            },
-            error: function() {
-                alert('Barang not found');
-            }
-        });
-    });
+
 document.querySelectorAll('select[name=id_barang]').forEach(select => {
     select.addEventListener('click', function() {
         const selectedIdBarang = this.value;
