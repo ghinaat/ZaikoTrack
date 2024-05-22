@@ -28,7 +28,7 @@ class DetailPeminjamanController extends Controller
         }
     
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan kode_barang
-        $inventaris = Inventaris::whereHas('barang', function ($query) use ($request) {
+        $inventaris = Inventaris::whereHas('barang',  function ($query) use ($request) {
             $query->where('kode_barang', $request->kode_barang);
         })->first();
     
