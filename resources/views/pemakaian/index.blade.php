@@ -42,8 +42,10 @@ Pemakaian
                                 <tr>
                                     <th>No.</th>
                                     <th>Tanggal Pakai</th>
+                                    @can('isTeknisi', 'isKaprog', 'isKabeng')
                                     <th>Nama</th>
                                     <th>Kelas</th>
+                                    @endcan
                                     <th>List Barang</th>
                                     <th style="width:189px;">Opsi</th>
                                 </tr>
@@ -53,6 +55,7 @@ Pemakaian
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pakai->tgl_pakai)->format('d F Y')}}</td>
+                                    @can('isTeknisi', 'isKaprog', 'isKabeng')
                                     <td>
                                         @if($pakai->status == 'siswa')
                                             {{$pakai->users->name}}
@@ -62,6 +65,7 @@ Pemakaian
                                             {{$pakai->karyawan->nama_karyawan}}
                                         @endif
                                     </td>
+                                   
                                     <td>
                                         @if ($pakai->kelas == null && $pakai->jurusan == null)
                                             -
@@ -69,6 +73,7 @@ Pemakaian
                                             {{$pakai->kelas}} {{$pakai->jurusan}}
                                         @endif
                                     </td>
+                                    @endcan
                                     <td>
                                         <a href="{{ route('pemakaian.showDetail', $pakai->id_pemakaian) }}"
                                             class="btn btn-info btn-xs mx-1">

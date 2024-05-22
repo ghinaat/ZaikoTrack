@@ -115,7 +115,7 @@ Tambah Pemakaian
                                                                 @endif
                                                                 <div class="form-group">
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                    <textarea type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></textarea>
+                                                                    <input type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></input>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group text-end justify-content-end mb-0 mt-4" >
@@ -162,22 +162,9 @@ Tambah Pemakaian
                                                         <div class="multisteps-form__content">
                                                             <div class="form-row mt-2"> 
                                                                 <div class="row">
-                                                                    <input type="hidden" name="id_barang" value="">
-                                                                    <div class="dropdownsearch">
-                                                                        <div class="options">
-                                                                            <label for="id_barang">Nama Barang</label>
-                                                                            <select name="" id="dynamic_select" name="id_barang" class="custom-select">
-                                                                                @foreach($barang as $key => $br)
-                                                                                <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
-                                                                                    {{$br->barang->nama_barang}}
-                                                                                </option>
-                                                                                @endforeach  
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
                                                                     <div class="form-group">
                                                                         <label for="id_barang">Nama Barang</label>
-                                                                            <select name="" id="dynamic_select" name="id_barang" class="custom-select">
+                                                                            <select id="id_barang" name="id_barang" class="form-select">
                                                                                 @foreach($barang as $key => $br)
                                                                                 <option value="{{$br->id_barang}}" @if( old('id_barang')==$br->id_barang)selected @endif>
                                                                                     {{$br->barang->nama_barang}}
@@ -219,11 +206,10 @@ Tambah Pemakaian
                                                     <h4 class="multisteps-form__title">Data Diri</h4>
                                                     <div class="multisteps-form__content">
                                                         <div class="form-row mt-2">
-                                                            @can('isSiswa')
-                                                            <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
-                                                            <input type="hidden" name="status" value="siswa">
-                                                            @endcan
-                                                            @can('isTeknisi', 'isKaprog', 'isKabeng')
+                                                            @if( auth()->user()->level == "siswa")
+                                                                <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
+                                                                <input type="hidden" name="status" value="siswa">
+                                                            @else
                                                             <div class="form-group">
                                                                 <label for="status">Status</label>
                                                                     <select class="form-select" name="status" id="status_upd">
@@ -232,31 +218,63 @@ Tambah Pemakaian
                                                                             <option value="karyawan">Karyawan</option>
                                                                     </select>                                
                                                             </div>
-                                                            <div class="form-group " style="display: none;" id="id_siswa_update">
-                                                                <label for="id_siswa">Nama Lengkap</label>
-                                                                    <select class="form-select" data-live-search="true" name="id_users" id="id_siswa_upd" >
-                                                                        <option value="" selected disabled>Pilih Nama</option>
-                                                                        @foreach($siswa as $key => $sw)
-                                                                        <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
-                                                                            {{$sw->name}}
-                                                                        </option>
-                                                                        @endforeach
-                                                                    </select>                                
+                                                            <div id="siswaFormUpdate" style="display: block;">
+                                                                <div class="form-group">
+                                                                    <label for="id_siswa">Nama Siswa</label>
+                                                                        <select class="form-select" data-live-search="true" name="id_users" id="normalize3" >
+                                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                                            @foreach($siswa as $key => $sw)
+                                                                            <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
+                                                                                {{$sw->name}}
+                                                                            </option>
+                                                                            @endforeach
+                                                                        </select>                                
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="kelas" class="form-label">Kelas</label>
+                                                                            <input type="text" name="kelas" id="kelas_upd" class="form-control" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="nis" class="form-label">NIS</label>
+                                                                            <input type="text" name="nis" id="nis_upd" class="form-control" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group " style="display: none;" id="id_guru_update">
-                                                                <label for="id_guru">Nama Lengkap</label>
-                                                                    <select class="form-select" data-live-search="true" name="id_guru" id="id_guru_upd" >
-                                                                        <option value="" selected disabled>Pilih Nama</option>
-                                                                        @foreach($guru as $key => $gr)
-                                                                        <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
-                                                                            {{$gr->nama_guru}}
-                                                                        </option>
-                                                                        @endforeach
-                                                                    </select>                                
+                                                            <div  id="guruFormUpdate" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="id_guru">Nama Guru</label>
+                                                                        <select class="form-select" data-live-search="true" name="id_guru" id="normalize4" >
+                                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                                            @foreach($guru as $key => $gr)
+                                                                            <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
+                                                                                {{$gr->nama_guru}}
+                                                                            </option>
+                                                                            @endforeach
+                                                                        </select>                                
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="nip" class="form-label">NIP</label>
+                                                                            <input type="text" name="nip" id="nip_upd" class="form-control" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="jurusan" class="form-label">Jurusan</label>
+                                                                            <input type="text" name="jurusan" id="jurusan_upd" class="form-control" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group " style="display: none;" id="id_karyawan_update">
-                                                                <label for="id_karyawan">Nama Lengkap</label>
-                                                                    <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan_upd" >
+                                                            <div class="form-group " style="display: none;" id="karyawanFormUpdate">
+                                                                <label for="id_karyawan">Nama Karyawan</label>
+                                                                    <select class="form-select" data-live-search="true" name="id_karyawan" id="normalize5" >
                                                                         <option value="" selected disabled>Pilih Nama</option>
                                                                         @foreach($karyawan as $key => $krywn)
                                                                         <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
@@ -265,24 +283,10 @@ Tambah Pemakaian
                                                                         @endforeach
                                                                     </select>                                
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-6 col-md-6 kelas">
-                                                                    <div class="form-group">
-                                                                        <label for="kelas" class="mb-0">Kelas</label>
-                                                                        <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas_update" required >
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-6 col-md-6 jurusan">
-                                                                    <div class="form-group">
-                                                                        <label for="jurusan" class="mb-0">Jurusan</label>
-                                                                        <input class="multisteps-form__input form-control" type="text" name="jurusan" id="jurusan_update" required>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            @endcan
+                                                            @endif
                                                             <div class="form-group">
                                                                 <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                                                                <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></textarea>
+                                                                <input type="text" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></input>
                                                             </div>
                                                         </div>
                                                         <div class="form-group mt-2" style="text-align: right;">
@@ -314,13 +318,22 @@ Tambah Pemakaian
 
 <script>
 
-// $('#normalize').selectize({
+$('#normalize').selectize({
 
-// });
+});
 $('#normalize1').selectize({
 
 });
 $('#normalize2').selectize({
+
+}); 
+$('#normalize3').selectize({
+
+}); 
+$('#normalize4').selectize({
+
+}); 
+$('#normalize5').selectize({
 
 }); 
 
@@ -331,9 +344,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const stokValue = document.getElementById('stok_value');
 
     // Fetch ruangan options for the selected barang
-    document.querySelectorAll('div.dropdown-select wide costum-select').forEach(div => div.addEventListener('click', function() {
+    document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click', function() {
         const id_ruanganSelect = this.closest('.form-row').querySelector('select[name=id_ruangan]');
-        const selectedIdBarang = this.querySelector('.current').getAttribute('data-value');
+        const selectedIdBarang = this.value;
         console.log("Selected Barang ID:", selectedIdBarang);
 
         // Fetch ruangan options for the selected barang
@@ -369,76 +382,126 @@ document.addEventListener('DOMContentLoaded', function() {
     }));
 
 });
-
-document.getElementById('status').addEventListener('click', function() {
-    const selectedStatus = this.value;
-    const siswaElement = document.getElementById('siswaForm');
-    const guruElement = document.getElementById('guruForm');
-    const karyawanElement = document.getElementById('karyawanForm');
-    const kelasInput = siswaElement.querySelector('#kelas');
-    const nisInput = siswaElement.querySelector('#nis');
-    const nipInput = guruElement.querySelector('#nip');
-    const jurusanInput = guruElement.querySelector('#jurusan');
-    
-    kelasInput.value = '';
-    nisInput.value = '';
-    nipInput.value = '';
-    jurusanInput.value = '';
-
-  
-    // Hide all forms
-    siswaElement.style.display = 'block';
-    guruElement.style.display = 'none';
-    karyawanElement.style.display = 'none';
-    // NamaElement.style.display = 'block';
-   
-
-    // Show the selected form
-    if (selectedStatus === 'siswa') {
-        siswaElement.style.display = 'block';
-
-    } else if (selectedStatus === 'guru') {
-        guruElement.style.display = 'block';
-        siswaElement.style.display = 'none';
-      
-    } else if (selectedStatus === 'karyawan') {
-        karyawanElement.style.display = 'block';
-        siswaElement.style.display = 'none';
-      
-    }
-
-    
-});
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('select[id=normalize]').forEach(select => select.addEventListener('click', function() {
-        const selectedIdUsers = this.value;
-        const nisInput = document.querySelector('input[name=nis]');
-        const kelasInput = document.querySelector('input[name=kelas]');
-        console.log('selected:', selectedIdUsers);        
+    const status = document.getElementById('status');
+    if(status){
+        document.getElementById('status').addEventListener('click', function() {
+            const selectedStatus = this.value;
+            const siswaElement = document.getElementById('siswaForm');
+            const guruElement = document.getElementById('guruForm');
+            const karyawanElement = document.getElementById('karyawanForm');
+            const kelasInput = siswaElement.querySelector('#kelas');
+            const nisInput = siswaElement.querySelector('#nis');
+            const nipInput = guruElement.querySelector('#nip');
+            const jurusanInput = guruElement.querySelector('#jurusan');
             
-            // Now you can make an AJAX request to fetch data based on selectedIdUsers
-            fetch(`/fetch-id-siswa/${selectedIdUsers}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch profile data');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Debug: Check the data received
-                    console.log('Data received:', data);
-                    
-                    // Display the corresponding data in the input elements
-                    nisInput.value = data.nis || '';
-                    kelasInput.value = data.kelas || '';
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    // Clear the input and possibly display an error message to the user
-                    nisInput.value = '';
-                    kelasInput.value = '';
-                });
-    }));
+            kelasInput.value = '';
+            nisInput.value = '';
+            nipInput.value = '';
+            jurusanInput.value = '';
+
+        
+            // Hide all forms
+            siswaElement.style.display = 'block';
+            guruElement.style.display = 'none';
+            karyawanElement.style.display = 'none';
+            // NamaElement.style.display = 'block';
+        
+
+            // Show the selected form
+            if (selectedStatus === 'siswa') {
+                siswaElement.style.display = 'block';
+
+            } else if (selectedStatus === 'guru') {
+                guruElement.style.display = 'block';
+                siswaElement.style.display = 'none';
+            
+            } else if (selectedStatus === 'karyawan') {
+                karyawanElement.style.display = 'block';
+                siswaElement.style.display = 'none';
+            
+            }
+        });
+    }
+$('#normalize').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIdUsers);
+    
+    // Temukan elemen input untuk nis dan kelas
+    const nisInput = document.querySelector('input[name=nis]');
+    const kelasInput = document.querySelector('input[name=kelas]');
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIdUsers
+    fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Debug: Periksa data yang diterima
+            console.log('Data received:', data);
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
+            nisInput.value = data.nis || '';
+            kelasInput.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
+            nisInput.value = '';
+            kelasInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
+        });
+});
+
+$('#normalize1').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIGuru = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIGuru);
+    
+    // Temukan elemen input untuk nis dan kelas
+    const nipInput = document.querySelector('input[name=nip]');
+    const jurusanInput = document.querySelector('input[name=jurusan]');
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIGuru
+    fetch(`/fetch-id-guru/${selectedIGuru}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Debug: Periksa data yang diterima
+            console.log('Data received:', data);
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
+            nipInput.value = data.nip || '';
+            jurusanInput.value = data.jurusan || '';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
+            nipInput.value = '';
+            jurusanInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
+        });
 });
 
 $(document).ready(function() {
@@ -621,93 +684,179 @@ $(document).ready(function() {
                 data: data,
             })
             .done(function(response) {
-                if(response.status !== 'siswa'){
-                    const namaSiswaElement = document.querySelector('#id_siswa_update');
-                    const namaGuruElement = document.querySelector('#id_guru_update' );
-                    const namaKaryawanElement = document.querySelector('#id_karyawan_update');
-                    const kelasElement = document.querySelector('#kelas_update');
-                    const jurusanElement = document.querySelector('#jurusan_update');
-                    let readonlyValue = false;
+                const namaSiswaElement = document.querySelector('#siswaFormUpdate');
+                const namaGuruElement = document.querySelector('#guruFormUpdate' );
+                const namaKaryawanElement = document.querySelector('#karyawanFormUpdate');
+                const kelasElement = document.querySelector('#kelas_upd');
+                const nisElement = document.querySelector('#nis_upd');
+                const nipElement = document.querySelector('#nip_upd');
+                const jurusanElement = document.querySelector('#jurusan_upd');
 
-                    namaSiswaElement.style.display = 'none';
-                    namaGuruElement.style.display = 'none';
-                    namaKaryawanElement.style.display = 'none';
+                namaSiswaElement.style.display = 'none';
+                namaGuruElement.style.display = 'none';
+                namaKaryawanElement.style.display = 'none';
 
-                    document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
+                document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
 
                     if (this.value === 'siswa') {
                         namaSiswaElement.style.display = 'block';
                         namaGuruElement.style.display = 'none';
                         namaKaryawanElement.style.display = 'none';
-                        readonlyValue = false;
                     } else if (this.value === 'guru') {
-                        namaSiswaElement.style.display = 'none';
                         namaGuruElement.style.display = 'block';
+                        namaSiswaElement.style.display = 'none';
                         namaKaryawanElement.style.display = 'none';
-                        kelasElement.value = null;
-                        readonlyValue = true;
                     } else if (this.value === 'karyawan') {
+                        namaKaryawanElement.style.display = 'block';
                         namaSiswaElement.style.display = 'none';
                         namaGuruElement.style.display = 'none';
-                        namaKaryawanElement.style.display = 'block';
-                        kelasElement.value = null; // Atur nilai input kelas menjadi null
-                        jurusanElement.value = null;
-                        readonlyValue = true;
                     }
                     
-                    kelasElement.readOnly = readonlyValue;
-                    jurusanElement.readOnly = (this.value === 'karyawan');
-                    }));
+                }));
+
+                $('#normalize3').on('change', function() {
+                var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+                console.log('Selected user ID:', selectedIdUsers);
+                    fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch profile data');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Data received:', data);
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+                            nisElement.value = data.nis || '';
+                            kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+                            })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            nisInput.value = '';
+                            kelasInput.value = '';
+                        alert('Error: ' + error.message);
+                    });
+                });
+
+                $('#normalize4').on('change', function() {
+                var selectedGuru = $(this).selectize()[0].selectize.getValue();
+                console.log('Selected user ID:', selectedGuru);
+                fetch(`/fetch-id-guru/${selectedGuru}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch profile data');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Data received:', data);
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+                                nipElement.value = data.nip || '';
+                                jurusanElement.value = data.jurusan || '';
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                nipElement.value = '';
+                                jurusanElement.value = '';
+                                alert('Error: ' + error.message);
+                            });
+                });
+
                     
-                    if (response.id_users !== 1) {
+                    if (response.status === 'siswa') {
+                        console.log(response.id_users)
+                        const selectedUser = response.id_users;
+                        fetch(`/fetch-id-siswa/${selectedUser}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch profile data');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+                                nisElement.value = data.nis || '';
+                                kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                nisInput.value = '';
+                                kelasInput.value = '';
+                                alert('Error: ' + error.message);
+                            });
+
                         namaSiswaElement.style.display = 'block';
-                        var selectSiswa = document.getElementById('id_siswa_upd');
-                        var statusSiswa = document.getElementById('status_upd');
+                        kelasElement.style.display = 'block';
+                        nisElement.style.display = 'block';
                         $('#status_upd').val('siswa');
 
-                        for (var i = 0; i < selectSiswa.options.length; i++) {
-                            if (selectSiswa.options[i].value == response.id_users) {
-                                selectSiswa.selectedIndex = i;
-                                break;
-                            }
+                        var selectSiswa = document.getElementById('normalize3');
+                        var selectizeInstance = $(selectSiswa).selectize()[0].selectize;
+                        var existingOption = selectizeInstance.options[response.id_users];
+                        if (!existingOption) {
+                            selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
                         }
-                        // $('#id_siswa_update').prop('value', response.id_siswa);
-                    } else if(response.id_guru !== 1){
-                        namaGuruElement.style.display = 'block';
-                        readonlyValue = true;
-                        var selectGuru = document.getElementById('id_guru_upd');
-                        var statusGuru = document.getElementById('status_upd' );
-                        $('#status_upd').val('guru');
-        
-                        for (var i = 0; i < selectGuru.options.length; i++) {
-                            if (selectGuru.options[i].value == response.id_guru) {
-                                selectGuru.selectedIndex = i;
-                                break;
-                            }
-                        }                
-                    } else if (response.id_karyawan !== 1) {
-                        namaKaryawanElement.style.display = 'block';
-                        readonlyValue = true;
-                        var statusKaryawan = document.getElementById('status_upd');
-                        $('#status_upd').val('karyawan');
+                        selectizeInstance.setValue(response.id_users);
 
-                        var selectKaryawan = document.getElementById('id_karyawan_upd');
-        
-                        for (var i = 0; i < selectKaryawan.options.length; i++) {
-                            if (selectKaryawan.options[i].value == response.id_karyawan) {
-                                selectKaryawan.selectedIndex = i;
-                                break;
-                            }
-                        }         
+                    } else if(response.status === 'guru'){
+                        const selectedGuru = response.id_guru;
+                        fetch(`/fetch-id-guru/${selectedGuru}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch profile data');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Data received:', data);
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+                                nipElement.value = data.nip || '';
+                                jurusanElement.value = data.jurusan || '';
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                nipElement.value = '';
+                                jurusanElement.value = '';
+                                alert('Error: ' + error.message);
+                            });
+                        namaGuruElement.style.display = 'block';
+                        nipElement.style.display = 'block';
+                        jurusanElement.style.display = 'block';
+                        $('#status_upd').val('guru');
+
+                        var selectGuru = document.getElementById('normalize4');
+                        var selectizeInstance = $(selectGuru).selectize()[0].selectize;
+                        var existingOption = selectizeInstance.options[response.id_guru];
+                        if (!existingOption) {
+                            selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
+                        }
+                        selectizeInstance.setValue(response.id_guru);      
+
+                    } else if (response.status === 'karyawan') {
+                        namaKaryawanElement.style.display = 'block';
+                        $('#status_upd').val('karyawan');
+                        var selectKaryawan = document.getElementById('normalize5');
+                        var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
+                        var existingOption = selectizeInstance.options[response.id_karyawan];
+                        if (!existingOption) {
+                            selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
+                        }
+                        selectizeInstance.setValue(response.id_karyawan); 
                     }
-                    kelasElement.readOnly = readonlyValue;
-                    jurusanElement.readOnly = (document.getElementById('status_upd').value === 'karyawan');
                     $('#kelas_update').prop('value', response.kelas);
                     $('#jurusan_update').prop('value',response.jurusan);
                     $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
                     $('#tgl_pakai_update').prop('value',response.tgl_pakai);
 
-                }
+                
                 $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
                 const panelUpdate = document.getElementById('panel_update');
                 let panelUpdateIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelUpdate);
