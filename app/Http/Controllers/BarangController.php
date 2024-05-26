@@ -179,6 +179,7 @@ class BarangController extends Controller
     public function selectPrint(Request $request){
 
         $selectedData = $request->input('id_barang');
+      
         if (!$selectedData) {
             return redirect()->back()->with(['error' => 'Tidak ada data yang di pilih.']);
         }

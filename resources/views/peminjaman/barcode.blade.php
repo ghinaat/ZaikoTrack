@@ -50,135 +50,135 @@ Tambah Peminjaman
                                                         <input type="hidden" name="id_users" value={{ Auth::user()->id_users }}>
                                                         <input type="hidden" name="status" value="siswa">
                                                         @else
-                                                        <div class="form-group">
-                                                            <label for="exampleInputstatus">Status</label>
-                                                            <select
-                                                                class="form-select @error('status') is-invalid @enderror selectpicker"
-                                                                data-live-search="true" id="exampleInputstatus"
-                                                                name="status">
-                                                                <option value="siswa" @if( old('status')=='siswa' )selected
-                                                                    @endif>Siswa
-                                                                </option>
-                                                                <option value="guru" @if( old('status')=='guru' )selected
-                                                                    @endif>
-                                                                    Guru
-                                                                </option>
-                                                                <option value="karyawan" @if( old('status')=='karyawan'
-                                                                    )selected @endif>Karyawan
-                                                                </option>
-                                                            </select>
-                                                            @error('status')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
+                                                    <div class="form-group">
+                                                        <label for="exampleInputstatus">Status</label>
+                                                        <select
+                                                            class="form-select @error('status') is-invalid @enderror selectpicker"
+                                                            data-live-search="true" id="exampleInputstatus"
+                                                            name="status">
+                                                            <option value="siswa" @if( old('status')=='siswa' )selected
+                                                                @endif>Siswa
+                                                            </option>
+                                                            <option value="guru" @if( old('status')=='guru' )selected
+                                                                @endif>
+                                                                Guru
+                                                            </option>
+                                                            <option value="karyawan" @if( old('status')=='karyawan'
+                                                                )selected @endif>Karyawan
+                                                            </option>
+                                                        </select>
+                                                        @error('status')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
                                                         </div>
-                                                        <div id="siswaForm" style="display: block;">
-                                                        <div class="form-group" >
-                                                            <label for="id_users">Nama Siswa</label>
-                                                            <select id="normalize"  name="id_users"  >                                                            <option selected>Select an option</option>
-                                                                <option value="" selected disabled>Pilih Nama</option>
-                                                                @foreach($users as $user)
-                                                                @if($user->level == 'siswa')
-                                                                <option value="{{ $user->id_users }}">{{ $user->name }}
-                                                                </option>
-                                                                @endif
-                                                                @endforeach
-                                                              </select>
-                                                            @error('id_users')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
+                                                        @enderror
+                                                    </div>
+                                                    <div id="siswaForm" style="display: block;">
+                                                    <div class="form-group" >
+                                                        <label for="id_users">Nama Siswa</label>
+                                                        <select name="id_users" id="normalize"  >                                                            <option selected>Select an option</option>
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($users as $user)
+                                                            @if($user->level == 'siswa')
+                                                            <option value="{{ $user->id_users }}">{{ $user->name }}
+                                                            </option>
+                                                            @endif
+                                                            @endforeach
+                                                          </select>
+                                                        @error('id_users')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="kelas" class="form-label">Kelas</label>
+                                                                    <input type="text" name="kelas" id="kelas" class="form-control" readonly>
+                                                                </div>
                                                             </div>
-                                                            @enderror
+                                                            <div class="col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="nis" class="form-label">NIS</label>
+                                                                    <input type="text" name="nis" id="nis" class="form-control" readonly>
+                                                                </div>
                                                             </div>
-                                                            <div class="row">
+                                                        </div>
+                                                    </div>
+                                        
+                                                    <div  id="guruForm" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="id_guru">Nama Guru</label>
+                                                        <select name="id_guru" id="normalize1">
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($guru as $key => $g)
+                                                            <option value="{{ $g->id_guru }}">
+                                                                {{ $g->nama_guru }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('id_guru')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="row">
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="kelas" class="form-label">Kelas</label>
-                                                                        <input type="text" name="kelas" id="kelas" class="form-control" readonly>
+                                                                        <label for="nip" class="form-label">NIP</label>
+                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="nis" class="form-label">NIS</label>
-                                                                        <input type="text" name="nis" id="nis" class="form-control" readonly>
+                                                                        <label for="jurusan" class="form-label">Jurusan</label>
+                                                                        <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                    </div>
+                                      
+
+                                                    <div class="form-group" id="karyawanForm" style="display: none;">
+                                                        <label for="id_karyawan">Nama Karyawan</label>
+                                                        <select  name="id_karyawan" id="normalize2">
+                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                            @foreach($karyawan as $key => $k)
+                                                            <option value="{{ $k->id_karyawan }}">
+                                                                {{ $k->nama_karyawan }}
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('id_karyawan')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
                                                         </div>
-                                            
-                                                        <div  id="guruForm" style="display: none;">
-                                                            <div class="form-group">
-                                                                <label for="id_guru">Nama Guru</label>
-                                                                <select name="id_guru" id="normalize1">
-                                                                    <option value="" selected disabled>Pilih Nama</option>
-                                                                    @foreach($guru as $key => $g)
-                                                                    <option value="{{ $g->id_guru }}">
-                                                                        {{ $g->nama_guru }}
-                                                                    </option>
-                                                                    @endforeach
-                                                                </select>
-                                                                @error('id_guru')
-                                                                <div class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <div class="form-group">
-                                                                                <label for="nip" class="form-label">NIP</label>
-                                                                                <input type="text" name="nip" id="nip" class="form-control" readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <div class="form-group">
-                                                                                <label for="jurusan" class="form-label">Jurusan</label>
-                                                                                <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                    @endif
+                                                   
+
+                                                    <div class="form-group mt-2">
+                                                        <label for="keterangan_pemakaian">Keterangan
+                                                            Pemakaian</label>
+                                                        <input type="text" name="keterangan_pemakaian"
+                                                            id="keterangan_pemakaian" class="form-control" >
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="tgl_kembali" class="form-label">Tanggal
+                                                            Kembali</label>
+                                                        <input type="date" name="tgl_kembali" id="tgl_kembali"
+                                                            class="form-control" required>
+                                                        
                                                         </div>
-                                                  
-                                          
-    
-                                                        <div class="form-group" id="karyawanForm" style="display: none;">
-                                                            <label for="id_karyawan">Nama Karyawan</label>
-                                                            <select  name="id_karyawan" id="normalize2">
-                                                                <option value="" selected disabled>Pilih Nama</option>
-                                                                @foreach($karyawan as $key => $k)
-                                                                <option value="{{ $k->id_karyawan }}">
-                                                                     {{ $k->nama_karyawan }}
-                                                                </option>
-                                                                @endforeach
-                                                            </select>
-                                                            @error('id_karyawan')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                        @endif
                                                        
-                                              
-    
-                                                        <div class="form-group mt-2">
-                                                            <label for="keterangan_pemakaian">Keterangan
-                                                                Pemakaian</label>
-                                                            <input type="text" name="keterangan_pemakaian"
-                                                                id="keterangan_pemakaian" class="form-control" required>
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="tgl_kembali" class="form-label">Tanggal
-                                                                Kembali</label>
-                                                            <input type="date" name="tgl_kembali" id="tgl_kembali"
-                                                                class="form-control" required>
-                                                        </div>
+                                                    </div>   
+                                                   
                                                 <div class="button-row d-flex justify-content-end mt-4">
                                                     <button class="btn btn-danger mybtn remove">Batal</button>
-                                                    <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
+                                                    <button class="js-btn-simpan btn btn-primary ml-auto  mybtn"
                                                         title="Selanjutnya">Selanjutnya</button>
                                                 </div>
                                     </form>
@@ -237,13 +237,22 @@ Tambah Peminjaman
                                             <video id="previewKamera" style="width: 100%; height: auto;"></video>
                                         </div>
                                         <br>
-                                        <select id="pilihKamera" class="form-select">
-                                        </select>
+                                       
                                         <br>
                                         <label for="ket_barang">Kode Barang</label>
                                         <input type="text" id="hasilscan" name="kode_barang"  class="form-control" readonly>
                                     </div>
-                                   
+                                    {{-- <div class="form-group mt-2">
+                                        <label for="ket_barang">Nama Barang</label>
+                                        <input type="text" name="ket_barang" id="ket_barang" class="form-control" value="{{''}}">
+                                      
+                                        @error('ket_barang')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+
+                                    </div> --}}
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
                                         <input type="text" name="ket_barang" id="ket_barang" class="form-control">
@@ -287,13 +296,24 @@ Tambah Peminjaman
     @method('delete')
     @csrf
 </form>
-<script src="../dist/js/selectize.js"></script>
+
 <script src="../js/script.js"></script>
 <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script src="{{ asset('js/barcode-scanner.js') }}"></script>
+<script src="{{ asset('/dist/js/selectize.js') }}"></script>
 <script>
+$('#normalize').selectize({
+
+});
+$('#normalize1').selectize({
+
+});
+$('#normalize2').selectize({
+
+});
+
 $(document).ready(function() {
     $('#myTable1').DataTable({
         "responsive": true,
@@ -306,15 +326,6 @@ $(document).ready(function() {
     });
 });
 
-$('#normalize').selectize({
-
-});
-$('#normalize1').selectize({
-
-});
-$('#normalize2').selectize({
-
-});
 
 $(document).ready(function() {
     var idPeminjaman;
@@ -636,45 +647,6 @@ $(document).ready(function() {
 
 
 
-document.getElementById('exampleInputstatus').addEventListener('click', function() {
-    const selectedStatus = this.value;
-    const siswaElement = document.getElementById('siswaForm');
-    const guruElement = document.getElementById('guruForm');
-    const karyawanElement = document.getElementById('karyawanForm');
-    const kelasInput = siswaElement.querySelector('#kelas');
-    const nisInput = siswaElement.querySelector('#nis');
-    const nipInput = guruElement.querySelector('#nip');
-    const jurusanInput = guruElement.querySelector('#jurusan');
-    
-    kelasInput.value = '';
-    nisInput.value = '';
-    nipInput.value = '';
-    jurusanInput.value = '';
-
-  
-    // Hide all forms
-    siswaElement.style.display = 'block';
-    guruElement.style.display = 'none';
-    karyawanElement.style.display = 'none';
-    // NamaElement.style.display = 'block';
-   
-
-    // Show the selected form
-    if (selectedStatus === 'siswa') {
-        siswaElement.style.display = 'block';
-
-    } else if (selectedStatus === 'guru') {
-        guruElement.style.display = 'block';
-        siswaElement.style.display = 'none';
-      
-    } else if (selectedStatus === 'karyawan') {
-        karyawanElement.style.display = 'block';
-        siswaElement.style.display = 'none';
-      
-    }
-
-    
-});
 
 document.querySelectorAll('select[name=id_barang]').forEach(select => select.addEventListener('click',
     function() {
@@ -744,6 +716,123 @@ document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').for
                 })
                 .catch(error => console.error('Error:', error));
         }));
+
+
+        document.getElementById('exampleInputstatus').addEventListener('change', function() {
+    const selectedStatus = this.value;
+
+    const siswaElement = document.getElementById('siswaForm');
+    const guruElement = document.getElementById('guruForm');
+    const karyawanElement = document.getElementById('karyawanForm');
+
+    const kelasInput = siswaElement.querySelector('#kelas');
+    const nisInput = siswaElement.querySelector('#nis');
+    const nipInput = guruElement.querySelector('#nip');
+    const jurusanInput = guruElement.querySelector('#jurusan');
+
+    // Clear input values
+    kelasInput.value = '';
+    nisInput.value = '';
+    nipInput.value = '';
+    jurusanInput.value = '';
+
+    // Hide all forms initially
+    siswaElement.style.display = 'none';
+    guruElement.style.display = 'none';
+    karyawanElement.style.display = 'none';
+
+    // Show the selected form
+    if (selectedStatus === 'siswa') {
+        siswaElement.style.display = 'block';
+    } else if (selectedStatus === 'guru') {
+        guruElement.style.display = 'block';
+    } else if (selectedStatus === 'karyawan') {
+        karyawanElement.style.display = 'block';
+    }
+});
+
+$('#normalize').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIdUsers);
+    
+    // Temukan elemen input untuk nis dan kelas
+    const nisInput = document.querySelector('input[name=nis]');
+    const kelasInput = document.querySelector('input[name=kelas]');
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIdUsers
+    fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Debug: Periksa data yang diterima
+            console.log('Data received:', data);
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
+            nisInput.value = data.nis || '';
+            kelasInput.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
+            nisInput.value = '';
+            kelasInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
+        });
+});
+
+$('#normalize1').on('change', function() {
+    // Dapatkan nilai yang dipilih menggunakan Selectize.js
+    var selectedIGuru = $(this).selectize()[0].selectize.getValue();
+    
+    // Debug: Log ID user yang dipilih
+    console.log('Selected user ID:', selectedIGuru);
+    
+    // Temukan elemen input untuk nis dan kelas
+    const nipInput = document.querySelector('input[name=nip]');
+    const jurusanInput = document.querySelector('input[name=jurusan]');
+
+    // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIGuru
+    fetch(`/fetch-id-guru/${selectedIGuru}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch profile data');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Debug: Periksa data yang diterima
+            console.log('Data received:', data);
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            // Tampilkan data yang sesuai di elemen input
+            nipInput.value = data.nip || '';
+            jurusanInput.value = data.jurusan || '';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Kosongkan input dan mungkin tampilkan pesan error kepada user
+            nipInput.value = '';
+            jurusanInput.value = '';
+            // Opsional: tampilkan pesan error kepada user
+            alert('Error: ' + error.message);
+        });
+});
+
 </script>
 
 

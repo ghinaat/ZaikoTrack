@@ -333,48 +333,45 @@ class PeminjamanController extends Controller
   
 
     public function store(Request $request)
-    {
-        try {
-            $request->validate([
-                'id_users' => 'nullable',
-                'id_karyawan' => 'nullable',
-                'id_guru' => 'nullable',
-                'status' => 'nullable',
-                'keterangan_peminjaman' => 'nullable',
-                'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 422);
-        }
-    
-        $id_users = $request->filled('id_users') ? $request->id_users : 1;
-        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
-        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
-    
-        if ($id_users == 1 && $id_karyawan == 1 && $id_guru == 1) {
-            return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
-        }
-    
-        // dd($request);
-        $peminjaman = new Peminjaman([
-            'id_users' => $id_users,
-            'id_guru' => $id_guru,
-            'id_karyawan' => $id_karyawan,
-            'status' => $request->status,
-            'tgl_kembali' => $request->tgl_kembali,
-            'keterangan_peminjaman' => $request->keterangan_peminjaman,
+{
+    try {
+        $request->validate([
+            'id_users' => 'nullable',
+            'id_karyawan' => 'nullable',
+            'id_guru' => 'nullable',
+            'status' => 'nullable',
+            'keterangan_peminjaman' => 'nullable',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
-        $peminjaman->save();
+    } catch (ValidationException $e) {
+        return response()->json(['error' => $e->validator->errors()], 422);
+    }
 
-        
+    $id_users = $request->filled('id_users') ? $request->id_users : 1;
+    $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
+    $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
-        if (request()->ajax()) {
-        return response()->json(['id_peminjaman' => $peminjaman->id_peminjaman, 'message' => 'Peminjaman berhasil disimpan']);
-        }else{
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
+    if ($id_users == 1 && $id_karyawan == 1 && $id_guru == 1) {
+        return response()->json(['error' => 'Nama Lengkap Belum Diisi.'], 400);
+    }
+
+    $peminjaman = new Peminjaman([
+        'id_users' => $id_users,
+        'id_guru' => $id_guru,
+        'id_karyawan' => $id_karyawan,
+        'status' => $request->status,
+        'tgl_kembali' => $request->tgl_kembali,
+        'keterangan_peminjaman' => $request->keterangan_peminjaman,
     ]);
+    $peminjaman->save();
+
+    if ($request->ajax()) {
+        return response()->json(['id_peminjaman' => $peminjaman->id_peminjaman, 'message' => 'Peminjaman berhasil disimpan']);
+    } else {
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
-    }
+}
+
 
    
     public function update(Request $request, $id_peminjaman)

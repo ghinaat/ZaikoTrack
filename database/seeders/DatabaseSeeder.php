@@ -93,6 +93,24 @@ class DatabaseSeeder extends Seeder
             'level' => 'siswa',
         ]);
 
+        Profile::create([
+            'id_profile' => '2',
+            'nis' => '1234567890',
+            'kelas' => '10A',
+            'jurusan' => 'SIJA',
+            'id_users' => 5,
+        ]);
+
+    
+
+        Profile::create([
+            'id_profile' => '3',
+            'nis' => '1122334455',
+            'kelas' => '12C',
+            'jurusan' => 'SIJA',
+            'id_users' => 7,
+        ]);
+
         JenisBarang::create([
             'id_jenis_barang' => '1',
             'nama_jenis_barang' => 'Perlengkapan Kelas',

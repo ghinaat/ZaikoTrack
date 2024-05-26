@@ -34,7 +34,7 @@ class DetailPeminjamanController extends Controller
     
         // Pastikan Inventaris ditemukan
         if (!$inventaris) {
-            return response()->json(['error' => 'Data tidak tersimpan.'], 400);
+            return response()->json(['error' => 'Kode Barang tidak ditemukan.'], 400);
         }
     
         // Validasi status peminjaman inventaris

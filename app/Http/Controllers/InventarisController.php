@@ -7,6 +7,8 @@ use App\Models\Ruangan;
 use App\Models\DetailPeminjaman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 
 
@@ -176,57 +178,49 @@ class InventarisController extends Controller
     }
     
     public function ruangans(Request $request) {
-            $request->validate([
-              'id_ruangan' => 'required',
-              'id_inventaris' => 'required',
-            ]);
-          
-            // Debugging: Inspect the submitted data (uncomment if needed)
-            // dd($request->id_inventaris); 
-          
-            $id_inventaris_array = $request->id_inventaris; // Get the string
-          
-            $id_inventaris_array = [];
-            $current_id = "";
-          
-            // Check if id_inventaris is an array and convert it to a string if necessary
-            if (is_array($request->id_inventaris)) {
-              $id_inventaris_array =  $request->id_inventaris; // Join array elements with commas
-            } else {
-              $id_inventaris_array = explode(',', $id_inventaris_string);// Already a string
+        // Separate the 'id_inventaris' array and ensure each element is an array of integers
+        $idInventaris = $request->input('id_inventaris', []);
+        $flattenedIds = [];
+        foreach ($idInventaris as $ids) {
+            $ids = explode(',', $ids);
+            $flattenedIds = array_merge($flattenedIds, $ids);
+        }
+    
+        // Validate each flattened ID to ensure it's an integer
+        foreach ($flattenedIds as $id) {
+            if (!is_numeric($id)) {
+                // Log the problematic value
+                Log::error("Invalid id_inventaris value: $id");
+    
+                // Return an error response if any element is not an integer
+                return response()->json(['error' => 'Invalid data provided.'], 422);
             }
-          
-            $id_ruangan = $request->id_ruangan;
-            $success_count = 0; // Count successful updates
-          
-            foreach ($id_inventaris_array as $id) {
-              // Debugging: Inspect the current ID (uncomment if needed)
-            //   dd($id); 
-          
-              $id = intval($id);  // Convert to integer
-          
-              if ($id > 0) {
-                $inventaris = Inventaris::find($id);
-                if ($inventaris) {
-                  $inventaris->id_ruangan = $id_ruangan;
-                  $inventaris->save();
-                  $success_count++; // Increment success count on successful update
-                  // Optionally, display success message for this specific ID
-                } else {
-                  // Log or handle invalid ID (optional)
-                  // Optionally, display error message for this specific ID
-                }
-              } else {
-                // Handle invalid ID (e.g., non-positive integer)
-                // Log or display error message (optional)
-              }
-            }
-          
-            // Craft success message based on the total count
-            $success_message = "Barang Telah Dipindahkan ($success_count berhasil)";
-          
-            return redirect()->back()->with(['success_message' => $success_message]);
-          } 
+        }
+    
+    
+        // Validate the remaining request data
+        $request->validate([
+            'id_ruangan' => 'required|integer',
+        ]);
+    
+        // If all elements are integers and the other data is valid, proceed with your logic
+        $idRuangan = $request->id_ruangan;
+    
+        // Perform the update operation in a single query
+        $updatedRows = Inventaris::whereIn('id_inventaris', $flattenedIds)
+        ->update(['id_ruangan' => $idRuangan]);
+    
+        // Check if the update was successful
+        if ($updatedRows > 0) {
+            // Set a success message
+            $successMessage = 'Data telah berhasil diperbarui.';
+            return redirect()->back()->with(['success_message' => $successMessage]);
+        } else {
+            // Set an error message if no rows were updated
+            $errorMessage = 'Tidak ada data yang diperbarui.';
+            return redirect()->back()->with(['error' => $errorMessage]);
+        }
+    }
     public function barcode($id_ruangan)
     {
 
@@ -255,6 +249,13 @@ class InventarisController extends Controller
                 return redirect()->back()->with(['error' => 'Data barang sudah diinventarisasikan.']);
             }    
 
+            $existingInventaris = Inventaris::where('id_barang', $id_barang->id_barang)
+                                     ->first();
+
+          // If the combination already exists, return an error message
+            if ($existingInventaris) {
+                return redirect()->back()->with(['error' => 'Data barang sudah diinventarisasikan.']);
+            }
             
             
             $inventaris = new Inventaris();
