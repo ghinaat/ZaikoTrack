@@ -52,12 +52,12 @@ Inventaris / List Barang
                             <div class="mb-2">
                                 <button class="btn btn-primary mb-2" onclick="notificationBeforeAdd(event, this, {{ $ruangan->id_ruangan }})" data-id-ruangan="{{ $ruangan->id_ruangan }}">Tambah</button>
                             </div>
-                            {{-- <div class="mb-2">
+                            <div class="mb-2">
                                 
                                 <a href="#" class="btn btn-danger moving-button" style="display: none;" data-toggle="modal" data-target="#moveInventarisModal">
-                                    <i class="fa-solid fa-right-from-bracket"></i> Move Inventaris
+                                    <i class="fa-solid fa-right-from-bracket"></i> Pindahkan
                                 </a>
-                            </div> --}}
+                            </div>
                             @endcan
                             @can('isKabeng')
                             <div class="mb-2">
@@ -65,7 +65,7 @@ Inventaris / List Barang
                             </div>
                             <div class="mb-2">
                                 <a href="#" class="btn btn-danger moving-button" style="display: none;" data-toggle="modal" data-target="#moveInventarisModal">
-                                    <i class="fa-solid fa-right-from-bracket"></i> Move Inventaris
+                                    <i class="fa-solid fa-right-from-bracket"></i> Pindahkan
                                 </a>
                             </div>
                             @endcan
@@ -446,8 +446,8 @@ Inventaris / List Barang
                     <!-- Hidden input field to store selected inventaris IDs -->
                     <input type="hidden" name="id_inventaris[]" id="selectedInventarisIds" value="">
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">Pindahkan</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
