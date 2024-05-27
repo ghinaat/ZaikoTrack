@@ -139,7 +139,7 @@ Detail Pembelian
                           </div>
                           <div class="form-group">
                               <label for="subtotal_pembelian" id="subtotal" style="display: none;">Subtotal Pembelian</label>
-                              <label for="harga_barang" id="harga" style="display: block;">Harga Barang</label>
+                              <label for="harga_barang" id="harga" style="display: block;">Subtotal Pembelian</label>
                               <input type="text" name="subtotal_pembelian" id="subtotal_pembelian" class="form-control" >
                           </div>
                           <div class="modal-footer">
@@ -344,7 +344,7 @@ Detail Pembelian
                       <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control" value="{{old('jumlah_barang',$dp->jumlah_barang)}}" required>
                   </div>
                   <div class="form-group">
-                      <label for="harga_barang" id="harga_edit" style="display: ;">Harga Barang</label>
+                      <label for="harga_barang" id="harga_edit" style="display: ;">Subtotal Pembelian</label>
                       <input type="text" name="subtotal_pembelian" id="subtotal_pembelian_edit" class="form-control" value="{{old('subtotal_pembelian',$dp->subtotal_pembelian)}}" data-format="rupiah" required>
                   </div>
                   <div class="modal-footer">

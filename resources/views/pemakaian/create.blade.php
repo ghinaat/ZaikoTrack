@@ -685,65 +685,41 @@ $(document).ready(function() {
             })
             .done(function(response) {
                 const namaSiswaElement = document.querySelector('#siswaFormUpdate');
-                const namaGuruElement = document.querySelector('#guruFormUpdate' );
-                const namaKaryawanElement = document.querySelector('#karyawanFormUpdate');
-                const kelasElement = document.querySelector('#kelas_upd');
-                const nisElement = document.querySelector('#nis_upd');
-                const nipElement = document.querySelector('#nip_upd');
-                const jurusanElement = document.querySelector('#jurusan_upd');
+                if(namaSiswaElement){
+                    const namaSiswaElement = document.querySelector('#siswaFormUpdate');
+                    const namaGuruElement = document.querySelector('#guruFormUpdate' );
+                    const namaKaryawanElement = document.querySelector('#karyawanFormUpdate');
+                    const kelasElement = document.querySelector('#kelas_upd');
+                    const nisElement = document.querySelector('#nis_upd');
+                    const nipElement = document.querySelector('#nip_upd');
+                    const jurusanElement = document.querySelector('#jurusan_upd');
 
-                namaSiswaElement.style.display = 'none';
-                namaGuruElement.style.display = 'none';
-                namaKaryawanElement.style.display = 'none';
+                    namaSiswaElement.style.display = 'none';
+                    namaGuruElement.style.display = 'none';
+                    namaKaryawanElement.style.display = 'none';
 
-                document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
+                    document.querySelectorAll('select[id="status_upd"]').forEach(select => select.addEventListener('click', function() {
 
-                    if (this.value === 'siswa') {
-                        namaSiswaElement.style.display = 'block';
-                        namaGuruElement.style.display = 'none';
-                        namaKaryawanElement.style.display = 'none';
-                    } else if (this.value === 'guru') {
-                        namaGuruElement.style.display = 'block';
-                        namaSiswaElement.style.display = 'none';
-                        namaKaryawanElement.style.display = 'none';
-                    } else if (this.value === 'karyawan') {
-                        namaKaryawanElement.style.display = 'block';
-                        namaSiswaElement.style.display = 'none';
-                        namaGuruElement.style.display = 'none';
-                    }
-                    
-                }));
+                        if (this.value === 'siswa') {
+                            namaSiswaElement.style.display = 'block';
+                            namaGuruElement.style.display = 'none';
+                            namaKaryawanElement.style.display = 'none';
+                        } else if (this.value === 'guru') {
+                            namaGuruElement.style.display = 'block';
+                            namaSiswaElement.style.display = 'none';
+                            namaKaryawanElement.style.display = 'none';
+                        } else if (this.value === 'karyawan') {
+                            namaKaryawanElement.style.display = 'block';
+                            namaSiswaElement.style.display = 'none';
+                            namaGuruElement.style.display = 'none';
+                        }
+                        
+                    }));
 
-                $('#normalize3').on('change', function() {
-                var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
-                console.log('Selected user ID:', selectedIdUsers);
-                    fetch(`/fetch-id-siswa/${selectedIdUsers}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch profile data');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Data received:', data);
-                            if (data.error) {
-                                throw new Error(data.error);
-                            }
-                            nisElement.value = data.nis || '';
-                            kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
-                            })
-                        .catch(error => {
-                            console.error('Error fetching data:', error);
-                            nisInput.value = '';
-                            kelasInput.value = '';
-                        alert('Error: ' + error.message);
-                    });
-                });
-
-                $('#normalize4').on('change', function() {
-                var selectedGuru = $(this).selectize()[0].selectize.getValue();
-                console.log('Selected user ID:', selectedGuru);
-                fetch(`/fetch-id-guru/${selectedGuru}`)
+                    $('#normalize3').on('change', function() {
+                    var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+                    console.log('Selected user ID:', selectedIdUsers);
+                        fetch(`/fetch-id-siswa/${selectedIdUsers}`)
                             .then(response => {
                                 if (!response.ok) {
                                     throw new Error('Failed to fetch profile data');
@@ -752,110 +728,136 @@ $(document).ready(function() {
                             })
                             .then(data => {
                                 console.log('Data received:', data);
-                                if (data.error) {
-                                    throw new Error(data.error);
-                                }
-                                nipElement.value = data.nip || '';
-                                jurusanElement.value = data.jurusan || '';
-                            })
-                            .catch(error => {
-                                console.error('Error fetching data:', error);
-                                nipElement.value = '';
-                                jurusanElement.value = '';
-                                alert('Error: ' + error.message);
-                            });
-                });
-
-                    
-                    if (response.status === 'siswa') {
-                        console.log(response.id_users)
-                        const selectedUser = response.id_users;
-                        fetch(`/fetch-id-siswa/${selectedUser}`)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to fetch profile data');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
                                 if (data.error) {
                                     throw new Error(data.error);
                                 }
                                 nisElement.value = data.nis || '';
                                 kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
-                            })
+                                })
                             .catch(error => {
                                 console.error('Error fetching data:', error);
                                 nisInput.value = '';
                                 kelasInput.value = '';
-                                alert('Error: ' + error.message);
-                            });
+                            alert('Error: ' + error.message);
+                        });
+                    });
 
-                        namaSiswaElement.style.display = 'block';
-                        kelasElement.style.display = 'block';
-                        nisElement.style.display = 'block';
-                        $('#status_upd').val('siswa');
+                    $('#normalize4').on('change', function() {
+                    var selectedGuru = $(this).selectize()[0].selectize.getValue();
+                    console.log('Selected user ID:', selectedGuru);
+                    fetch(`/fetch-id-guru/${selectedGuru}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to fetch profile data');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log('Data received:', data);
+                                    if (data.error) {
+                                        throw new Error(data.error);
+                                    }
+                                    nipElement.value = data.nip || '';
+                                    jurusanElement.value = data.jurusan || '';
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                    nipElement.value = '';
+                                    jurusanElement.value = '';
+                                    alert('Error: ' + error.message);
+                                });
+                    });
 
-                        var selectSiswa = document.getElementById('normalize3');
-                        var selectizeInstance = $(selectSiswa).selectize()[0].selectize;
-                        var existingOption = selectizeInstance.options[response.id_users];
-                        if (!existingOption) {
-                            selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
+                        
+                        if (response.status === 'siswa') {
+                            console.log(response.id_users)
+                            const selectedUser = response.id_users;
+                            fetch(`/fetch-id-siswa/${selectedUser}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to fetch profile data');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.error) {
+                                        throw new Error(data.error);
+                                    }
+                                    nisElement.value = data.nis || '';
+                                    kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                    nisInput.value = '';
+                                    kelasInput.value = '';
+                                    alert('Error: ' + error.message);
+                                });
+
+                            namaSiswaElement.style.display = 'block';
+                            kelasElement.style.display = 'block';
+                            nisElement.style.display = 'block';
+                            $('#status_upd').val('siswa');
+
+                            var selectSiswa = document.getElementById('normalize3');
+                            var selectizeInstance = $(selectSiswa).selectize()[0].selectize;
+                            var existingOption = selectizeInstance.options[response.id_users];
+                            if (!existingOption) {
+                                selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
+                            }
+                            selectizeInstance.setValue(response.id_users);
+
+                        } else if(response.status === 'guru'){
+                            const selectedGuru = response.id_guru;
+                            fetch(`/fetch-id-guru/${selectedGuru}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to fetch profile data');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log('Data received:', data);
+                                    if (data.error) {
+                                        throw new Error(data.error);
+                                    }
+                                    nipElement.value = data.nip || '';
+                                    jurusanElement.value = data.jurusan || '';
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                    nipElement.value = '';
+                                    jurusanElement.value = '';
+                                    alert('Error: ' + error.message);
+                                });
+                            namaGuruElement.style.display = 'block';
+                            nipElement.style.display = 'block';
+                            jurusanElement.style.display = 'block';
+                            $('#status_upd').val('guru');
+
+                            var selectGuru = document.getElementById('normalize4');
+                            var selectizeInstance = $(selectGuru).selectize()[0].selectize;
+                            var existingOption = selectizeInstance.options[response.id_guru];
+                            if (!existingOption) {
+                                selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
+                            }
+                            selectizeInstance.setValue(response.id_guru);      
+
+                        } else if (response.status === 'karyawan') {
+                            namaKaryawanElement.style.display = 'block';
+                            $('#status_upd').val('karyawan');
+                            var selectKaryawan = document.getElementById('normalize5');
+                            var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
+                            var existingOption = selectizeInstance.options[response.id_karyawan];
+                            if (!existingOption) {
+                                selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
+                            }
+                            selectizeInstance.setValue(response.id_karyawan); 
                         }
-                        selectizeInstance.setValue(response.id_users);
-
-                    } else if(response.status === 'guru'){
-                        const selectedGuru = response.id_guru;
-                        fetch(`/fetch-id-guru/${selectedGuru}`)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to fetch profile data');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log('Data received:', data);
-                                if (data.error) {
-                                    throw new Error(data.error);
-                                }
-                                nipElement.value = data.nip || '';
-                                jurusanElement.value = data.jurusan || '';
-                            })
-                            .catch(error => {
-                                console.error('Error fetching data:', error);
-                                nipElement.value = '';
-                                jurusanElement.value = '';
-                                alert('Error: ' + error.message);
-                            });
-                        namaGuruElement.style.display = 'block';
-                        nipElement.style.display = 'block';
-                        jurusanElement.style.display = 'block';
-                        $('#status_upd').val('guru');
-
-                        var selectGuru = document.getElementById('normalize4');
-                        var selectizeInstance = $(selectGuru).selectize()[0].selectize;
-                        var existingOption = selectizeInstance.options[response.id_guru];
-                        if (!existingOption) {
-                            selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
-                        }
-                        selectizeInstance.setValue(response.id_guru);      
-
-                    } else if (response.status === 'karyawan') {
-                        namaKaryawanElement.style.display = 'block';
-                        $('#status_upd').val('karyawan');
-                        var selectKaryawan = document.getElementById('normalize5');
-                        var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
-                        var existingOption = selectizeInstance.options[response.id_karyawan];
-                        if (!existingOption) {
-                            selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
-                        }
-                        selectizeInstance.setValue(response.id_karyawan); 
-                    }
-                    $('#kelas_update').prop('value', response.kelas);
-                    $('#jurusan_update').prop('value',response.jurusan);
-                    $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
-                    $('#tgl_pakai_update').prop('value',response.tgl_pakai);
-
+                        $('#kelas_update').prop('value', response.kelas);
+                        $('#jurusan_update').prop('value',response.jurusan);
+                        $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
+                        $('#tgl_pakai_update').prop('value',response.tgl_pakai);
+                }
                 
                 $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
                 const panelUpdate = document.getElementById('panel_update');
