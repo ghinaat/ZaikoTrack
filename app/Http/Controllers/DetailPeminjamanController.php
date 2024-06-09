@@ -217,8 +217,6 @@ class DetailPeminjamanController extends Controller
 
         $request->validate([
             'id_barang' => 'required',
-            'status' => 'required',
-            'ket_tidak_lengkap_akhir' => 'nullable',
         ]);
 
         $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
@@ -235,15 +233,14 @@ class DetailPeminjamanController extends Controller
         }
         
         $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
-        $detailPeminjaman-> status = $request->status;
+        $detailPeminjaman-> status = "dipinjam";
      
         $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
 
         $detailPeminjaman ->save();
        
 
-        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
-    ]);
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
 
     public function Return($id_detail_peminjaman)

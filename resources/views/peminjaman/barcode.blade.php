@@ -203,7 +203,7 @@ Tambah Peminjaman
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
                                                                 <th>Ruangan</th>
-                                                                <th>Action</th>
+                                                                <th>Opsi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

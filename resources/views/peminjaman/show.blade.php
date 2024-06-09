@@ -276,21 +276,6 @@ Peminjaman / List Barang
                                                         </div>
                                                         @enderror
                     
-                                                    
-                                                        <div class="form-group mt-2">
-                                                            <label for="ket_tidak_lengkap_akhir">Keterangan
-                                                                Barang</label>
-                                                            <input type="text" name="ket_tidak_lengkap_akhir"
-                                                                id="ket_tidak_lengkap_akhir" class="form-control"
-                                                                value="{{old('ket_tidak_lengkap_akhir')}}">
-                                                            <small class="form-text text-muted">*wajib diisi
-                                                                ketika
-                                                                barang tidak lengkap/rusak. </small>
-                                                            @error('ket_tidak_lengkap_akhir')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
 
                                                         </div>
                                                         <div class="modal-footer">
