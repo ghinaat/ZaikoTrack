@@ -78,15 +78,17 @@ Laporan Peminjaman
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 mt-md-0 mt-3">
-                                <div class="d-flex align-items-center">
-                                    <button type="submit" class="btn btn-primary mt-md-4" style="width: 120px;">Tampilkan</button>&nbsp;
-                                    <a href="{{ route('laporan-peminjaman') }}" class="btn btn-info mt-md-4 ml-md-auto" style="width: 120px;">Refresh</a>&nbsp;
-                                    <a href="{{ route('downloadpdf', [
-                                        'tglawal' => request()->input('tglawal'),
-                                        'tglakhir' => request()->input('tglakhir'),
-                                        'id_barang' => request()->input('id_barang'),
-                                        'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger mt-md-4 ml-2 ml-md-auto" style="min-width: 150px;">Unduh PDF
-                                    </a>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-4 mb-3 mb-md-0">
+                                            <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
+                                        </div>
+                                        <div class="col-md-4 mb-3 mb-md-0">
+                                            <a href="{{ route('laporan.pemakaian') }}" class="btn btn-info w-100">Refresh</a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="{{ route('downloadPemakaian', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date'), 'id_barang' => request()->input('id_barang'), 'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger w-100">Unduh PDF</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
