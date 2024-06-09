@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('id_barang');
             $table->unsignedInteger('id_ruangan');
             $table->integer('jumlah_barang')->nullable();
-            $table->enum('kondisi_barang', ['lengkap', 'tidak_lengkap', 'rusak']);
+            $table->enum('kondisi_barang', ['lengkap', 'tidak_lengkap', 'rusak'])->nullable();
             $table->string('ket_barang')->nullable();
             $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan')->onDelete('cascade');
             $table->foreign('id_barang')->references('id_barang')->on('barang')->onDelete('cascade');

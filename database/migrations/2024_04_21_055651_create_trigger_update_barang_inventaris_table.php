@@ -12,16 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         DB::unprepared('
-        CREATE TRIGGER update_stok_barang_inventaris AFTER UPDATE  ON inventaris FOR EACH ROW
+        CREATE TRIGGER update_stok_barang_inventaris AFTER UPDATE ON inventaris
+        FOR EACH ROW
         BEGIN
-            DECLARE jenis_barang_id INT;
-            SELECT id_jenis_barang INTO jenis_barang_id FROM barang WHERE id_barang = NEW.id_barang;
-            
-            IF jenis_barang_id = 3 THEN
-                UPDATE barang SET stok_barang =  stok_barang - old.jumlah_barang + new.jumlah_barang WHERE id_barang = NEW.id_barang;
-            END IF;
+        UPDATE barang 
+        SET stok_barang = stok_barang + IFNULL(OLD.jumlah_barang, 0) - IFNULL(NEW.jumlah_barang, 0)         
+        WHERE id_barang = NEW.id_barang;
         END
-        ');
+    ');
     }
 
     /**
