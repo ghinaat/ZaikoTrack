@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+
 
 class PemakaianController extends Controller
 {
@@ -242,17 +244,19 @@ class PemakaianController extends Controller
         ]);
         $id_inventaris = Inventaris::where('id_barang', $request->id_barang)->where('id_ruangan', $request->id_ruangan)->with(['barang'])->first();
         
-      
-        if (!$id_inventaris || $id_inventaris->jumlah_barang < $request->jumlah_barang || $id_inventaris->jumlah_barang - $request->jumlah_barang < 0) {
-            return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
-        }
-
+        if ($id_inventaris->jumlah_barang < $request->jumlah_barang || $id_inventaris->jumlah_barang - $request->jumlah_barang < 0) {
+            if($request->ajax()){
+                return response()->json(['error' => 'Stok Barang tidak mencukupi.']);
+            }else{
+                return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
+            }
+        }else{
         $detailPemakaian = new DetailPemakaian();
         $detailPemakaian->id_pemakaian = $request->id_pemakaian;
         $detailPemakaian->id_inventaris = $id_inventaris->id_inventaris;
         $detailPemakaian->jumlah_barang = $request->jumlah_barang;
         $detailPemakaian->save();
-
+        }
        
         
         if($request->ajax()){
@@ -273,26 +277,42 @@ class PemakaianController extends Controller
 
     public function store(Request $request){
         // dd($request);
-        $request->validate([
+        $rules = [
             'id_users' => 'nullable',
             'id_guru' => 'nullable',
             'id_karyawan' => 'nullable',
             'status' => 'nullable',
-            'keterangan_pemakaian' => 'nullable'
+            'keterangan_pemakaian' => 'nullable',
+        ];
+        if ($request->status == 'siswa') {
+            $rules['kelas'] = 'required';
+            $rules['nis'] = 'required';
+        }
+        if ($request->status == 'guru') {
+            $rules['nip'] = 'required';
+        }
 
-        ]);
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
 
-            $pemakaian = new Pemakaian();
-            $pemakaian->status = $request->status;
-            $pemakaian->tgl_pakai = now();
-            $pemakaian->id_users = $id_users;
-            $pemakaian->id_guru = $id_guru;
-            $pemakaian->id_karyawan = $id_karyawan;
-            $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
-            $pemakaian->save();
+        $pemakaian = new Pemakaian();
+        $pemakaian->status = $request->status;
+        $pemakaian->tgl_pakai = now();
+        $pemakaian->id_users = $id_users;
+        $pemakaian->id_guru = $id_guru;
+        $pemakaian->id_karyawan = $id_karyawan;
+        $pemakaian->keterangan_pemakaian = $request->keterangan_pemakaian;
+        $pemakaian->save();
         
             return response()->json([
                 'id_pemakaian' => $pemakaian->id_pemakaian,

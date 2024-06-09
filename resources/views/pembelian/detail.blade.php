@@ -319,11 +319,19 @@ Detail Pembelian
                       </select>
                   </div>
                   <div class="form-group" style="display: block;" id="alatPerlengkapan_update_{{$dp->id_detail_pembelian}}">
-                      <label for="id_barang">Nama Barang</label>
-                      @php
-                        $firstBarang = $dp->barang->first();
-                      @endphp
-                      <input type="text" class="form-control" value="{{$firstBarang->nama_barang}}"  name="id_barang_perlengkapan" id="id_barang_alat">
+                    <label for="id_barang">Nama Barang</label>
+                      @if ($dp->id_barang)
+                        @foreach($barangs as $barang)
+                          @if($barang->id_barang == $dp->id_barang)
+                            <input type="text" class="form-control" value="{{$barang->nama_barang}}"  name="id_barang_perlengkapan" id="id_barang_alat">
+                          @endif
+                        @endforeach
+                      @else
+                        @php
+                          $firstBarang = $dp->barang->first();
+                        @endphp
+                        <input type="text" class="form-control" value="{{$firstBarang->nama_barang}}"  name="id_barang_perlengkapan" id="id_barang_alat">
+                      @endif
                   </div>
                   <div class="form-group" style="display: none;" id="bahanPraktik_update_{{$dp->id_detail_pembelian}}">
                       <label for="id_barang">Nama Barang</label>

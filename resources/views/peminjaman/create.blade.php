@@ -109,33 +109,30 @@ Tambah Peminjaman
                                                     </div>
                                         
                                                     <div  id="guruForm" style="display: none;">
-                                                    <div class="form-group">
-                                                        <label for="id_guru">Nama Guru</label>
-                                                        <select name="id_guru" id="normalize1">
-                                                            <option value="" selected disabled>Pilih Nama</option>
-                                                            @foreach($guru as $key => $g)
-                                                            <option value="{{ $g->id_guru }}">
-                                                                {{ $g->nama_guru }}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('id_guru')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="row">
+                                                    
+                                                        <div class="row">
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="nip" class="form-label">NIP</label>
-                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
+                                                                        <label for="id_guru">Nama Guru</label>
+                                                                        <select name="id_guru" id="normalize1">
+                                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                                            @foreach($guru as $key => $g)
+                                                                            <option value="{{ $g->id_guru }}">
+                                                                                {{ $g->nama_guru }}
+                                                                            </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        @error('id_guru')
+                                                                        <div class="invalid-feedback">
+                                                                            {{ $message }}
+                                                                        </div>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="jurusan" class="form-label">Jurusan</label>
-                                                                        <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
+                                                                        <label for="nip" class="form-label">NIP</label>
+                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -162,10 +159,10 @@ Tambah Peminjaman
                                                    
 
                                                     <div class="form-group mt-2">
-                                                        <label for="keterangan_pemakaian">Keterangan
-                                                            Pemakaian</label>
-                                                        <input type="text" name="keterangan_pemakaian"
-                                                            id="keterangan_pemakaian" class="form-control" required>
+                                                        <label for="keterangan_peminjaman">Keterangan
+                                                            Peminjaman</label>
+                                                        <input type="text" name="keterangan_peminjaman"
+                                                            id="keterangan_peminjaman" class="form-control" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -363,8 +360,11 @@ $('#normalize').on('change', function() {
     fetch(`/fetch-id-siswa/${selectedIdUsers}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to fetch profile data');
-            }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Data profile belum disi.',
+                });            }
             return response.json();
         })
         .then(data => {
@@ -384,8 +384,6 @@ $('#normalize').on('change', function() {
             // Kosongkan input dan mungkin tampilkan pesan error kepada user
             nisInput.value = '';
             kelasInput.value = '';
-            // Opsional: tampilkan pesan error kepada user
-            alert('Error: ' + error.message);
         });
 });
 
@@ -398,14 +396,16 @@ $('#normalize1').on('change', function() {
     
     // Temukan elemen input untuk nis dan kelas
     const nipInput = document.querySelector('input[name=nip]');
-    const jurusanInput = document.querySelector('input[name=jurusan]');
 
     // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIGuru
     fetch(`/fetch-id-guru/${selectedIGuru}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to fetch profile data');
-            }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Data profile belum disi.',
+                });            }
             return response.json();
         })
         .then(data => {
@@ -418,15 +418,11 @@ $('#normalize1').on('change', function() {
 
             // Tampilkan data yang sesuai di elemen input
             nipInput.value = data.nip || '';
-            jurusanInput.value = data.jurusan || '';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
             // Kosongkan input dan mungkin tampilkan pesan error kepada user
             nipInput.value = '';
-            jurusanInput.value = '';
-            // Opsional: tampilkan pesan error kepada user
-            alert('Error: ' + error.message);
         });
 });
 
@@ -552,7 +548,7 @@ $(document).ready(function() {
                 let errorMessage;
                 try {
                     const responseJson = JSON.parse(jqXHR.responseText);
-                    errorMessage = responseJson.error || 'Data Tidak Sesuai.';
+                    errorMessage = responseJson.error || 'Data Diri Belum Lengkap.';
                 } catch (error) {
                     errorMessage = 'Data Belum Terisi.';
                 }
@@ -817,12 +813,10 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
     const kelasInput = siswaElement.querySelector('#kelas');
     const nisInput = siswaElement.querySelector('#nis');
     const nipInput = guruElement.querySelector('#nip');
-    const jurusanInput = guruElement.querySelector('#jurusan');
     
     kelasInput.value = '';
     nisInput.value = '';
     nipInput.value = '';
-    jurusanInput.value = '';
 
   
     // Hide all forms

@@ -303,17 +303,6 @@ Home
             </div>
         </div>
     </div>
-
-    <footer class="footer pt-3">
-        <div class="container-fluid pb-0">
-            <div class=" align-items-start">
-                    <div class="copyright text-start text-sm text-muted ">
-                        ©2024 SIJA STUDENT
-                    </div>
-            </div>
-        </div>
-    </footer>
-
 </div>
 @endcan
 

@@ -28,20 +28,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $inventaris = Inventaris::sum('jumlah_barang');
+        $users = User::count();
         $peminjaman = DetailPeminjaman::where('status', 'dipinjam')->count();
         $jumlahBarangRusak = Inventaris::where('kondisi_barang', 'rusak')->count();
-        $users = User::count();
+        $perlengkapan = Barang::where('id_jenis_barang', '1')->count();
+        $alatPraktik = Barang::where('id_jenis_barang', '2')->count();
+        $bahanPraktik = Barang::where('id_jenis_barang', '3')->sum('stok_barang');
+        $inventaris = Inventaris::selectRaw('SUM(COALESCE(jumlah_barang, 1)) as total_jumlah_barang')
+            ->value('total_jumlah_barang');
+
         $jadwalKembali = DetailPeminjaman::with(['peminjaman'])
             ->where('detail_peminjaman.status', 'dipinjam') // Tentukan tabel detail_peminjaman
             ->join('peminjaman', 'detail_peminjaman.id_peminjaman', '=', 'peminjaman.id_peminjaman')
             ->orderBy('peminjaman.tgl_kembali')
             ->get();   
-        $perlengkapan = Barang::where('id_jenis_barang', '1')->count();
-        $alatPraktik = Barang::where('id_jenis_barang', '2')->count();
-        $bahanPraktik = Barang::where('id_jenis_barang', '3')->sum('stok_barang');
 
-        // dd($jadwalKembali);
         $user = Auth::user();
         if ($user->level == 'siswa') {
             $jadwals = $user->peminjaman()
@@ -52,9 +53,6 @@ class HomeController extends Controller
         } else {
             $jadwals = $jadwalKembali->groupBy('id_peminjaman');
         }
-        // dd($detail);
-
-        // dd($jadwals);
         return view('home',[
             'inventaris' => $inventaris,
             'peminjaman' => $peminjaman,

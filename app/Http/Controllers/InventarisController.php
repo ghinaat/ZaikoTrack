@@ -170,9 +170,31 @@ class InventarisController extends Controller
         ]);
 
         $inventaris = Inventaris::find($id_inventaris);
-       
-        $inventaris->id_ruangan = $request->id_ruangan;
-        $inventaris->save();
+        if($inventaris->barang->id_jenis_barang != 3){
+            $inventaris->id_ruangan = $request->id_ruangan;
+            $inventaris->save();
+        }else{
+            $inventarisBahan = Inventaris::where('id_barang', $inventaris->id_barang)
+                ->where('id_ruangan', $request->id_ruangan)->first();
+            if($inventarisBahan){
+                $jumlahBarang = $inventaris->jumlah_barang - $request->jumlah_barang;
+                $inventaris->jumlah_barang = $jumlahBarang;
+                $inventaris->save();
+                
+                $inventarisBahan->id_ruangan = $request->id_ruangan;
+                $inventarisBahan->jumlah_barang = $inventarisBahan->jumlah_barang + $request->jumlah_barang;
+                $inventarisBahan->save();
+            }else{
+                $inventarisNew = new Inventaris();
+                $inventarisNew->id_barang = $inventaris->id_barang;
+                $inventarisNew->id_ruangan = $request->id_ruangan;
+                $inventarisNew->jumlah_barang = $request->jumlah_barang;
+                $inventarisNew->kondisi_barang = 'lengkap';
+                $inventarisNew->ket_barang = null;
+                $inventarisNew->save();
+            }
+        }
+
 
         return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
     }
@@ -321,10 +343,13 @@ class InventarisController extends Controller
             $barangEdit = $barangEdit->merge($barangEditForItem);
         }
 
-        $inventarisRuangan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+        $inventarisRuanganAlat = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
             $query->where('id_ruangan', $id_ruangan)
-                ->where('id_jenis_barang', '!=', 3); 
-        })->get();
+                ->where('id_jenis_barang', '!=', 3); })->get();
+
+        $inventarisRuanganBahan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+            $query->where('id_ruangan', $id_ruangan)
+                ->where('id_jenis_barang', '=', 3); })->get();
         
         $ruangans = Ruangan::all();
 
@@ -346,7 +371,8 @@ class InventarisController extends Controller
             'barangsInRuangan' => $barangsInRuangan,
             'barangEdit' => $barangEdit,
             'inventarisAlat' => $inventarisAlat,
-            'inventarisRuangan' => $inventarisRuangan,
+            'inventarisRuanganAlat' => $inventarisRuanganAlat,
+            'inventarisRuanganBahan' => $inventarisRuanganBahan,
             'inventarisBahan' => $inventarisBahan,
             'BarangAlat' => $BarangAlat,
             'barangEdit' => $barangEdit,

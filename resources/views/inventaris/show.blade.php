@@ -126,10 +126,6 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuangan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
                                             </a>
-                                            {{-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
-                                                <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a> --}}
-                                        </td>
                                         @endcan
                                         @can('isKabeng')
                                         <td>
@@ -139,9 +135,6 @@ Inventaris / List Barang
                                             <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuangan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa-solid fa-right-from-bracket"></i>
                                             </a>
-                                            {{-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}" onclick="notificationBeforeDelete(event, this, {{$key+1}})" class="btn btn-danger btn-xs mx-1">
-                                                <i class="fa-solid fa-right-from-bracket"></i>
-                                            </a> --}}
                                         </td>
                                         @endcan
                                     </tr>
@@ -221,11 +214,9 @@ Inventaris / List Barang
                                                 data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <!-- <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
-                                                onclick="notificationBeforeDelete(event, this, {{$key+1}})"
-                                                class="btn btn-danger btn-xs mx-1">
-                                                <i class="fa fa-trash"></i>
-                                            </a> -->
+                                            <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuanganBahan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
+                                            </a>
                                         </td>
                                         @endcan
                                         @can('isKabeng')
@@ -235,11 +226,8 @@ Inventaris / List Barang
                                                 data-id="{{$barang->id_inventaris}}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            
-                                            <a href="{{ route('inventaris.destroy', $barang->id_inventaris) }}"
-                                                onclick="notificationBeforeDelete(event, this, {{$key+1}})"
-                                                class="btn btn-danger btn-xs mx-1">
-                                                <i class="fa fa-trash"></i>
+                                            <a href="#" class="btn btn-danger btn-xs edit-button" data-toggle="modal" data-target="#editRuanganBahan{{$barang->id_inventaris}}" data-id="{{$barang->id_inventaris}}">
+                                                <i class="fa-solid fa-right-from-bracket"></i>
                                             </a>
                                         </td>
                                         @endcan
@@ -377,7 +365,7 @@ Inventaris / List Barang
 @endforeach
 <!-- end -->
 
-@foreach($inventarisRuangan as $key => $ruangan)
+@foreach($inventarisRuanganAlat as $key => $ruangan)
 <div class="modal fade" id="editRuangan{{$ruangan->id_inventaris}}" tabindex="-1" role="dialog"
     aria-labelledby="editRuanganLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -421,6 +409,58 @@ Inventaris / List Barang
     </div>
 </div>
 @endforeach
+@foreach($inventarisRuanganBahan as $key => $ruangan)
+<div class="modal fade" id="editRuanganBahan{{$ruangan->id_inventaris}}" tabindex="-1" role="dialog"
+    aria-labelledby="editRuanganLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRuanganLabel">Edit Ruangan
+                </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('inventaris.ruangan', $ruangan->id_inventaris)}}" method="post">
+                    @csrf
+                    @method('PUT')
+                 
+                    <div class="form-group">
+                        <label for="id_ruangan">Ruangan</label>
+                        <select class="form-select" name="id_ruangan" id="id_ruangan" required>
+                            @foreach($ruangans as $r)
+                            <option value="{{ $r ->id_ruangan }}" @if($ruangan->id_ruangan ===
+                             old('id_ruangan', $r->id_ruangan)) selected @endif>
+                                {{ $r ->nama_ruangan }}</option>
+                            @endforeach
+                        </select>
+                        @error('id_ruangan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group" id="stokBarangField">
+                        <label for="jumlah_barang">Stok Barang</label>
+                        <input type="number" name="jumlah_barang" id="jumlah_barang" class="form-control">
+                        @error('jumlah_barang')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 
 <div class="modal fade" id="moveInventarisModal" tabindex="-1" role="dialog" aria-labelledby="moveInventarisModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

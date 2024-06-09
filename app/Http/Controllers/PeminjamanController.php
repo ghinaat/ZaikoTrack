@@ -329,6 +329,19 @@ class PeminjamanController extends Controller
         ]);
     }
 
+    public function fetchPemakaianData($id_peminjaman){
+        
+        $peminjaman = Peminjaman::where('id_peminjaman', $id_peminjaman)->first();
+
+        return response()->json([
+            'id_users' => $peminjaman->id_users,    // Ganti dengan nilai sesuai kebutuhan
+            'id_guru' => $peminjaman->id_guru,    // Ganti dengan nilai sesuai kebutuhan
+            'id_karyawan' => $peminjaman->id_karyawan, // Ganti dengan nilai sesuai kebutuhan
+            'tgl_kembali' => $peminjaman->tgl_kembali,             // Ganti dengan nilai sesuai kebutuhan
+            'keterangan_peminjaman' => $peminjaman->keterangan_peminjaman,             // Ganti dengan nilai sesuai kebutuhan
+            'status' => $peminjaman->status,             // Ganti dengan nilai sesuai kebutuhan
+        ]);
+    }
 
   
 
@@ -382,8 +395,7 @@ class PeminjamanController extends Controller
                 'id_karyawan' => 'nullable',
                 'id_guru' => 'nullable',
                 'status' => 'nullable',
-                'keterangan_pemakaian' => 'nullable',
-                'tgl_pinjam' => 'required|date',
+                'keterangan_peminjaman' => 'nullable',
                 'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             ]);
         } catch (ValidationException $e) {
@@ -395,20 +407,26 @@ class PeminjamanController extends Controller
         } catch (ModelNotFoundException $ex) {
             return response()->json(['error' => 'Peminjaman not found'], 404);
         }
-    
         $id_users = $request->filled('id_users') ? $request->id_users : 1;
         $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
         $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
-    
+        
+        if(Auth::user()->level == 'siswa'){
+            $tgl_pinjam = $peminjaman->tgl_pinjam;
+        }else{
+            $tgl_pinjam = now();
+        }
+
+        dd($request->all());
         // Update existing record
         $peminjaman->update([
             'id_users' => $id_users,
             'id_guru' => $id_guru,
             'id_karyawan' => $id_karyawan,
             'status' => $request->status,
-            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_pinjam' => $tgl_pinjam,
             'tgl_kembali' => $request->tgl_kembali,
-            'keterangan_pemakaian' => $request->keterangan_pemakaian,
+            'keterangan_peminjaman' => $request->keterangan_peminjaman,
         ]);
         
         if ($request->ajax()) {
