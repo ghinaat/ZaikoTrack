@@ -382,7 +382,7 @@ class PeminjamanController extends Controller
                 'id_karyawan' => 'nullable',
                 'id_guru' => 'nullable',
                 'status' => 'nullable',
-                'keterangan_pemakaian' => 'nullable',
+                'keterangan_peminjaman' => 'nullable',
                 'tgl_pinjam' => 'required|date',
                 'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             ]);
@@ -408,7 +408,7 @@ class PeminjamanController extends Controller
             'status' => $request->status,
             'tgl_pinjam' => $request->tgl_pinjam,
             'tgl_kembali' => $request->tgl_kembali,
-            'keterangan_pemakaian' => $request->keterangan_pemakaian,
+            'keterangan_peminjaman' => $request->keterangan_peminjaman,
         ]);
         
         if ($request->ajax()) {

@@ -147,29 +147,36 @@ class DetailPeminjamanController extends Controller
     
     public function store(Request $request)
     {
-        // dd($request);
-        try{
-        $request->validate([
-           
-            'id_barang' => 'required',
-            'ket_tidak_lengkap_awal' => 'nullable',
-        ]);
+        try {
+            $request->validate([
+                'id_barang' => 'required',
+                'ket_tidak_lengkap_awal' => 'nullable',
+            ]);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 400);
         }
-
-        // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang
-        $inventaris = Inventaris::with(['ruangan', 'barang'])
-        ->where('id_barang', $request->input('id_barang'))
-        ->first();
-        
-        // Pastikan Inventaris ditemukan sebelum melanjutkan
-        if (!$inventaris) {
-         
-            return response()->json(['error' => 'Data tidak tersimpan.',
-        ], 400);
+    
+        // Check if the id_barang already exists for the given id_peminjaman
+        $existingDetail = DetailPeminjaman::where('id_peminjaman', $request->id_peminjaman)
+            ->whereHas('inventaris', function ($query) use ($request) {
+                $query->where('id_barang', $request->id_barang);
+            })
+            ->first();
+    
+        if ($existingDetail) {
+            return response()->json(['error' => 'Barang sudah ada di peminjaman ini.'], 400);
         }
-
+    
+       
+        $inventaris = Inventaris::with(['ruangan', 'barang'])
+            ->where('id_barang', $request->input('id_barang'))
+            ->first();
+    
+       
+        if (!$inventaris) {
+            return response()->json(['error' => 'Data tidak tersimpan.'], 400);
+        }
+    
         $peminjaman = Peminjaman::findOrFail($request->id_peminjaman);
         $detailPeminjaman = new DetailPeminjaman([
             'id_peminjaman' => $request->id_peminjaman,
@@ -177,31 +184,33 @@ class DetailPeminjamanController extends Controller
             'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
             'status' => 'dipinjam',
             'tgl_kembali' => $peminjaman->tgl_kembali,
-
         ]);
-        $detailPeminjaman ->save();
-        $detail_peminjaman = DetailPeminjaman::all();
-        // dd($detail_peminjaman);
-      
-        
-        $namaBarang = Inventaris::with(['barang'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
-        $namaRuangan = Inventaris::with(['ruangan'])->where('id_inventaris', $detailPeminjaman->id_inventaris)->first();
+        $detailPeminjaman->save();
+    
+        // Fetching the nama_barang, nama_ruangan, and kode_barang
+        $namaBarang = Inventaris::with(['barang'])
+            ->where('id_inventaris', $detailPeminjaman->id_inventaris)
+            ->first();
+        $namaRuangan = Inventaris::with(['ruangan'])
+            ->where('id_inventaris', $detailPeminjaman->id_inventaris)
+            ->first();
+    
         if (request()->ajax()) {
             if ($namaBarang && $namaRuangan) {
                 return response()->json([
-                    'nama_ruangan'  => $namaRuangan->ruangan->nama_ruangan,
+                    'nama_ruangan' => $namaRuangan->ruangan->nama_ruangan,
                     'nama_barang' => $namaBarang->barang->nama_barang,
+                    'kode_barang' => $namaBarang->barang->kode_barang,
                     'id_detail_peminjaman' => $detailPeminjaman->id_detail_peminjaman
                 ]);
             } else {
-                return response()->json(['error' => 'One or more relationships are null or undefined'],400);
+                return response()->json(['error' => 'One or more relationships are null or undefined'], 400);
             }
-        }else{
-            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.'
-        ]);
+        } else {
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
         }
-        
     }
+    
 
     public function update(Request $request, $id_detail_peminjaman)
     {
