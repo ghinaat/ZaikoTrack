@@ -17,7 +17,7 @@ body a {
 .card {
     margin: 0 auto 50px;
     box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2),
-        0px 10px 15px 0px rgba(0,  0,  0,  0.15);
+        0px 10px 15px 0px rgba(0, 0, 0, 0.15);
 }
 
 .header__btn {

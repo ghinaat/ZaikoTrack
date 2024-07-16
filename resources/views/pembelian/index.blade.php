@@ -38,8 +38,8 @@ Pembelian
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pb->tgl_pembelian)->format('d F Y')}}</td>
                                     <td>{{$pb->nama_toko}}</td>
-                                    <td>Rp. {{ isset($subtotalPembelian[$pb->id]) ? number_format($subtotalPembelian[$pb->id], 0, ',', '.') : 0 }}</td>
-                                    <td>{{ isset($stoklPembelian[$pb->id]) ? $stoklPembelian[$pb->id] : 0 }}</td>
+                                    <td>Rp. {{ isset($subtotalPembelian[$pb->id_pembelian]) ? number_format($subtotalPembelian[$pb->id_pembelian], 0, ',', '.') : 0 }}</td>
+                                    <td>{{ isset($stoklPembelian[intval($pb->id_pembelian)]) ? $stoklPembelian[intval($pb->id_pembelian)] : 0 }}</td>
                                     <td>{{$pb->keterangan_anggaran}}</td>
                                     <td style="text-align: center; ">
                                         @if($pb->nota_pembelian)
@@ -89,7 +89,7 @@ Pembelian
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
                         <input type="text" name="keterangan_anggaran" id="keterangan_anggaran"
-                            class="form-control" required></textarea>
+                            class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="nota_pembelian" class="form-label">Nota Pembelian</label>
@@ -139,9 +139,8 @@ Pembelian
                     </div>
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
-                        <textarea rows="3" type="date" name="keterangan_anggaran" id="keterangan_anggaran"
-                            class="form-control"
-                            required>{{old('keterangan_anggaran', $pb->keterangan_anggaran)}}</textarea>
+                        <input type="text" name="keterangan_anggaran" id="keterangan_anggaran"
+                            class="form-control" value="{{old('keterangan_anggaran', $pb->keterangan_anggaran)}}" required></input>
                     </div>
                     <div class="form-group">
                         <label for="nota_pembelian">Nota Pembelian</label>

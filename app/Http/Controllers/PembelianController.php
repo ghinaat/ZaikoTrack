@@ -13,21 +13,26 @@ use Illuminate\Support\Str;
 class PembelianController extends Controller
 {
     public function index(){
-        $pembelian = Pembelian::all()->except(1);
-
-        $subtotalPembelian = [];
+        $pembelian = Pembelian::where('id_pembelian', '!=', 1)
+        ->orderBy('tgl_pembelian', 'desc') // Mengurutkan berdasarkan tanggal pembelian secara descending (terbaru ke terlama)
+        ->get();
+        
+        $subtotals = [];
         foreach ($pembelian as $pb) {
-            $subtotalPembelian[$pb->id] = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('subtotal_pembelian');
+            $subtotalPembelian = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('subtotal_pembelian');
+            $subtotals[$pb->id_pembelian] = $subtotalPembelian;
         }
         
-        $stoklPembelian = [];
+        $stoks = [];
         foreach ($pembelian as $pb) {
-            $stoklPembelian[$pb->id] = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('jumlah_barang');
+            $StokPembelians = DetailPembelian::where('id_pembelian', $pb->id_pembelian)->sum('jumlah_barang');
+            $stoks[$pb->id_pembelian] = $StokPembelians;
         }
+
         return view("pembelian.index",[
             'pembelian' => $pembelian,
-            'subtotalPembelian' => $subtotalPembelian,
-            'stoklPembelian' => $stoklPembelian
+            'subtotalPembelian' => $subtotals,
+            'stoklPembelian' => $stoks
         ]);
     }
 

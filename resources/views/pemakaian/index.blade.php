@@ -1,6 +1,7 @@
 @extends('layouts.demo')
 @section('title', 'List Pemakaian')
 @section('css')
+<link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
 <style>
    @media (min-width: 768px) {
     .input-date{
@@ -122,6 +123,10 @@ Pemakaian
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+                    @if( auth()->user()->level == "siswa")
+                    <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
+                    <input type="hidden" name="status" value="siswa">
+                    @else
                     <input type="hidden" name="id_pemakaian" value="{{$pakai->id_pemakaian}}">
                     <div class="form-group">
                         <label for="status">Status</label>
@@ -131,32 +136,60 @@ Pemakaian
                                     <option value="karyawan">Karyawan</option>
                             </select>                                
                     </div>
-                    <div class="form-group" style="display: none;" id="id_siswa_update{{$pakai->id_pemakaian}}">
-                        <label for="id_siswa">Nama Lengkap</label>
-                            <select class="form-select" data-live-search="true" name="id_users" id="id_siswa_upd{{$pakai->id_pemakaian}}" >
-                                <option value="" selected hidden>-- Pilih Nama --</option>
-                                @foreach($siswa as $key => $sw)
-                                <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
-                                    {{$sw->name}}
-                                </option>
-                                @endforeach
-                            </select>                                
+                    <div id="siswaFormUpdate{{$pakai->id_pemakaian}}" style="display: none;">
+                        <div class="form-group">
+                            <label for="id_siswa">Nama Siswa</label>
+                                <select class="form-select" data-live-search="true" name="id_users" id="normalize{{$pakai->id_pemakaian}}" >
+                                    <option value="" selected disabled>Pilih Nama</option>
+                                    @foreach($siswa as $key => $sw)
+                                    <option value="{{$sw->id_users}}" @if( old('id_users')==$sw->id_users)selected @endif>
+                                        {{$sw->name}}
+                                    </option>
+                                    @endforeach
+                                </select>                                
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="kelas" class="form-label">Kelas</label>
+                                    <input type="text" name="kelas" id="kelas{{$pakai->id_pemakaian}}" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="nis" class="form-label">NIS</label>
+                                    <input type="text" name="nis" id="nis{{$pakai->id_pemakaian}}" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group" style="display: none;" id="id_guru_update{{$pakai->id_pemakaian}}">
-                        <label for="id_guru">Nama Lengkap</label>
-                            <select class="form-select" data-live-search="true" name="id_guru" id="id_guru_upd{{$pakai->id_pemakaian}}" >
-                                <option value="" selected hidden>-- Pilih Nama --</option>
-                                @foreach($guru as $key => $gr)
-                                <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
-                                    {{$gr->nama_guru}}
-                                </option>
-                                @endforeach
-                            </select>                                
+                    <div  id="guruFormUpdate{{$pakai->id_pemakaian}}" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group" id="id_guru">
+                                <label for="id_guru">Nama Guru</label>
+                                    <select class="form-select"  name="id_guru" id="normalize1{{$pakai->id_pemakaian}}" >
+                                        <option value="" selected disabled>Pilih Nama</option>
+                                        @foreach($guru as $key => $gr)
+                                            <option value="{{$gr->id_guru}}" @if( old('id_guru')==$gr->id_guru)selected @endif>
+                                            {{$gr->nama_guru}}
+                                            </option>
+                                        @endforeach
+                                    </select>                                
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label for="nip" class="form-label">NIP</label>
+                                    <input type="text" name="nip" id="nip{{$pakai->id_pemakaian}}" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group" style="display: none;" id="id_karyawan_update{{$pakai->id_pemakaian}}">
-                        <label for="id_karyawan">Nama Lengkap</label>
-                            <select class="form-select" data-live-search="true" name="id_karyawan" id="id_karyawan_upd{{$pakai->id_pemakaian}}" >
-                                <option value="" selected hidden>-- Pilih Nama --</option>
+                    <div class="form-group " style="display: none;" id="karyawanFormUpdate{{$pakai->id_pemakaian}}">
+                        <label for="id_karyawan">Nama Karyawan</label>
+                            <select class="form-select" name="id_karyawan" id="normalize2{{$pakai->id_pemakaian}}" >
+                                <option value="" selected disabled>Pilih Nama</option>
                                 @foreach($karyawan as $key => $krywn)
                                 <option value="{{$krywn->id_karyawan}}" @if( old('id_karyawan')==$krywn->id_karyawan)selected @endif>
                                     {{$krywn->nama_karyawan}}
@@ -164,28 +197,16 @@ Pemakaian
                                 @endforeach
                             </select>                                
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label for="kelas" class="mb-0">Kelas</label>
-                                <input class=" form-control" type="text" name="kelas" id="kelas_update{{$pakai->id_pemakaian}}" value="{{old('kelas', $pakai->kelas)}}" >
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label for="jurusan" class="mb-0">Jurusan</label>
-                                <input class="form-control" type="text" name="jurusan" id="jurusan_update{{$pakai->id_pemakaian}}" value="{{old('jurusan', $pakai->jurusan)}}">
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                     <div class="form-group">
                         <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
-                        <textarea rows="2" name="keterangan_pemakaian" id="keterangan_pemakaian" class="form-control" >{{old('keterangan_pemakaian', $pakai->keterangan_pemakaian)}}
-                        </textarea>
+                        <input type="text" name="keterangan_pemakaian" id="keterangan_pemakaian{{$pakai->id_pemakaian}}" 
+                            class="form-control" value="{{old('keterangan_pemakaian', $pakai->keterangan_pemakaian)}}">
+                        </input>
                     </div>
                     <div class="form-group">
                         <label for="tgl_pakai">Tanggal Pakai</label>
-                        <input type="date" name="tgl_pakai" id="tgl_pakai" class="form-control" value="{{old('tgl_pakai', $pakai->tgl_pakai)}}">
+                        <input type="date" name="tgl_pakai" id="tgl_pakai" class="form-control" value="{{old('tgl_pakai', $pakai->tgl_pakai)}}" readonly>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -200,7 +221,7 @@ Pemakaian
 
 @stop
 @push('js')
-{{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> --}}
+<script src="../dist/js/selectize.js"></script>
 <form action="" id="delete-form" method="post">
     @method('delete')
     @csrf
@@ -217,26 +238,34 @@ $(document).ready(function() {
         }
     });
 });
-</script>
-<script>
+
 $(document).ready(function() {
     $('.edit-button').click(function(e) {
         e.preventDefault();
 
         let IdPemakaian = $(this).data('id');
 
+        $('#normalize' + IdPemakaian).selectize({
+
+        }); 
+        $('#normalize1' + IdPemakaian).selectize({
+
+        }); 
+        $('#normalize2' + IdPemakaian).selectize({
+
+        }); 
         $.ajax({
             type: 'GET',
             url: `/get-pemakaian-data/${IdPemakaian}`,
         })
         .done(function(response) {
             console.log('Data terkirim!!', response);
-                const namaSiswaElement = document.querySelector('#id_siswa_update' + IdPemakaian);
-                const namaGuruElement = document.querySelector('#id_guru_update' + IdPemakaian);
-                const namaKaryawanElement = document.querySelector('#id_karyawan_update' + IdPemakaian );
-                const kelasElement = document.querySelector('#kelas_update' + IdPemakaian);
-                const jurusanElement = document.querySelector('#jurusan_update' + IdPemakaian);
-                let readonlyValue = false;
+                const namaSiswaElement = document.getElementById('siswaFormUpdate' + IdPemakaian);
+                const namaGuruElement = document.getElementById('guruFormUpdate' + IdPemakaian);
+                const namaKaryawanElement = document.getElementById('karyawanFormUpdate' + IdPemakaian);
+                const kelasElement = document.querySelector('#kelas' + IdPemakaian);
+                const nisElement = document.querySelector('#nis' + IdPemakaian);
+                const nipElement = document.querySelector('#nip' + IdPemakaian);
 
                 namaSiswaElement.style.display = 'none';
                 namaGuruElement.style.display = 'none';
@@ -248,73 +277,158 @@ $(document).ready(function() {
                     namaSiswaElement.style.display = 'block';
                     namaGuruElement.style.display = 'none';
                     namaKaryawanElement.style.display = 'none';
-                    readonlyValue = false;
                 } else if (this.value === 'guru') {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'block';
                     namaKaryawanElement.style.display = 'none';
-                    kelasElement.value = null;
-                    readonlyValue = true;
                 } else if (this.value === 'karyawan') {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
                     namaKaryawanElement.style.display = 'block';
-                    kelasElement.value = null; // Atur nilai input kelas menjadi null
-                    jurusanElement.value = null;
-                    readonlyValue = true;
                 }
-
-                // Atur atribut readonly untuk elemen kelas
-                kelasElement.readOnly = readonlyValue;
-
-                // Atur atribut readonly untuk elemen jurusan hanya jika karyawan dipilih
-                jurusanElement.readOnly = (this.value === 'karyawan');
-            
             }));
 
-                if (response.id_users !== 1) {
+            $('#normalize' + IdPemakaian).on('change', function() {
+            var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
+            console.log('Selected user ID:', selectedIdUsers);
+            const nisElement = document.querySelector('input[name=nis]');
+            const kelasElement = document.querySelector('input[name=kelas]');
+
+            fetch(`/fetch-id-siswa/${selectedIdUsers}`)
+                .then(response => {
+                    if (!response.ok) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Data profile belum disi.',
+                        });            }
+                    return response.json();
+                })
+                .then(data => {
+                    // Debug: Periksa data yang diterima
+                    console.log('Data received:', data);
+
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Tampilkan data yang sesuai di elemen input
+                    nisElement.value = data.nis || '';
+                    kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Kosongkan Element dan mungkin tampilkan pesan error kepada user
+                    nisElement.value = '';
+                    kelasElement.value = '';
+                });
+        });
+
+        $('#normalize1' + IdPemakaian).on('change', function() {
+            var selectedIGuru = $(this).selectize()[0].selectize.getValue();
+            console.log('Selected user ID:', selectedIGuru);
+            const nipElement = document.querySelector('input[name=nip]');
+
+            fetch(`/fetch-id-guru/${selectedIGuru}`)
+                .then(response => {
+                    if (!response.ok) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Data profile belum disi.',
+                        });            }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data received:', data);
+
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    nipElement.value = data.nip || '';
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    nipElement.value = '';
+                });
+        });
+
+
+                if (response.status == 'siswa') {
+                    const selectedUser = response.id_users;
+                    fetch(`/fetch-id-siswa/${selectedUser}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to fetch profile data');
+                            }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+                                nisElement.value = data.nis || '';
+                                kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                nisElement.value = '';                                    
+                                kelasElement.value = '';
+                                alert('Error: ' + error.message);
+                            });
                     namaSiswaElement.style.display = 'block';
-                    var selectSiswa = document.getElementById('id_siswa_upd' + IdPemakaian);
-                    var statusSiswa = document.getElementById('status_upd' + IdPemakaian);
                     $('#status_upd' + IdPemakaian).val('siswa');
 
-                    for (var i = 0; i < selectSiswa.options.length; i++) {
-                        if (selectSiswa.options[i].value == response.id_users) {
-                            selectSiswa.selectedIndex = i;
-                            break;
-                        }
+                    var selectSiswa = document.getElementById('normalize' + IdPemakaian);
+                    var selectizeInstance = $(selectSiswa).selectize()[0].selectize;
+                    var existingOption = selectizeInstance.options[response.id_users];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
                     }
-                    // $('#id_siswa_update').prop('value', response.id_siswa);
-                } else if(response.id_guru !== 1){
-                    namaGuruElement.style.display = 'block';
-                    readonlyValue = true;
-                    var selectGuru = document.getElementById('id_guru_upd' + IdPemakaian);
-                    var statusGuru = document.getElementById('status_upd' + IdPemakaian);
-                    $('#status_upd' + IdPemakaian).val('guru');
-    
-                    for (var i = 0; i < selectGuru.options.length; i++) {
-                        if (selectGuru.options[i].value == response.id_guru) {
-                            selectGuru.selectedIndex = i;
-                            break;
-                        }
-                    }                
-                } else if (response.id_karyawan !== 1) {
-                    namaKaryawanElement.style.display = 'block';
-                    readonlyValue = true;
-                    var statusKaryawan = document.getElementById('status_upd' + IdPemakaian);
-                    $('#status_upd' + IdPemakaian).val('karyawan');
+                    selectizeInstance.setValue(response.id_users);
 
-                    var selectKaryawan = document.getElementById('id_karyawan_upd' + IdPemakaian);
-    
-                    for (var i = 0; i < selectKaryawan.options.length; i++) {
-                        if (selectKaryawan.options[i].value == response.id_karyawan) {
-                            selectKaryawan.selectedIndex = i;
-                            break;
-                        }
-                    }         
+                } else if(response.status == 'guru'){
+                    const selectedGuru = response.id_guru;
+                        fetch(`/fetch-id-guru/${selectedGuru}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Failed to fetch profile data');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Data received:', data);
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+                                nipElement.value = data.nip || '';
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
+                                nipElement.value = '';
+                                alert('Error: ' + error.message);
+                            });
+                    namaGuruElement.style.display = 'block';
+                    $('#status_upd' + IdPemakaian).val('guru');
+                    var selectGuru = document.getElementById('normalize1' + IdPemakaian);
+                    var selectizeInstance = $(selectGuru).selectize()[0].selectize;
+                    var existingOption = selectizeInstance.options[response.id_guru];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
+                    }
+                    selectizeInstance.setValue(response.id_guru);      
+     
+                } else if (response.status == 'karyawan') {
+                    namaKaryawanElement.style.display = 'block';
+                    $('#status_upd' + IdPemakaian).val('karyawan');
+                    var selectKaryawan = document.getElementById('normalize2' + IdPemakaian);
+                    var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
+                    var existingOption = selectizeInstance.options[response.id_karyawan];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
+                    }
+                    selectizeInstance.setValue(response.id_karyawan); 
                 }
-                kelasElement.readOnly = readonlyValue;
-                jurusanElement.readOnly = (document.getElementById('status_upd'+ IdPemakaian).value === 'karyawan');
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.log('Data gagal terkirim!!', errorThrown);

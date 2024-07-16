@@ -181,7 +181,6 @@ class InventarisController extends Controller
     
         // Fetch the Inventaris record
         $inventaris = Inventaris::find($id_inventaris);
-    
         // Check if the Inventaris record exists
         if (!$inventaris) {
             return redirect()->back()->withErrors(['error_message' => 'Inventaris not found.']);
@@ -234,6 +233,7 @@ class InventarisController extends Controller
         $inventaris->save();
     
         // Return the success message
+
         return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
     }
     
@@ -384,7 +384,7 @@ class InventarisController extends Controller
             $barangEdit = $barangEdit->merge($barangEditForItem);
         }
 
-        $inventarisRuangan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
+        $inventarisRuanganAlat = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
             $query->where('id_ruangan', $id_ruangan)
                 ->where('id_jenis_barang', '!=', 3); 
         })->get();
@@ -392,6 +392,7 @@ class InventarisController extends Controller
         $inventarisRuanganBahan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
             $query->where('id_ruangan', $id_ruangan);
         })->get();
+
         
         $ruangans = Ruangan::all();
 
@@ -413,7 +414,8 @@ class InventarisController extends Controller
             'barangsInRuangan' => $barangsInRuangan,
             'barangEdit' => $barangEdit,
             'inventarisAlat' => $inventarisAlat,
-            'inventarisRuangan' => $inventarisRuangan,
+
+            'inventarisRuanganAlat' => $inventarisRuanganAlat,
             'inventarisRuanganBahan' => $inventarisRuanganBahan,
             'inventarisBahan' => $inventarisBahan,
             'BarangAlat' => $BarangAlat,
