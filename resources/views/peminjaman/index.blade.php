@@ -61,8 +61,10 @@ Peminjaman
                                 <tr>
                                     <th>No.</th>
                                     <th>Tanggal Pinjam</th>
+                                    @cannot('isSiswa')
                                     <th>Nama</th>
                                     <th>Jurusan</th>
+                                    @endcan
                                     <th>List Barang</th>
                                     <th>Opsi</th>
                                 </tr>
@@ -73,6 +75,7 @@ Peminjaman
                                 <tr>
                                     <td></td>
                                     <td>{{\Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y')}}</td>
+                                    @cannot('isSiswa')
                                     @if ($peminjaman->status == 'guru')
                                     <td>{{ $peminjaman->guru ? $peminjaman->guru->nama_guru : 'N/A' }}</td>
                                     @elseif ($peminjaman->status == 'karyawan')
@@ -89,7 +92,9 @@ Peminjaman
                                     @else
                                     <td>{{$peminjaman->kelas}} {{$peminjaman->jurusan}}</td>
                                     @endif
+                                    @endcan
                                     <td>
+
                                         <a href="{{ route('peminjaman.showDetail', $peminjaman->id_peminjaman) }}"
                                             class="btn btn-info btn-xs mx-1">
                                             <i class="fa fa-rectangle-list"></i>

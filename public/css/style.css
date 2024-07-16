@@ -117,6 +117,7 @@ body a {
   background-color: transparent;
   outline: none !important;
   cursor: pointer;
+  pointer-events: none; 
 }
 @media (min-width: 500px) {
   .multisteps-form__progress-btn {

@@ -158,10 +158,10 @@ Tambah Peminjaman
                                                    
 
                                                     <div class="form-group mt-2">
-                                                        <label for="keterangan_pemakaian">Keterangan
-                                                            Pemakaian</label>
-                                                        <input type="text" name="keterangan_pemakaian"
-                                                            id="keterangan_pemakaian" class="form-control" >
+                                                        <label for="keterangan_peminjaman">Keterangan
+                                                            Peminjaman</label>
+                                                        <input type="text" name="keterangan_peminjaman"
+                                                            id="keterangan_peminjaman" class="form-control" >
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -200,7 +200,7 @@ Tambah Peminjaman
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
                                                                 <th>Ruangan</th>
-                                                                <th>Action</th>
+                                                                <th>Opsi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -341,9 +341,16 @@ $(document).ready(function() {
 
         // Append the CSRF token to the data
         data += '&_token=' + $('meta[name="csrf-token"]').attr('content');
-        if (idPeminjaman) {
+         if (idPeminjaman) {
             data += '&id_peminjaman=' + idPeminjaman;
         }
+
+        // Dynamically adjust action URL and method for update operation
+        if (idPeminjaman) {
+            url = '/peminjaman/create/' + idPeminjaman;
+            method = 'PUT';
+        }
+
 
         // Kirim data ke server menggunakan AJAX
         $.ajax({
@@ -576,9 +583,11 @@ $(document).ready(function() {
     $('#formPeminjaman').on('click', '.remove', function(e) {
         e.preventDefault();
         if (!idPeminjaman) {
-            console.error('Error: idPeminjaman is not defined');
-            return;
-        }
+        console.error('Error: idPeminjaman is not defined');
+        // Redirect to /peminjaman if idPeminjaman is not defined
+        window.location.href = "/peminjaman";
+        return;
+    }
         let id_peminjaman =
             idPeminjaman;
 

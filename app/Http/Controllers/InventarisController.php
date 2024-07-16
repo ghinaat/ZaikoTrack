@@ -34,7 +34,7 @@ class InventarisController extends Controller
             'id_barang' => 'required',
             'id_ruangan' => 'required',
             'jumlah_barang' => 'nullable',
-            'kondisi_barang' => 'required',
+            'kondisi_barang' => 'nullable',
             'ket_barang' => 'nullable'
         ]);
 
@@ -127,7 +127,7 @@ class InventarisController extends Controller
         'id_barang' => 'required',
             'id_ruangan' => 'required',
             'jumlah_barang' => 'nullable',
-            'kondisi_barang' => 'required',
+            'kondisi_barang' => 'nullable',
             'ket_barang' => 'nullable'
         ]);
 
@@ -135,7 +135,15 @@ class InventarisController extends Controller
 
         $stokBarang = Barang::where('id_barang', $request->id_barang)->first();
 
-        if (!$stokBarang || $stokBarang->stok_barang < $request->jumlah_barang || $stokBarang->stok_barang - $request->jumlah_barang < 0) {
+        if (!$stokBarang) {
+            return redirect()->back()->with(['error' => 'Barang not found.']);
+        }
+    
+        // Calculate the difference between the new and the current quantity
+        $quantityDifference = $request->jumlah_barang - $inventaris->jumlah_barang;
+    
+        // Check if the stock is sufficient
+        if ($stokBarang->stok_barang < $quantityDifference || $stokBarang->stok_barang - $quantityDifference < 0) {
             return redirect()->back()->with(['error' => 'Stok barang tidak mencukupi.']);
         }
 
@@ -144,6 +152,7 @@ class InventarisController extends Controller
         ->whereHas('barang', function($query) use ($barang) {
             $query->where('kode_barang', $barang->kode_barang);
         })
+        ->whereNull('jumlah_barang')
         ->first();
 
     // Check if an existing inventaris item is found
@@ -163,41 +172,72 @@ class InventarisController extends Controller
 
 
     
-    public function ruangan(Request $request, $id_inventaris){
-        
+    public function ruangan(Request $request, $id_inventaris)
+    {
         $request->validate([
             'id_ruangan' => 'required',
+            'jumlah_barang' => 'nullable|integer|min:1',
         ]);
-
+    
+        // Fetch the Inventaris record
         $inventaris = Inventaris::find($id_inventaris);
-        if($inventaris->barang->id_jenis_barang != 3){
-            $inventaris->id_ruangan = $request->id_ruangan;
-            $inventaris->save();
-        }else{
-            $inventarisBahan = Inventaris::where('id_barang', $inventaris->id_barang)
-                ->where('id_ruangan', $request->id_ruangan)->first();
-            if($inventarisBahan){
-                $jumlahBarang = $inventaris->jumlah_barang - $request->jumlah_barang;
-                $inventaris->jumlah_barang = $jumlahBarang;
-                $inventaris->save();
+        // Check if the Inventaris record exists
+        if (!$inventaris) {
+            return redirect()->back()->withErrors(['error_message' => 'Inventaris not found.']);
+        }
+    
+        // Fetch the associated Barang record
+        $barang = Barang::find($inventaris->id_barang);
+    
+        // Check if the Barang record exists
+        if (!$barang) {
+            return redirect()->back()->withErrors(['error_message' => 'Barang not found.']);
+        }
+    
+        // Update id_ruangan for all cases
+      
+    
+        // If id_jenis_barang equals 3, validate and handle jumlah_barang
+        if ($barang->id_jenis_barang == 3) {
+            $request->validate([
+                'jumlah_barang' => 'required|integer|min:1',
+            ]);
+    
+            // If the requested jumlah_barang is less than current jumlah_barang
+            if ($request->jumlah_barang < $inventaris->jumlah_barang) {
+                // Calculate remaining quantity
+                $remaining_quantity = $inventaris->jumlah_barang - $request->jumlah_barang;
+    
+                // Update current inventaris with the new jumlah_barang
+                $inventaris->jumlah_barang = $remaining_quantity;
                 
-                $inventarisBahan->id_ruangan = $request->id_ruangan;
-                $inventarisBahan->jumlah_barang = $inventarisBahan->jumlah_barang + $request->jumlah_barang;
-                $inventarisBahan->save();
-            }else{
-                $inventarisNew = new Inventaris();
-                $inventarisNew->id_barang = $inventaris->id_barang;
-                $inventarisNew->id_ruangan = $request->id_ruangan;
-                $inventarisNew->jumlah_barang = $request->jumlah_barang;
-                $inventarisNew->kondisi_barang = 'lengkap';
-                $inventarisNew->ket_barang = null;
-                $inventarisNew->save();
+                // Save the changes to current inventaris
+                $inventaris->save();
+    
+                // Create a new inventaris for the remaining quantity
+                $new_inventaris = new Inventaris();
+                $new_inventaris->id_barang = $inventaris->id_barang;
+                $new_inventaris->id_ruangan = $request->id_ruangan; // Assign the new room
+                $new_inventaris->jumlah_barang = $request->jumlah_barang;
+                $new_inventaris->save();
+    
+                return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan dan sebagian dipisahkan ke inventaris baru.']);
+            } else {
+                // Update jumlah_barang if not splitting
+                $inventaris->id_ruangan = $request->id_ruangan;
+                $inventaris->jumlah_barang = $request->jumlah_barang;
             }
         }
-
+    
+        // Save the changes
+        $inventaris->save();
+    
+        // Return the success message
 
         return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
     }
+    
+    
     
     public function ruangans(Request $request) {
         // Separate the 'id_inventaris' array and ensure each element is an array of integers
@@ -243,6 +283,7 @@ class InventarisController extends Controller
             return redirect()->back()->with(['error' => $errorMessage]);
         }
     }
+
     public function barcode($id_ruangan)
     {
 
@@ -345,11 +386,13 @@ class InventarisController extends Controller
 
         $inventarisRuanganAlat = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
             $query->where('id_ruangan', $id_ruangan)
-                ->where('id_jenis_barang', '!=', 3); })->get();
+                ->where('id_jenis_barang', '!=', 3); 
+        })->get();
 
         $inventarisRuanganBahan = Inventaris::whereHas('barang', function ($query) use ($id_ruangan) {
-            $query->where('id_ruangan', $id_ruangan)
-                ->where('id_jenis_barang', '=', 3); })->get();
+            $query->where('id_ruangan', $id_ruangan);
+        })->get();
+
         
         $ruangans = Ruangan::all();
 
@@ -371,6 +414,7 @@ class InventarisController extends Controller
             'barangsInRuangan' => $barangsInRuangan,
             'barangEdit' => $barangEdit,
             'inventarisAlat' => $inventarisAlat,
+
             'inventarisRuanganAlat' => $inventarisRuanganAlat,
             'inventarisRuanganBahan' => $inventarisRuanganBahan,
             'inventarisBahan' => $inventarisBahan,

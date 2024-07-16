@@ -201,7 +201,7 @@ Tambah Peminjaman
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
                                                                 <th>Ruangan</th>
-                                                                <th>Action</th>
+                                                                <th>Opsi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -215,9 +215,9 @@ Tambah Peminjaman
                                     <div id='button-new' class="d-flex justify-content-end mt-4 button-row">
                                         <button class="btn btn-secondary js-btn-prev mybtn" type="button"
                                             title="Prev">Kembali</button>
-                                        <a href="{{route('peminjaman.index')}}" class="btn btn-primary">
-                                            Simpan
-                                        </a>
+                                            <a href="#" class="btn btn-primary" id="simpanButton" href="{{ route('peminjaman.index') }}">
+                                                Simpan
+                                            </a>
                                     </div>
                                 </div>
                             </div>
@@ -426,7 +426,23 @@ $('#normalize1').on('change', function() {
         });
 });
 
+document.getElementById('simpanButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        
+        // Perform your AJAX request or other logic here
 
+        // Redirect to the index page
+        window.location.href = "{{ route('peminjaman.index') }}";
+
+        // Show success message using SweetAlert2
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: 'Data Berhasil Disimpan.',
+            timer: 40000, // Set the timer to automatically close the message after 2 seconds
+            showConfirmButton: false // Hide the "OK" button
+        });
+    });
 
 
 
@@ -505,6 +521,7 @@ $(document).ready(function() {
         data += '&_token=' + $('meta[name="csrf-token"]').attr('content');
         if (idPeminjaman) {
             data += '&id_peminjaman=' + idPeminjaman;
+            form.attr('method', 'PUT');
         }
 
         // Kirim data ke server menggunakan AJAX
@@ -560,75 +577,92 @@ $(document).ready(function() {
             });
     });
 
+$("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
+    e.preventDefault();
 
-    $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
-        e.preventDefault();
+    // Dapatkan formulir yang sedang aktif
+    var form = $(this).closest('form');
 
-        // Dapatkan formulir yang sedang aktif
-        var form = $(this).closest('form');
+    // Dapatkan URL dan metode formulir
+    var url = form.attr('action');
+    var method = form.attr('method');
 
-        // Dapatkan URL dan metode formulir
-        var url = form.attr('action');
-        var method = form.attr('method');
+    // Serialize data formulir
+    var data = form.serialize();
 
-        // Serialize data formulir
-        var data = form.serialize();
+    if (idPeminjaman) {
+        data += '&id_peminjaman=' + idPeminjaman;
 
-        if (idPeminjaman) {
-            data += '&id_peminjaman=' + idPeminjaman;
+        $.ajax({
+                type: method,
+                url: url,
+                data: data,
+            })
+            .done(function(response) {
+                console.log('Additional form submitted!', response);
 
-            $.ajax({
-                    type: method,
-                    url: url,
-                    data: data,
-                })
-                .done(function(response) {
-                    console.log('Additional form submitted!', response);
-
-                    // Check if the expected properties exist in the response
-                    if (response.nama_barang && response.nama_ruangan) {
-                        const progressButtons = document.querySelectorAll(
-                            '.multisteps-form__progress-btn');
-                        progressButtons.forEach(button => {
-                            button.disabled = false;
-                        });
-                        DOMstrings.stepsForm.style.display = 'block';
-                        DOMstrings.additionalFormContainer.style.display = 'none';
-                        var existingRowCount = $('#myTable2 tbody tr').length;
-                        var newRowNumber = existingRowCount + 1;
-                        var formContainer = $(
-                            '#button-new'
-                        );
-                        // Reload or update the content within the container
-
-                        // Create the new row HTML
-                        var newRow = '<tr>' +
-                            '<td>' + newRowNumber + '</td>' +
-                            '<td>' + response.nama_barang + '</td>' +
-                            '<td>' + response.nama_ruangan + '</td>' +
-                            '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
-                            response.id_detail_peminjaman + '">Hapus</button></td>'
-                        '</tr>';
-
-                        // Append the new row to the table
-                        $('#myTable2 tbody').append(newRow);
-                        $('#myTable2').addClass('table-responsive');
-                        formHeight(getActivePanel());
-                        form[0].reset();
-                    } else {
-                        let errorMessage;
-                        try {
-                            const responseJson = JSON.parse(jqXHR.responseText);
-                            errorMessage = responseJson.error || 'Data Tidak Sesuai.';
-                        } catch (error) {
-                            errorMessage = 'Data Belum Terisi.';
+                // Check if the expected properties exist in the response
+                if (response.nama_barang && response.nama_ruangan) {
+                    // Check for duplicate id_barang in the table
+                    var duplicate = false;
+                    $('#myTable2 tbody tr').each(function() {
+                        var existingIdBarang = $(this).find('td:eq(2)').text().trim();
+                        if (existingIdBarang === response.nama_barang) {
+                            duplicate = true;
+                            return false; // Exit loop
                         }
+                    });
+
+                    if (duplicate) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: errorMessage,
+                            text: 'Barang sudah ada di tabel.',
                         });
+                        return;
                     }
+
+                    const progressButtons = document.querySelectorAll(
+                        '.multisteps-form__progress-btn');
+                    progressButtons.forEach(button => {
+                        button.disabled = false;
+                    });
+                    DOMstrings.stepsForm.style.display = 'block';
+                    DOMstrings.additionalFormContainer.style.display = 'none';
+                    var existingRowCount = $('#myTable2 tbody tr').length;
+                    var newRowNumber = existingRowCount + 1;
+                    var formContainer = $('#button-new');
+
+                    // Create the new row HTML
+                    var newRow = '<tr>' +
+                        '<td>' + newRowNumber + '</td>' +
+                        '<td>' + response.nama_barang + '</td>' +
+                        '<td>' + response.kode_barang + '</td>' +
+                        '<td>' + response.nama_ruangan + '</td>' +
+                        '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
+                        response.id_detail_peminjaman + '">Hapus</button></td>' +
+                        '</tr>';
+
+                    // Append the new row to the table
+                    $('#myTable2 tbody').append(newRow);
+                    $('#myTable2').addClass('table-responsive');
+                    formHeight(getActivePanel());
+                    form[0].reset();
+                } else {
+                    let errorMessage;
+                    try {
+                        const responseJson = JSON.parse(jqXHR.responseText);
+                        errorMessage = responseJson.error || 'Data Tidak Sesuai.';
+                    } catch (error) {
+                        errorMessage = 'Data Belum Terisi.';
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMessage,
+                    });
+                }
+
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     let errorMessage;
@@ -738,9 +772,11 @@ $(document).ready(function() {
     $('#formPeminjaman').on('click', '.remove', function(e) {
         e.preventDefault();
         if (!idPeminjaman) {
-            console.error('Error: idPeminjaman is not defined');
-            return;
-        }
+        console.error('Error: idPeminjaman is not defined');
+        // Redirect to /peminjaman if idPeminjaman is not defined
+        window.location.href = "/peminjaman";
+        return;
+    }
         let id_peminjaman =
             idPeminjaman;
 
