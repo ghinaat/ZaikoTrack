@@ -159,10 +159,10 @@ Tambah Peminjaman
                                                    
 
                                                     <div class="form-group mt-2">
-                                                        <label for="keterangan_peminjaman">Keterangan
+                                                        <label for="keterangan_pemakaian">Keterangan
                                                             Peminjaman</label>
-                                                        <input type="text" name="keterangan_peminjaman"
-                                                            id="keterangan_peminjaman" class="form-control" required>
+                                                        <input type="text" name="keterangan_pemakaian"
+                                                            id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -175,7 +175,7 @@ Tambah Peminjaman
                                                     </div>   
                                                    
                                                 <div class="button-row d-flex justify-content-end mt-4">
-                                                    <button class="btn btn-danger mybtn remove">Batal</button>
+                                                    <button class="btn btn-danger remove mybtn">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
                                                         title="Selanjutnya">Selanjutnya</button>
                                                 </div>
@@ -321,6 +321,7 @@ Tambah Peminjaman
 </form>
 
 <script src="../js/script.js"></script>
+
 
 <script>
 $(document).ready(function() {

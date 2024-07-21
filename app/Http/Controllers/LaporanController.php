@@ -200,7 +200,7 @@ public function exportPDFPeminjaman(Request $request)
         $pdf->setPaper('A4', 'potret');
 
         // Unduh PDF langsung
-        return $pdf->download('Laporan Peminjaman Barang.pdf');
+        return $pdf->stream('Laporan Peminjaman Barang.pdf');
     }
 
     public function pemakaian(Request $request)
@@ -401,7 +401,7 @@ public function exportPDFPeminjaman(Request $request)
         $pdf->setPaper('A4', 'potret');
 
         // Mengunduh file PDF
-        return $pdf->download('Laporan Pemakaian Barang.pdf');
+        return $pdf->stream('Laporan Pemakaian Barang.pdf');
     }
     /**
      * Show the form for creating a new resource.

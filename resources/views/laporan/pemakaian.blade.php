@@ -46,6 +46,9 @@
         .pemakaian {
             margin-bottom: 0; /* Menghapus margin bawah */
         }
+        .margin-bottom {
+            margin-bottom: 10px; /* Mengatur margin bawah */
+        }
         .barang {
             margin-bottom: 10; /* Menghapus margin bawah */
         }
@@ -82,13 +85,17 @@
 <div style="border-top: 3pt solid black; margin-bottom: 2px;"></div>
 <div style="border-bottom: 1px solid black; margin-bottom: 10px;"></div> 
 
-    <h2 align="center">Laporan Data Pemakaian Barang SIJA</h2>
+    <h2 align="center" style="margin-left: 75px; margin-bottom: 20px;">Laporan Data Pemakaian Barang SIJA</h2>
         @if(session('selected_nama_peminjam'))
-            <p class="pemakaian"><b>Nama Peminjam:</b> {{ session('selected_nama_peminjam') }}</p>
+            @if(!$id_barang)
+                <p class="pemakaian margin-bottom"><b>Nama Peminjam:</b> {{ ucwords(session('selected_nama_peminjam')) }}</p>
+            @else
+                <p class="pemakaian"><b>Nama Peminjam:</b> {{ ucwords(session('selected_nama_peminjam')) }}</p>
+            @endif
         @endif
         @if($id_barang)
             <p class="barang"><b>Barang:</b> {{ $nama_barang }}</p>
-        @endif
+        @endif        
         @if($start_date && $end_date)
             <p><b>Periode:</b><br>
             Tanggal Awal: {{ \Carbon\Carbon::parse($start_date)->format('d F Y') }}<br>

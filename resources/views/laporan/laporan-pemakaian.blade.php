@@ -62,34 +62,32 @@ Laporan Pemakaian
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="row">
                                 <div class="col-md-4 col-lg-3">
                                     <div class="form-group">
-                                    <label for="start_date" class="form-label">Tanggal Awal:</label>
-                                    <input type="date" id="start_date" name="start_date" class="form-control"
-                                        value="{{ request()->input('start_date') }}">
+                                        <label for="start_date" class="form-label">Tanggal Awal:</label>
+                                        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request()->input('start_date') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-3">
                                     <div class="form-group">
-                                    <label for="end_date" class="form-label">Tanggal Akhir:</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control"
-                                        value="{{ request()->input('end_date') }}">
+                                        <label for="end_date" class="form-label">Tanggal Akhir:</label>
+                                        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request()->input('end_date') }}">
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 mt-md-0 mt-3">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-4 mb-3 mb-md-0">
-                                            <button type="submit" class="btn btn-primary w-100">Tampilkan</button>
-                                        </div>
-                                        <div class="col-md-4 mb-3 mb-md-0">
-                                            <a href="{{ route('laporan.pemakaian') }}" class="btn btn-info w-100">Refresh</a>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <a href="{{ route('downloadPemakaian', ['start_date' => request()->input('start_date'), 'end_date' => request()->input('end_date'), 'id_barang' => request()->input('id_barang'), 'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger w-100">Unduh PDF</a>
-                                        </div>
+                                <div class="col-md-6 col-lg-6 mt-md-0 mt-3">
+                                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-start">
+                                        <button type="submit" class="btn btn-primary mt-2 mt-md-4 mx-1 w-100 w-md-auto" style="width: 120px;">Tampilkan</button>
+                                        <a href="{{ route('laporan.pemakaian') }}" class="btn btn-info mt-2 mt-md-4 mx-1 w-100 w-md-auto" style="width: 120px;">Refresh</a>
+                                        <a href="{{ route('downloadPemakaian', [
+                                            'start_date' => request()->input('start_date'),
+                                            'end_date' => request()->input('end_date'),
+                                            'id_barang' => request()->input('id_barang'),
+                                            'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger mt-2 mt-md-4 mx-1 w-100 w-md-auto" style="width: 120px;">Unduh PDF
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                            
                         </form>
                     </div>            
                 </div>
