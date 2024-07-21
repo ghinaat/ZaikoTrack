@@ -31,8 +31,10 @@ Users
                                     </div>
                                     <div class="mb-2 mb-md-0">
                                         <button type="submit" class="btn btn-success" id="importButton">Import</button>
-                                        <p><a href="https://docs.google.com/spreadsheets/d/1BkSPwDEJDwLAae41dmfyjsd9cdP8Z34ehdk-lmHUpDU/edit?usp=sharing" target="_blank">Format Excel</a></p>
                                     </div>
+                                </div>
+                                <div class="d-md-flex justify-content-md-end">
+                                    <a href="https://docs.google.com/spreadsheets/d/1BkSPwDEJDwLAae41dmfyjsd9cdP8Z34ehdk-lmHUpDU/edit?usp=sharing" target="_blank" class="btn btn-success">Download Format Excel</a>
                                 </div>
                             </form>
                         </div>

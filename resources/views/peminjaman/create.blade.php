@@ -163,7 +163,7 @@ Tambah Peminjaman
 
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_pemakaian">Keterangan
-                                                            Pemakaian</label>
+                                                            Peminjaman</label>
                                                         <input type="text" name="keterangan_pemakaian"
                                                             id="keterangan_pemakaian" class="form-control" required>
                                                     </div>
@@ -178,7 +178,7 @@ Tambah Peminjaman
                                                     </div>   
                                                    
                                                 <div class="button-row d-flex justify-content-end mt-4">
-                                                    <button class="btn btn-danger mybtn remove">Batal</button>
+                                                    <button class="btn btn-danger remove mybtn">Batal</button>
                                                     <button class="btn btn-primary ml-auto js-btn-simpan mybtn"
                                                         title="Selanjutnya">Selanjutnya</button>
                                                 </div>
@@ -204,7 +204,7 @@ Tambah Peminjaman
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
                                                                 <th>Ruangan</th>
-                                                                <th>Action</th>
+                                                                <th>Opsi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -324,6 +324,7 @@ Tambah Peminjaman
 </form>
 
 <script src="../js/script.js"></script>
+
 
 <script>
 $(document).ready(function() {

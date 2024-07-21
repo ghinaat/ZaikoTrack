@@ -231,7 +231,7 @@ Peminjaman
 
                                                         <div class="form-group mt-2">
                                                             <label for="keterangan_pemakaian">Keterangan
-                                                                Pemakaian</label>
+                                                                Peminjaman</label>
                                                             <input type="text" name="keterangan_pemakaian"
                                                                 id="keterangan_pemakaian" class="form-control" value="{{$peminjaman->keterangan_pemakaian ?? old('keterangan_pemakaians')}}">
                                                         </div>

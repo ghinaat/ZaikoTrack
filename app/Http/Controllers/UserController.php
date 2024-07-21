@@ -53,7 +53,6 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'password' => 'required',
-            'nis' => 'required',
             'level' => 'required',
         ];
 

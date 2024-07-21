@@ -89,7 +89,7 @@ Pembelian
                     <div class="form-group">
                         <label for="keterangan_anggaran">Keterangan Anggaran</label>
                         <input type="text" name="keterangan_anggaran" id="keterangan_anggaran"
-                            class="form-control" required></textarea>
+                            class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="nota_pembelian" class="form-label">Nota Pembelian</label>
