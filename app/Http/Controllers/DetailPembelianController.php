@@ -91,7 +91,11 @@ class DetailPembelianController extends Controller
                 $barang->stok_barang += $request->jumlah_barang;
                 $barang->save();
             }
-
+            $inventarisData = Inventaris::where('id_barang', $request->id_barang_bahan)->where('id_ruangan', 3)->first();
+            if($inventarisData){
+                $inventarisData->jumlah_barang += $request->jumlah_barang;
+                $inventarisData->save();
+            }
 
         } else{
             $detailPembelian->id_pembelian = $request->id_pembelian;

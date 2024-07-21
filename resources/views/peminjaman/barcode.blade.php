@@ -108,33 +108,30 @@ Tambah Peminjaman
                                                     </div>
                                         
                                                     <div  id="guruForm" style="display: none;">
-                                                    <div class="form-group">
-                                                        <label for="id_guru">Nama Guru</label>
-                                                        <select name="id_guru" id="normalize1">
-                                                            <option value="" selected disabled>Pilih Nama</option>
-                                                            @foreach($guru as $key => $g)
-                                                            <option value="{{ $g->id_guru }}">
-                                                                {{ $g->nama_guru }}
-                                                            </option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('id_guru')
-                                                        <div class="invalid-feedback">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="row">
+                                                    
+                                                        <div class="row">
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="nip" class="form-label">NIP</label>
-                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
+                                                                        <label for="id_guru">Nama Guru</label>
+                                                                        <select name="id_guru" id="normalize1">
+                                                                            <option value="" selected disabled>Pilih Nama</option>
+                                                                            @foreach($guru as $key => $g)
+                                                                            <option value="{{ $g->id_guru }}">
+                                                                                {{ $g->nama_guru }}
+                                                                            </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                        @error('id_guru')
+                                                                        <div class="invalid-feedback">
+                                                                            {{ $message }}
+                                                                        </div>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6 col-sm-6">
                                                                     <div class="form-group">
-                                                                        <label for="jurusan" class="form-label">Jurusan</label>
-                                                                        <input type="text" name="jurusan" id="jurusan" class="form-control" readonly>
+                                                                        <label for="nip" class="form-label">NIP</label>
+                                                                        <input type="text" name="nip" id="nip" class="form-control" readonly>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -161,10 +158,10 @@ Tambah Peminjaman
                                                    
 
                                                     <div class="form-group mt-2">
-                                                        <label for="keterangan_pemakaian">Keterangan
-                                                            Pemakaian</label>
-                                                        <input type="text" name="keterangan_pemakaian"
-                                                            id="keterangan_pemakaian" class="form-control" >
+                                                        <label for="keterangan_peminjaman">Keterangan
+                                                            Peminjaman</label>
+                                                        <input type="text" name="keterangan_peminjaman"
+                                                            id="keterangan_peminjaman" class="form-control" >
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -344,9 +341,16 @@ $(document).ready(function() {
 
         // Append the CSRF token to the data
         data += '&_token=' + $('meta[name="csrf-token"]').attr('content');
-        if (idPeminjaman) {
+         if (idPeminjaman) {
             data += '&id_peminjaman=' + idPeminjaman;
         }
+
+        // Dynamically adjust action URL and method for update operation
+        if (idPeminjaman) {
+            url = '/peminjaman/create/' + idPeminjaman;
+            method = 'PUT';
+        }
+
 
         // Kirim data ke server menggunakan AJAX
         $.ajax({
@@ -579,9 +583,11 @@ $(document).ready(function() {
     $('#formPeminjaman').on('click', '.remove', function(e) {
         e.preventDefault();
         if (!idPeminjaman) {
-            console.error('Error: idPeminjaman is not defined');
-            return;
-        }
+        console.error('Error: idPeminjaman is not defined');
+        // Redirect to /peminjaman if idPeminjaman is not defined
+        window.location.href = "/peminjaman";
+        return;
+    }
         let id_peminjaman =
             idPeminjaman;
 
@@ -728,13 +734,11 @@ document.querySelectorAll('select[name=id_ruangan], select[name=id_barang]').for
     const kelasInput = siswaElement.querySelector('#kelas');
     const nisInput = siswaElement.querySelector('#nis');
     const nipInput = guruElement.querySelector('#nip');
-    const jurusanInput = guruElement.querySelector('#jurusan');
 
     // Clear input values
     kelasInput.value = '';
     nisInput.value = '';
     nipInput.value = '';
-    jurusanInput.value = '';
 
     // Hide all forms initially
     siswaElement.style.display = 'none';
@@ -801,7 +805,6 @@ $('#normalize1').on('change', function() {
     
     // Temukan elemen input untuk nis dan kelas
     const nipInput = document.querySelector('input[name=nip]');
-    const jurusanInput = document.querySelector('input[name=jurusan]');
 
     // Lakukan permintaan AJAX untuk mengambil data berdasarkan selectedIGuru
     fetch(`/fetch-id-guru/${selectedIGuru}`)
@@ -821,13 +824,11 @@ $('#normalize1').on('change', function() {
 
             // Tampilkan data yang sesuai di elemen input
             nipInput.value = data.nip || '';
-            jurusanInput.value = data.jurusan || '';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
             // Kosongkan input dan mungkin tampilkan pesan error kepada user
             nipInput.value = '';
-            jurusanInput.value = '';
             // Opsional: tampilkan pesan error kepada user
             alert('Error: ' + error.message);
         });

@@ -47,6 +47,7 @@ class Peminjaman extends Model
             $model->tgl_pinjam = now();
         });
 
+        
     }
    
 }
