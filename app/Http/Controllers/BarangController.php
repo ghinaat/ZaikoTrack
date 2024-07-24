@@ -22,6 +22,7 @@ class BarangController extends Controller
         $bahan = Barang::where('id_jenis_barang',  3)->get();
         $barang = Barang::all();
         $inventaris = Inventaris::all();
+        $jenisBarang = JenisBarang::all()->except('3');
         $totals = $inventaris->groupBy('id_barang')->map(function ($group) {
             return $group->sum('jumlah_barang');
         });
@@ -37,7 +38,7 @@ class BarangController extends Controller
         'barang' => $barang,
         'bahan' => $bahan,
         'alatdanperlengkapan' => $alatdanperlengkapan,
-        'jenisBarang' => JenisBarang::all(),
+        'jenisBarang' => $jenisBarang,
         'updatedStokBarang' => $updatedStokBarang,
         'totals' => $totals,
         ]);

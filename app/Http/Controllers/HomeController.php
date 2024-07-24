@@ -36,7 +36,9 @@ class HomeController extends Controller
         $bahanPraktik = Barang::where('id_jenis_barang', '3')->sum('stok_barang');
         $inventaris = Inventaris::selectRaw('SUM(COALESCE(jumlah_barang, 1)) as total_jumlah_barang')
             ->value('total_jumlah_barang');
-
+        if($inventaris == null){
+            $inventaris == 0;
+        }
         $jadwalKembali = DetailPeminjaman::with(['peminjaman'])
             ->where('detail_peminjaman.status', 'dipinjam') // Tentukan tabel detail_peminjaman
             ->join('peminjaman', 'detail_peminjaman.id_peminjaman', '=', 'peminjaman.id_peminjaman')
@@ -53,6 +55,7 @@ class HomeController extends Controller
         } else {
             $jadwals = $jadwalKembali->groupBy('id_peminjaman');
         }
+        
         return view('home',[
             'inventaris' => $inventaris,
             'peminjaman' => $peminjaman,

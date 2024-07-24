@@ -76,7 +76,7 @@ Home
                             <div class="col-8" style="padding-right: 0px">
                                 <div class="numbers">
                                     <h5 class="font-weight-bolder text-primary mt-2" style="font-size: 26px">
-                                    {{$inventaris}}
+                                        {{ $inventaris ?? 0 }}                                    </h5>
                                     </h5>
                                     <p class="text-xs mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
 
@@ -316,8 +316,7 @@ Home
                             <div class="col-8" style="padding-right: 0px">
                                 <div class="numbers">
                                     <h5 class="font-weight-bolder text-primary mt-2" style="font-size: 26px">
-                                    {{$inventaris}}
-                                    </h5>
+                                        {{ $inventaris ?? 0 }}                                    </h5>
                                     <p class="text-xs mb-0 text-uppercase font-weight-bold">Terinventarisasi</p>
 
                                 </div>
