@@ -112,7 +112,7 @@ Route::get('/peminjaman/barcode', [PeminjamanController::class, 'Barcode'])->nam
 Route::get('/peminjaman', [App\Http\Controllers\PeminjamanController::class, 'index'])->name('peminjaman.index');
 Route::get('/peminjaman/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'showDetail'])->name('peminjaman.showDetail');
 Route::post('/peminjaman/create', [App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
-Route::put('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
+Route::put('/peminjaman/update/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'update'])->name('peminjaman.update');
 Route::delete('/peminjaman/create/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'destroy'])->name('peminjaman.destroy');
 Route::get('/fetch-id-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchIdBarang'])->name('peminjaman.fetchIdBarang');
 Route::get('/fetch-nama-barang/{id_barang}', [App\Http\Controllers\PeminjamanController::class, 'fetchNamaBarang'])->name('peminjaman.fetchNamaBarang');
@@ -129,6 +129,7 @@ Route::put('/peminjaman/detailPeminjaman/returnBarcode/{id_detail_peminjaman}', 
 Route::put('/peminjaman/detailPeminjaman/{id_detail_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'update'])->name('detailPeminjaman.update');
 Route::post('/peminjaman/detailPeminjaman/barcode', [App\Http\Controllers\DetailPeminjamanController::class, 'AddBarcode'])->name('detailPeminjaman.AddBarcode');
 Route::post('/peminjaman/detailPeminjaman/qrcode/{id_peminjaman}', [App\Http\Controllers\DetailPeminjamanController::class, 'AddQrcode'])->name('detailPeminjaman.AddQrcode');
+Route::get('/get-peminjaman-data/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'getPeminjamanData'])->name('peminjaman.getPeminjamanData');
 
 
 Route::get('/fetch-id-siswa/{id_users}', [App\Http\Controllers\PemakaianController::class, 'fetchSiswa'])->name('pemakaian.fetchIdSiswa');

@@ -144,9 +144,9 @@ Tambah Pemakaian
                                                         </div>
                                                         <div class="form-group mt-3" style="text-align: right;">
                                                             <button class="btn btn-secondary js-btn-update" type="click" title="Prev">Kembali</button>
-                                                            <a href="{{route('pemakaian.index')}}" class="btn btn-primary ">
+                                                            <a href="#" class="btn btn-primary" id="simpanButton" href="{{ route('pemakaian.index') }}">
                                                                 Simpan
-                                                            </a>                                                        
+                                                            </a>                                                     
                                                         </div>
                                                     </div>
                                                 </div>
@@ -283,7 +283,7 @@ Tambah Pemakaian
                                                         </div>
                                                         <div class="form-group mt-2" style="text-align: right;">
                                                             <button class="btn btn-danger js-btn-cancel" type="button" title="Prev">Batal</button>
-                                                            <button class="btn btn-primary js-btn-save-update" type="click" title="Next">Selnjutnya</button>
+                                                            <button class="btn btn-primary js-btn-save-update" type="click" title="Next">Selanjutnya</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -328,6 +328,24 @@ $('#normalize4').selectize({
 $('#normalize5').selectize({
 
 }); 
+
+document.getElementById('simpanButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        
+        // Perform your AJAX request or other logic here
+
+        // Redirect to the index page
+        window.location.href = "{{ route('pemakaian.index') }}";
+
+        // Show success message using SweetAlert2
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: 'Data Berhasil Disimpan.',
+            timer: 40000, // Set the timer to automatically close the message after 2 seconds
+            showConfirmButton: false // Hide the "OK" button
+        });
+    });
 
 //untuk select ruangan 
 document.addEventListener('DOMContentLoaded', function() {

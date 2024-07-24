@@ -179,63 +179,59 @@ class InventarisController extends Controller
             'jumlah_barang' => 'nullable|integer|min:1',
         ]);
     
-        // Fetch the Inventaris record
         $inventaris = Inventaris::find($id_inventaris);
-        // Check if the Inventaris record exists
-        if (!$inventaris) {
-            return redirect()->back()->withErrors(['error_message' => 'Inventaris not found.']);
-        }
-    
-        // Fetch the associated Barang record
-        $barang = Barang::find($inventaris->id_barang);
-    
-        // Check if the Barang record exists
-        if (!$barang) {
-            return redirect()->back()->withErrors(['error_message' => 'Barang not found.']);
-        }
-    
-        // Update id_ruangan for all cases
-      
-    
-        // If id_jenis_barang equals 3, validate and handle jumlah_barang
-        if ($barang->id_jenis_barang == 3) {
-            $request->validate([
-                'jumlah_barang' => 'required|integer|min:1',
-            ]);
-    
-            // If the requested jumlah_barang is less than current jumlah_barang
-            if ($request->jumlah_barang < $inventaris->jumlah_barang) {
-                // Calculate remaining quantity
-                $remaining_quantity = $inventaris->jumlah_barang - $request->jumlah_barang;
-    
-                // Update current inventaris with the new jumlah_barang
-                $inventaris->jumlah_barang = $remaining_quantity;
+
+    // Check if the Inventaris record exists
+    if (!$inventaris) {
+        return redirect()->back()->withErrors(['error_message' => 'Inventaris not found.']);
+    }
+
+    // Fetch the associated Barang record
+    $barang = Barang::find($inventaris->id_barang);
+
+    // Check if the Barang record exists
+    if (!$barang) {
+        return redirect()->back()->withErrors(['error_message' => 'Barang not found.']);
+    }
+
+    // If id_jenis_barang equals 3, validate and handle jumlah_barang
+            if ($barang->id_jenis_barang == 3) {
+            
+                    $request->validate([
+                        'jumlah_barang' => 'required|integer|min:1',
+                    ]);
+            
+                    // If the requested jumlah_barang is less than current jumlah_barang
+                    if ($request->jumlah_barang < $inventaris->jumlah_barang) {
+                        // Calculate remaining quantity
+                        $remaining_quantity = $inventaris->jumlah_barang - $request->jumlah_barang;
+            
+                        // Update current inventaris with the new jumlah_barang
+                        $inventaris->jumlah_barang = $remaining_quantity;
+                        
+                        // Save the changes to current inventaris
+                        $inventaris->save();
+            
+                        // Create a new inventaris for the remaining quantity
+                        $new_inventaris = new Inventaris();
+                        $new_inventaris->id_barang = $inventaris->id_barang;
+                        $new_inventaris->id_ruangan = $request->id_ruangan; // Assign the new room
+                        $new_inventaris->jumlah_barang = $request->jumlah_barang;
+                        $new_inventaris->save();
+            
+                        return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan dan sebagian dipisahkan ke inventaris baru.']);
+                    }
                 
-                // Save the changes to current inventaris
-                $inventaris->save();
-    
-                // Create a new inventaris for the remaining quantity
-                $new_inventaris = new Inventaris();
-                $new_inventaris->id_barang = $inventaris->id_barang;
-                $new_inventaris->id_ruangan = $request->id_ruangan; // Assign the new room
-                $new_inventaris->jumlah_barang = $request->jumlah_barang;
-                $new_inventaris->save();
-    
-                return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan dan sebagian dipisahkan ke inventaris baru.']);
             } else {
-                // Update jumlah_barang if not splitting
+                // For id_jenis_barang other than 3, just update the room
                 $inventaris->id_ruangan = $request->id_ruangan;
-                $inventaris->jumlah_barang = $request->jumlah_barang;
+                $inventaris->save();
+
+                return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
             }
         }
     
-        // Save the changes
-        $inventaris->save();
-    
-        // Return the success message
 
-        return redirect()->back()->with(['success_message' => 'Barang Telah Dipindahkan.']);
-    }
     
     
     

@@ -56,11 +56,6 @@ Peminjaman / List Barang
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
                       {{ $peminjaman->kelas ?? '' }} {{ $peminjaman->jurusan ?? '' }}
                     </div>
-                    @elseif($peminjaman->status == 'guru' )
-                    <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
-                    <div class="col-12 text-dark text-sm font-weight-bold mb-3">
-                      {{ $peminjaman->jurusan ?? '' }}
-                    </div>
                     @else
                     <h6 class="mt-2 text-secondary text-xs">Status</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">

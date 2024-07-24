@@ -265,7 +265,73 @@ class DetailPembelianController extends Controller
         }else if($barangAlat && $request->id_jenis_barang == 3){
 
             $barang = Barang::find($request->id_barang_bahan);
+          
             $detailPembelian->id_pembelian = $request->id_pembelian;
+            $oldJumlahBarang = $detailPembelian->jumlah_barang;
+            $subtotal_pembelian = $request->subtotal_pembelian;
+            $subtotalPembelian = str_replace(".", "", $subtotal_pembelian);
+            $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
+            $detailPembelian->subtotal_pembelian = $subtotalPembelians;
+            $detailPembelian->harga_perbarang = $subtotalPembelians / ($request->jumlah_barang);
+            $detailPembelian->jumlah_barang = $request->jumlah_barang;
+            $detailPembelian->id_barang = $request->id_barang_bahan;
+            $detailPembelian->save();
+        
+            // Delete previous Barang records related to the detail_pembelian
+            Barang::where('id_detail_pembelian', $id_detail_pembelian)->delete();
+        
+            if ($barang) {
+                // Calculate the difference between the new and old jumlah_barang
+                $newJumlahBarang = $request->jumlah_barang;
+                $stokDifference = $newJumlahBarang - $oldJumlahBarang;
+
+                        // Update the barang table with the new stock value
+                $barang->stok_barang = $stokDifference;
+                $barang->save();
+
+                // Synchronize the stok_barang in the inventaris table
+                $inventarisData = Inventaris::where('id_barang', $barang->id_barang)->where('id_ruangan', 3)->first();
+
+                if ($stokDifference > 0) {
+                    // If new stock is more than old stock, add the difference to inventaris
+                    if ($inventarisData) {
+                        $inventarisData->jumlah_barang += $stokDifference;
+                        $inventarisData->save();
+                    } else {
+                        // If no existing record in inventaris, create a new one
+                        Inventaris::create([
+                            'id_barang' => $barang->id_barang,
+                            'jumlah_barang' => $newJumlahBarang,
+                            'kondisi_barang' => 'lengkap', // Assuming default status is 'lengkap'
+                            'id_ruangan' => 3,
+                        ]);
+                    }
+                } elseif ($stokDifference < 0) {
+                    // If new stock is less than old stock, subtract the difference from inventaris
+                    $inventarisData->jumlah_barang += $stokDifference; // $stokDifference is negative, so it effectively subtracts
+                    $inventarisData->save();
+
+                    // Handle the case where the difference is more than the available inventaris stock
+                    if ($inventarisData->jumlah_barang < 0) {
+                        // Calculate the excess that needs to be subtracted from the barang stock
+                        $excess = abs($inventarisData->jumlah_barang);
+                        $inventarisData->jumlah_barang = 0; // Set inventaris stock to 0
+                        $inventarisData->save();
+
+                        // Subtract the excess from barang stock
+                        $barang->stok_barang -= $excess;
+                        $barang->save();
+                    }
+                }
+            }
+            return redirect()->back()->with(['success_message' => 'Data telah tersimpan']);
+
+        }else if($barangAlat == null && $request->id_jenis_barang == 3){
+            
+            $barang = Barang::find($request->id_barang_bahan);
+          
+            $detailPembelian->id_pembelian = $request->id_pembelian;
+            $oldJumlahBarang = $detailPembelian->jumlah_barang;
             $subtotal_pembelian = $request->subtotal_pembelian;
             $subtotalPembelian = str_replace(".", "",  $subtotal_pembelian);
             $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
@@ -276,36 +342,54 @@ class DetailPembelianController extends Controller
             $detailPembelian->save();
 
             Barang::where('id_detail_pembelian', $id_detail_pembelian)->delete();
-
+        
             if ($barang) {
-                $barang->stok_barang += $request->jumlah_barang;
-                $barang->save();
-            }
-            return redirect()->back()->with(['success_message' => 'Data telah tersimpan']);
+                // Calculate the difference between the new and old jumlah_barang
+                $newJumlahBarang = $request->jumlah_barang;
+                $stokDifference = $newJumlahBarang - $oldJumlahBarang;
 
-        }else if($barangAlat == null && $request->id_jenis_barang == 3){
+                        // Update the barang table with the new stock value
+                $barang->stok_barang = $stokDifference;
+                $barang->save();
+
+                // Synchronize the stok_barang in the inventaris table
+                $inventarisData = Inventaris::where('id_barang', $barang->id_barang)->where('id_ruangan', 3)->first();
+
+                if ($stokDifference > 0) {
+                    // If new stock is more than old stock, add the difference to inventaris
+                    if ($inventarisData) {
+                        $inventarisData->jumlah_barang += $stokDifference;
+                        $inventarisData->save();
+                    } else {
+                        // If no existing record in inventaris, create a new one
+                        Inventaris::create([
+                            'id_barang' => $barang->id_barang,
+                            'jumlah_barang' => $newJumlahBarang,
+                            'kondisi_barang' => 'lengkap', // Assuming default status is 'lengkap'
+                            'id_ruangan' => 3,
+                        ]);
+                    }
+                } elseif ($stokDifference < 0) {
+                    // If new stock is less than old stock, subtract the difference from inventaris
+                    $inventarisData->jumlah_barang += $stokDifference; // $stokDifference is negative, so it effectively subtracts
+                    $inventarisData->save();
+
+                    // Handle the case where the difference is more than the available inventaris stock
+                    if ($inventarisData->jumlah_barang < 0) {
+                        // Calculate the excess that needs to be subtracted from the barang stock
+                        $excess = abs($inventarisData->jumlah_barang);
+                        $inventarisData->jumlah_barang = 0; // Set inventaris stock to 0
+                        $inventarisData->save();
+
+                        // Subtract the excess from barang stock
+                        $barang->stok_barang -= $excess;
+                        $barang->save();
+                    }
+                }
+            }
             
-            $barang = Barang::find($request->id_barang_bahan);
-            if ($barang) {
-                // Kurangi stok barang dengan jumlah barang dari detail pembelian
-                $barang->stok_barang -= $detailPembelian->jumlah_barang;
-                $barang->save();
+            
 
-                // Kurangi lagi stok barang dengan jumlah barang yang diminta sekarang
-                $barang->stok_barang += $request->jumlah_barang;
-                $barang->save();
-            }
-            $detailPembelian->id_pembelian = $request->id_pembelian;
-            $subtotal_pembelian = $request->subtotal_pembelian;
-            $subtotalPembelian = str_replace(".", "",  $subtotal_pembelian);
-            $subtotalPembelians = str_replace("Rp", "", $subtotalPembelian);
-            $detailPembelian->subtotal_pembelian = $subtotalPembelians;
-            $detailPembelian->harga_perbarang = $subtotalPembelians / ($request->jumlah_barang);
-            $detailPembelian->jumlah_barang = $request->jumlah_barang;
-            $detailPembelian->id_barang = $request->id_barang_bahan;
-            $detailPembelian->save();
-
-           
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan']);
 
         }else if($barangAlat == null && $request->id_jenis_barang !== 3){
