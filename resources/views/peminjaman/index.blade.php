@@ -378,8 +378,14 @@ $(document).ready(function() {
                     } else if (response.status === 'guru') {
                         if (namaGuruElement) namaGuruElement.style.display = 'block';
                         const selectGuru = document.getElementById(`#normalize1${IdPeminjaman}`);
-                            
-                            fetchProfileData(response.id_guru, '/fetch-id-guru/', nipElement, null);
+                        const selectizeInstance = $(`#normalize1${IdPeminjaman}`).selectize()[0].selectize;
+                        console.log('Selected user ID:', response.id_guru);
+                        var existingOption = selectizeInstance.options[response.id_guru];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
+                    }
+                    selectizeInstance.setValue(response.id_guru);
+                            fetchProfileData(response.id_guru, '/fetch-id-guru/', nipElement, selectizeInstance);
                         
                     } else if (response.status === 'karyawan') {
                         if (namaKaryawanElement) namaKaryawanElement.style.display = 'block';
