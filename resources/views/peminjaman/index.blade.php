@@ -1,5 +1,5 @@
 @extends('layouts.demo')
-@section('title', 'List Peminjaamn')
+@section('title', 'List Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
 <style>
@@ -85,7 +85,7 @@ Peminjaman
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
 
-                                    @if($peminjaman->users->profile->kelas == null && $peminjaman->users->profile->jurusan == null)
+                                    @if($peminjaman->kelas == null && $peminjaman->jurusan == null)
 
                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
@@ -94,7 +94,7 @@ Peminjaman
                                     </td>
 
                                     @else
-                                    <td>{{$peminjaman->users->profile->kelas}} {{$peminjaman->users->profile->jurusan}}</td>
+                                    <td>{{$peminjaman->kelas}} {{$peminjamane->jurusan}}</td>
 
                                     @endif
                                     @endcan
