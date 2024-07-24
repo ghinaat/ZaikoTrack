@@ -46,15 +46,15 @@ class PeminjamanController extends Controller
     }
 
     // Retrieve the filtered Peminjaman records
-    $peminjaman = $peminjamanQuery->orderBy('id_peminjaman', 'desc')->get();
+    $peminjaman = $peminjamanQuery->orderBy('id_peminjaman', 'desc')->with(['users.profile'])->get();
     session()->put('selected_id_barang', $id_barang);
 
     // Retrieve other necessary data
     $barang = Barang::where('id_jenis_barang', '!=', 3)->get();
     $detailPeminjaman = DetailPeminjaman::all();
-    $users = User::where('id_users', '!=', 1)->with('profiles') // Eager load profiles
-    ->orderByRaw("LOWER(name)")
-    ->get();
+
+    $users = User::where('id_users', '!=', 1)->with('profile')->orderByRaw("LOWER(name)")->get();
+    
     $guru = Guru::where('id_guru', '!=', 1)->orderByRaw("LOWER(nama_guru)")->get();
     $karyawan = Karyawan::where('id_karyawan', '!=', 1)->orderByRaw("LOWER(nama_karyawan)")->get(); 
 
@@ -242,7 +242,7 @@ class PeminjamanController extends Controller
     
     public function showDetail($id_peminjaman)
     {
-        $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+        $peminjaman = Peminjaman::with(['users.profile'])->find($id_peminjaman);
         $detailPeminjamans = DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->get();
         $detailPeminjaman = DetailPeminjaman::where('id_peminjaman', $id_peminjaman)->get();
         $ruangan = Inventaris::select('id_ruangan', DB::raw('MAX(id_inventaris) as max_id_inventaris'))

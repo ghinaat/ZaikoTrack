@@ -84,18 +84,18 @@ Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
-
-                                    @if($peminjaman->users->profile->kelas == null && $peminjaman->users->profile->jurusan == null)
-
-                                    <td>
+                                   
+                                    @if($peminjaman->status == "siswa")
+                                   
+                                        
+                                    <td>{{ optional($peminjaman->users->profile)->kelas }} {{ optional($peminjaman->users->profile)->jurusan }}</td>                                     
+                                   
+                                     @else  
+                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
-                                       
+
                                     </td>
-
-                                    @else
-                                    <td>{{$peminjaman->users->profile->kelas}} {{$peminjaman->users->profile->jurusan}}</td>
-
                                     @endif
                                     @endcan
                                     <td>
@@ -332,6 +332,16 @@ $(document).ready(function() {
         const IdPeminjaman = $(this).data('id');
         initializeSelectize(IdPeminjaman);
 
+        $('#normalize' + IdPeminjaman).selectize({
+
+        }); 
+        $('#normalize1' + IdPeminjaman).selectize({
+
+        }); 
+        $('#normalize2' + IdPeminjaman).selectize({
+
+        }); 
+
         $.get(`/fetch-peminjaman-data/${IdPeminjaman}`)
         .done(response => {
             console.log('Data terkirim!!', response);
@@ -351,24 +361,38 @@ $(document).ready(function() {
 
                     // Show the form based on the status
                     if (response.status === 'siswa') {
-                       
                         if (namaSiswaElement) namaSiswaElement.style.display = 'block';
-                        const selectSiswa = document.getElementById(`#normalize${IdPeminjaman}`);
-                       
-                        // Fetch additional data if necessary
-                        fetchProfileData(response.id_users, '/fetch-id-siswa/', nisElement, kelasElement);
+                        const selectSiswa = document.getElementById(`normalize${IdPeminjaman}`);
+                    
+                        const selectizeInstance = $(`#normalize${IdPeminjaman}`).selectize()[0].selectize;
+                        console.log('Selected user ID:', response.id_users);
+                        var existingOption = selectizeInstance.options[response.id_users];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
+                    }
+                    selectizeInstance.setValue(response.id_users);
+                        fetchProfileData(response.id_users, '/fetch-id-siswa/', nisElement, kelasElement, selectizeInstance);
+
                     } else if (response.status === 'guru') {
                         if (namaGuruElement) namaGuruElement.style.display = 'block';
                         const selectGuru = document.getElementById(`#normalize1${IdPeminjaman}`);
-                    
-                        fetchProfileData(response.id_guru, '/fetch-id-guru/', nipElement, null);
+                            
+                            fetchProfileData(response.id_guru, '/fetch-id-guru/', nipElement, null);
+                        
                     } else if (response.status === 'karyawan') {
                         if (namaKaryawanElement) namaKaryawanElement.style.display = 'block';
                         const selectKaryawan = document.getElementById('normalize2' + IdPeminjaman);
+                        var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
+                    var existingOption = selectizeInstance.options[response.id_karyawan];
+                    if (!existingOption) {
+                        selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
+                    }
+                    selectizeInstance.setValue(response.id_karyawan); 
                         if (selectKaryawan) {
                             selectKaryawan.value = response.id_karyawan;
                             $(selectKaryawan).trigger('change'); // Trigger change if using Selectize or similar
-                         }
+                        }
+
                     }
                 })
                 .fail((jqXHR, textStatus, errorThrown) => {

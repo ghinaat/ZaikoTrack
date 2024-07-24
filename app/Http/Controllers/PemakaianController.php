@@ -90,7 +90,7 @@ class PemakaianController extends Controller
         $request->session()->put('selected_id_barang', $id_barang);
 
         // Mendapatkan data pemakaian yang telah difilter
-        $groupedPemakaians = $pemakaianFilter->orderBy('id_pemakaian', 'desc')->get();
+        $groupedPemakaians = $pemakaianFilter->orderBy('id_pemakaian', 'desc')->with(['users.profile'])->get();
 
         $idJenisBarang = 3;
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
@@ -110,7 +110,7 @@ class PemakaianController extends Controller
     }
 
     public function showDetail($id_pemakaian){
-        $pemakaian = Pemakaian::with('users', 'guru', 'karyawan')->find($id_pemakaian);
+        $pemakaian = Pemakaian::with('users', 'guru', 'karyawan')->with(['users.profile'])->find($id_pemakaian);
         $detailPemakaians = DetailPemakaian::with(['inventaris.barang'])->where('id_pemakaian', $pemakaian->id_pemakaian)->get();
         $idJenisBarang = 3;
         $bahanPraktik = Inventaris::whereHas('barang', function ($query) use ($idJenisBarang) {
