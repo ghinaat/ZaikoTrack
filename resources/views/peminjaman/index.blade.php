@@ -84,13 +84,18 @@ Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
-                                    @if($peminjaman->kelas == null && $peminjaman->jurusan == null)
+                                    @if($peminjaman->status == 'siswa')
+                                    <td>
+                                       @foreach($user->profiles as $profile)
+                                            {{ $profile->kelas }} {{ $profile->jurusan }}<br>
+                                        @endforeach
+                                    </td>
+                                    @else
                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
+                                       
                                     </td>
-                                    @else
-                                    <td>{{$peminjaman->kelas}} {{$peminjaman->jurusan}}</td>
                                     @endif
                                     @endcan
                                     <td>
@@ -133,164 +138,109 @@ Peminjaman
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form id="updateForm"
-                                                        action="{{ route('peminjaman.update', $peminjaman->id_peminjaman)}}"
+                                                    <form id="updateForm{{ $peminjaman->id_peminjaman }}" data-id-peminjaman="{{ $peminjaman->id_peminjaman }}"
+                                                        action="{{ route('peminjaman.update', $peminjaman->id_peminjaman) }}"
                                                         method="post" enctype="multipart/form-data">
                                                         @csrf
                                                         @method('PUT')
-                                                        @if( auth()->user()->level == "siswa")
-                                                            <input type="hidden" name="id_users" value="{{auth()->user()->id_users}}">
+                                                        @if(auth()->user()->level == "siswa")
                                                             <input type="hidden" name="status" value="siswa">
+                                                            <input type="hidden" name="id_users" value="{{ auth()->user()->id_users }}">
                                                         @else
-                                                        <div class="form-group">
-                                                            <label for="exampleInputstatus">Status</label>
-                                                            <select
-                                                                class="form-select @error('status') is-invalid @enderror selectpicker"
-                                                                data-live-search="true" id="status{{$peminjaman->id_peminjaman}}"
-                                                                name="status">
-                                                                <option value="siswa" @if($peminjaman->status == 'siswa'
-                                                                    ||
-                                                                    old('status')=='siswa'
-                                                                    )selected @endif>Siswa
-                                                                </option>
-                                                                <option value="guru" @if($peminjaman->status == 'guru'
-                                                                    ||
-                                                                    old('status')=='guru'
-                                                                    )selected @endif>Guru
-                                                                </option>
-                                                                <option value="karyawan" @if($peminjaman->status ==
-                                                                    'karyawan'
-                                                                    ||
-                                                                    old('status')=='karyawan'
-                                                                    )selected @endif>Karyawan</option>
-                                                            </select>
-                                                            @error('status')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="id_guru">Nama Guru 2</label>
-                                                            <select name="id_guru2" class="form-select" id="normalize3{{$peminjaman->id_peminjaman}}">
-                                                                <option value="" selected disabled>Pilih Nama</option>
-                                                                @foreach($guru as $key => $g)
-                                                                <option value="{{ $g->id_guru }}">
-                                                                    {{ $g->nama_guru }}
-                                                                </option>
-                                                                @endforeach
-                                                            </select>
-                                                            @error('id_guru')
-                                                            <div class="invalid-feedback">
-                                                                {{ $message }}
-                                                            </div>
-                                                            @enderror
-                                                        </div>
-                                                        <div id="siswaForm{{$peminjaman->id_peminjaman}}" style="display: none;">
-                                                            <div class="form-group" >
-                                                                <label for="id_users">Nama Siswa</label>
-                                                                <select name="id_users" class="form-select" id="normalize{{$peminjaman->id_peminjaman}}">                                                            <option selected>Select an option</option>
-                                                                    <option value="" selected disabled>Pilih Nama</option>
-                                                                    @foreach($users as $user)
-                                                                    @if($user->level == 'siswa')
-                                                                    <option value="{{ $user->id_users }}">{{ $user->name }}
-                                                                    </option>
-                                                                    @endif
-                                                                    @endforeach
-                                                                  </select>
-                                                                @error('id_users')
-                                                                <div class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
+                                                            <div class="form-group">
+                                                                <label for="status{{$peminjaman->id_peminjaman}}">Status</label>
+                                                                <select class="form-select @error('status') is-invalid @enderror selectpicker"
+                                                                    data-live-search="true" id="status{{$peminjaman->id_peminjaman}}" name="status">
+                                                                    <option value="siswa" @if($peminjaman->status == 'siswa' || old('status') == 'siswa') selected @endif>Siswa</option>
+                                                                    <option value="guru" @if($peminjaman->status == 'guru' || old('status') == 'guru') selected @endif>Guru</option>
+                                                                    <option value="karyawan" @if($peminjaman->status == 'karyawan' || old('status') == 'karyawan') selected @endif>Karyawan</option>
+                                                                </select>
+                                                                @error('status')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
                                                                 @enderror
+                                                            </div>
+                                                            <div id="siswaForm{{$peminjaman->id_peminjaman}}" style="display: none;">
+                                                                <!-- Siswa form fields -->
+                                                                <div class="form-group">
+                                                                    <label for="id_users">Nama Siswa</label>
+                                                                    <select name="id_users" class="form-select" id="normalize{{$peminjaman->id_peminjaman}}">
+                                                                        <option value="" selected disabled>Pilih Nama</option>
+                                                                        @foreach($users as $user)
+                                                                        @if($user->level == 'siswa')
+                                                                        <option value="{{ $user->id_users }}" @if($user->id_users == old('id_users')) selected @endif>{{ $user->name }}</option>
+                                                                        @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('id_users')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-6 col-sm-6">
+                                                                    <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="kelas" class="form-label">Kelas</label>
-                                                                             <input type="text" name="kelas" id="kelas{{$peminjaman->id_peminjaman}}" class="form-control" readonly>
+                                                                            <label for="kelas{{$peminjaman->id_peminjaman}}">Kelas</label>
+                                                                            <input type="text" name="kelas" id="kelas{{$peminjaman->id_peminjaman}}" class="form-control" readonly>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6 col-sm-6">
+                                                                    <div class="col-md-6">
                                                                         <div class="form-group">
-                                                                            <label for="nis" class="form-label">NIS</label>
+                                                                            <label for="nis{{$peminjaman->id_peminjaman}}">NIS</label>
                                                                             <input type="text" name="nis" id="nis{{$peminjaman->id_peminjaman}}" class="form-control" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div id="guruForm{{$peminjaman->id_peminjaman}}" style="display: none;">
+                                                                <!-- Guru form fields -->
+                                                                <div class="form-group">
+                                                                    <label for="id_guru">Nama Guru</label>
+                                                                    <select class="form-select" name="id_guru" id="normalize1{{$peminjaman->id_peminjaman}}">
+                                                                        <option value="" selected disabled>Pilih Nama</option>
+                                                                        @foreach($guru as $g)
+                                                                        <option value="{{ $g->id_guru }}" @if($g->id_guru == old('id_guru')) selected @endif>{{ $g->nama_guru }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('id_guru')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="nip{{$peminjaman->id_peminjaman}}">NIP</label>
+                                                                    <input type="text" name="nip" id="nip{{$peminjaman->id_peminjaman}}" class="form-control" readonly>
+                                                                </div>
+                                                            </div>
+                                                            <div id="karyawanForm{{$peminjaman->id_peminjaman}}" style="display: none;">
+                                                                <!-- Karyawan form fields -->
+                                                                <div class="form-group">
+                                                                    <label for="id_karyawan">Nama Karyawan</label>
+                                                                    <select class="form-select" name="id_karyawan" id="normalize2{{$peminjaman->id_peminjaman}}">
+                                                                        <option value="" selected disabled>Pilih Nama</option>
+                                                                        @foreach($karyawan as $k)
+                                                                        <option value="{{ $k->id_karyawan }}" @if($k->id_karyawan == old('id_karyawan')) selected @endif>{{ $k->nama_karyawan }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('id_karyawan')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                 
-                                                            <div  id="guruForm{{$peminjaman->id_peminjaman}}" style="display: none;">
-                                                            
-                                                                <div class="row">
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <div class="form-group">
-                                                                                <label for="id_guru">Nama Guru</label>
-                                                                                <select class="form-select" name="id_guru" id="normalize1{{$peminjaman->id_peminjaman}}">
-                                                                                    <option value="" selected disabled>Pilih Nama</option>
-                                                                                    @foreach($guru as $key => $g)
-                                                                                    <option value="{{ $g->id_guru }}">
-                                                                                        {{ $g->nama_guru }}
-                                                                                    </option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                                @error('id_guru')
-                                                                                <div class="invalid-feedback">
-                                                                                    {{ $message }}
-                                                                                </div>
-                                                                                @enderror
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <div class="form-group">
-                                                                                <label for="nip" class="form-label">NIP</label>
-                                                                                <input type="text" name="nip" id="nip{{$peminjaman->id_peminjaman}}" class="form-control" readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                              
-        
-                                                            <div class="form-group" id="karyawanForm{{$peminjaman->id_peminjaman}}" style="display: none;">
-                                                                <label for="id_karyawan">Nama Karyawan</label>
-                                                                <select class="form-select" name="id_karyawan" id="normalize2{{$peminjaman->id_peminjaman}}">
-                                                                    <option value="" selected disabled>Pilih Nama</option>
-                                                                    @foreach($karyawan as $key => $k)
-                                                                    <option value="{{ $k->id_karyawan }}">
-                                                                        {{ $k->nama_karyawan }}
-                                                                    </option>
-                                                                    @endforeach
-                                                                </select>
-                                                                @error('id_karyawan')
-                                                                <div class="invalid-feedback">
-                                                                    {{ $message }}
-                                                                </div>
-                                                                @enderror
-                                                            </div>
-                                                            @endif
-                                                           
-        
-                                                            <div class="form-group mt-2">
-                                                                <label for="keterangan_peminjaman">Keterangan
-                                                                    Peminjaman</label>
-                                                                <input type="text" name="keterangan_peminjaman"
-                                                                    id="keterangan_peminjaman{{$peminjaman->id_peminjaman}}" class="form-control" 
-                                                                    value="{{$peminjaman->keterangan_peminjaman}}" required>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="tgl_kembali" class="form-label">Tanggal
-                                                                    Kembali</label>
-                                                                <input type="date" name="tgl_kembali" id="tgl_kembali{{$peminjaman->id_peminjaman}}"
-                                                                    class="form-control" value="{{$peminjaman->tgl_kembali}}" required>
-                                                                
-                                                                </div>
-                                                        <div class="modal-footer">
-                                                            <button type="click" class="btn btn-primary">Simpan</button>
-                                                            <button type="button" class="btn btn-danger"
-                                                                data-dismiss="modal">Batal</button>
+                                                        <div class="form-group mt-2">
+                                                            <label for="keterangan_peminjaman">Keterangan Peminjaman</label>
+                                                            <input type="text" name="keterangan_peminjaman" id="keterangan_peminjaman{{$peminjaman->id_peminjaman}}" class="form-control" value="{{ old('keterangan_peminjaman', $peminjaman->keterangan_peminjaman) }}">
                                                         </div>
-                                                </form>
-                                            </div>
+                                                        <div class="form-group">
+                                                            <label for="tgl_kembali{{$peminjaman->id_peminjaman}}">Tanggal Kembali</label>
+                                                            <input type="date" name="tgl_kembali" id="tgl_kembali{{$peminjaman->id_peminjaman}}" class="form-control" value="{{ old('tgl_kembali', $peminjaman->tgl_kembali) }}" required>
+                                                        </div>
+                                                
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                         </div>
                                     </div>
                                     @endforeach
@@ -364,200 +314,156 @@ function notificationBeforeAdds(event, el, dt) {
     });
 }
 
+
+
 $(document).ready(function() {
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    // Set up global AJAX settings to include the CSRF token
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        }
+    });
+
+    // Handler for the edit button click
     $('.edit-button').click(function(e) {
         e.preventDefault();
+        const IdPeminjaman = $(this).data('id');
+        initializeSelectize(IdPeminjaman);
 
-        let IdPeminjaman = $(this).data('id');
-
-        $('#normalize' + IdPeminjaman).selectize({
-
-        }); 
-        $('#normalize1' + IdPeminjaman).selectize({
-
-        }); 
-        $('#normalize2' + IdPeminjaman).selectize({
-
-        }); 
-        $.ajax({
-            type: 'GET',
-            url: `/fetch-peminjaman-data/${IdPeminjaman}`,
-        })
-        .done(function(response) {
+        $.get(`/fetch-peminjaman-data/${IdPeminjaman}`)
+        .done(response => {
             console.log('Data terkirim!!', response);
-                const namaSiswaElement = document.getElementById('siswaForm' + IdPeminjaman);
-                const namaGuruElement = document.getElementById('guruForm' + IdPeminjaman);
-                const namaKaryawanElement = document.getElementById('karyawanForm' + IdPeminjaman);
-                const kelasElement = document.querySelector('#kelas' + IdPeminjaman);
-                const nisElement = document.querySelector('#nis' + IdPeminjaman);
-                const nipElement = document.querySelector('#nip' + IdPeminjaman);
 
-                namaSiswaElement.style.display = 'none';
-                namaGuruElement.style.display = 'none';
-                namaKaryawanElement.style.display = 'none';
+                    // Define elements
+                    const namaSiswaElement = document.getElementById('siswaForm' + IdPeminjaman);
+                    const namaGuruElement = document.getElementById('guruForm' + IdPeminjaman);
+                    const namaKaryawanElement = document.getElementById('karyawanForm' + IdPeminjaman);
+                    const kelasElement = document.querySelector('#kelas' + IdPeminjaman);
+                    const nisElement = document.querySelector('#nis' + IdPeminjaman);
+                    const nipElement = document.querySelector('#nip' + IdPeminjaman);
 
-            document.querySelectorAll('select[id="status' + IdPeminjaman + '"]').forEach(select => select.addEventListener('click', function() {
-
-                if (this.value === 'siswa') {
-                    namaSiswaElement.style.display = 'block';
-                    namaGuruElement.style.display = 'none';
-                    namaKaryawanElement.style.display = 'none';
-                } else if (this.value === 'guru') {
-                    namaSiswaElement.style.display = 'none';
-                    namaGuruElement.style.display = 'block';
-                    namaKaryawanElement.style.display = 'none';
-                } else if (this.value === 'karyawan') {
+                    // Hide all forms initially
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
-                    namaKaryawanElement.style.display = 'block';
-                }
-            }));
+                    namaKaryawanElement.style.display = 'none';
 
-            $('#normalize' + IdPeminjaman).on('change', function() {
-            var selectedIdUsers = $(this).selectize()[0].selectize.getValue();
-            console.log('Selected user ID:', selectedIdUsers);
-            const nisElement = document.querySelector('input[name=nis]');
-            const kelasElement = document.querySelector('input[name=kelas]');
-
-            fetch(`/fetch-id-siswa/${selectedIdUsers}`)
-                .then(response => {
-                    if (!response.ok) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Data profile belum disi.',
-                        });            }
-                    return response.json();
-                })
-                .then(data => {
-                    // Debug: Periksa data yang diterima
-                    console.log('Data received:', data);
-
-                    if (data.error) {
-                        throw new Error(data.error);
+                    // Show the form based on the status
+                    if (response.status === 'siswa') {
+                       
+                        if (namaSiswaElement) namaSiswaElement.style.display = 'block';
+                        const selectSiswa = document.getElementById(`#normalize${IdPeminjaman}`);
+                       
+                        // Fetch additional data if necessary
+                        fetchProfileData(response.id_users, '/fetch-id-siswa/', nisElement, kelasElement);
+                    } else if (response.status === 'guru') {
+                        if (namaGuruElement) namaGuruElement.style.display = 'block';
+                        const selectGuru = document.getElementById(`#normalize1${IdPeminjaman}`);
+                    
+                        fetchProfileData(response.id_guru, '/fetch-id-guru/', nipElement, null);
+                    } else if (response.status === 'karyawan') {
+                        if (namaKaryawanElement) namaKaryawanElement.style.display = 'block';
+                        const selectKaryawan = document.getElementById('normalize2' + IdPeminjaman);
+                        if (selectKaryawan) {
+                            selectKaryawan.value = response.id_karyawan;
+                            $(selectKaryawan).trigger('change'); // Trigger change if using Selectize or similar
+                         }
                     }
-
-                    // Tampilkan data yang sesuai di elemen input
-                    nisElement.value = data.nis || '';
-                    kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
                 })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    // Kosongkan Element dan mungkin tampilkan pesan error kepada user
-                    nisElement.value = '';
-                    kelasElement.value = '';
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    console.error('Data fetch failed:', errorThrown);
                 });
-        });
+    });
 
-        $('#normalize1' + IdPeminjaman).on('change', function() {
-            var selectedIGuru = $(this).selectize()[0].selectize.getValue();
-            console.log('Selected user ID:', selectedIGuru);
-            const nipElement = document.querySelector('input[name=nip]');
+    // Handler for form submission
+    $('form[id^="updateForm"]').submit(function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const formId = form.attr('id');
+        const IdPeminjaman = formId.match(/\d+/)[0];
+        const status = $(`#status${IdPeminjaman}`).val();
+        const formData = form.serializeArray();
 
-            fetch(`/fetch-id-guru/${selectedIGuru}`)
-                .then(response => {
-                    if (!response.ok) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'Data profile belum disi.',
-                        });            }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Data received:', data);
+        if (status === 'siswa') {
+            formData.push({ name: 'id_users', value: $(`#normalize${IdPeminjaman}`).val() });
+        } else if (status === 'guru') {
+            formData.push({ name: 'id_guru', value: $(`#normalize1${IdPeminjaman}`).val() });
+        } else if (status === 'karyawan') {
+            formData.push({ name: 'id_karyawan', value: $(`#normalize2${IdPeminjaman}`).val() });
+        }
 
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    nipElement.value = data.nip || '';
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    nipElement.value = '';
+        $.ajax({
+            type: 'PUT',
+            url: form.attr('action'),
+            data: $.param(formData),
+            success: response => {
+                console.log('Form submitted successfully:', response);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your changes have been saved.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = "{{ route('peminjaman.index') }}";
                 });
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+                console.error('Form submission failed:', errorThrown);
+            }
         });
+    });
 
+    function initializeSelectize(IdPeminjaman) {
+        $(`#normalize${IdPeminjaman}, #normalize1${IdPeminjaman}, #normalize2${IdPeminjaman}`).selectize();
+    }
 
-                if (response.status == 'siswa') {
-                    const selectedUser = response.id_users;
-                    fetch(`/fetch-id-siswa/${selectedUser}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Failed to fetch profile data');
-                            }
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.error) {
-                                    throw new Error(data.error);
-                                }
-                                nisElement.value = data.nis || '';
-                                kelasElement.value = (data.kelas || '') + ' ' + (data.jurusan || '');
-                            })
-                            .catch(error => {
-                                console.error('Error fetching data:', error);
-                                nisElement.value = '';                                    
-                                kelasElement.value = '';
-                                alert('Error: ' + error.message);
-                            });
-                    namaSiswaElement.style.display = 'block';
-                    $('#status_upd' + IdPeminjaman).val('siswa');
+    function handleStatusChange(IdPeminjaman, status, id_users, id_guru, id_karyawan) {
+        const statusElements = {
+            siswa: $(`#siswaForm${IdPeminjaman}`),
+            guru: $(`#guruForm${IdPeminjaman}`),
+            karyawan: $(`#karyawanForm${IdPeminjaman}`)
+        };
 
-                    var selectSiswa = document.getElementById('normalize' + IdPeminjaman);
-                    var selectizeInstance = $(selectSiswa).selectize()[0].selectize;
-                    var existingOption = selectizeInstance.options[response.id_users];
-                    if (!existingOption) {
-                        selectizeInstance.addOption({ value: response.id_users, text: 'User Name' }); // Replace 'User Name' with actual name
-                    }
-                    selectizeInstance.setValue(response.id_users);
+        Object.values(statusElements).forEach(element => element.hide());
+        statusElements[status].show();
 
-                } else if(response.status == 'guru'){
-                    const selectedGuru = response.id_guru;
-                        fetch(`/fetch-id-guru/${selectedGuru}`)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to fetch profile data');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log('Data received:', data);
-                                if (data.error) {
-                                    throw new Error(data.error);
-                                }
-                                nipElement.value = data.nip || '';
-                            })
-                            .catch(error => {
-                                console.error('Error fetching data:', error);
-                                nipElement.value = '';
-                                alert('Error: ' + error.message);
-                            });
-                    namaGuruElement.style.display = 'block';
-                    $('#status_upd' + IdPeminjaman).val('guru');
-                    var selectGuru = document.getElementById('normalize1' + IdPeminjaman);
-                    var selectizeInstance = $(selectGuru).selectize()[0].selectize;
-                    var existingOption = selectizeInstance.options[response.id_guru];
-                    if (!existingOption) {
-                        selectizeInstance.addOption({ value: response.id_guru, text: 'User Name' }); // Replace 'User Name' with actual name
-                    }
-                    selectizeInstance.setValue(response.id_guru);      
-     
-                } else if (response.status == 'karyawan') {
-                    namaKaryawanElement.style.display = 'block';
-                    $('#status_upd' + IdPeminjaman).val('karyawan');
-                    var selectKaryawan = document.getElementById('normalize2' + IdPeminjaman);
-                    var selectizeInstance = $(selectKaryawan).selectize()[0].selectize;
-                    var existingOption = selectizeInstance.options[response.id_karyawan];
-                    if (!existingOption) {
-                        selectizeInstance.addOption({ value: response.id_karyawan, text: 'User Name' }); // Replace 'User Name' with actual name
-                    }
-                    selectizeInstance.setValue(response.id_karyawan); 
-                }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('Data gagal terkirim!!', errorThrown);
+        initializeSelectize(IdPeminjaman);
+
+        handleSelectizeChange(`#normalize${IdPeminjaman}`, '/fetch-id-siswa/', $('#nis' + IdPeminjaman), $('#kelas' + IdPeminjaman));
+        handleSelectizeChange(`#normalize1${IdPeminjaman}`, '/fetch-id-guru/', $('#nip' + IdPeminjaman), null);
+        handleSelectizeChange(`#normalize2${IdPeminjaman}`, '/fetch-id-karyawan/', null, null);
+    }
+
+    function handleSelectizeChange(selectId, url, nisOrNipSelector, kelasSelector) {
+        const selectizeInstance = $(selectId).selectize()[0].selectize;
+        selectizeInstance.on('change', function(value) {
+            fetchProfileData(value, url, nisOrNipSelector, kelasSelector);
         });
+    }
+
+    function fetchProfileData(id, url, nisOrNipSelector, kelasSelector) {
+        fetch(`${url}${id}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch profile data');
+                return response.json();
+            })
+            .then(data => {
+                if (nisOrNipSelector) $(nisOrNipSelector).val(data.nis || data.nip || '');
+                if (kelasSelector) $(kelasSelector).val(`${data.kelas || ''} ${data.jurusan || ''}`);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                if (nisOrNipSelector) $(nisOrNipSelector).val('');
+                if (kelasSelector) $(kelasSelector).val('');
+            });
+    }
+
+      // Handler for status change
+      $(document).on('change', 'select[id^="status"]', function() {
+        const IdPeminjaman = $(this).attr('id').match(/\d+/)[0];
+        const status = $(this).val();
+        handleStatusChange(IdPeminjaman, status);
     });
 });
 

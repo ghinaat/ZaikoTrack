@@ -29,8 +29,6 @@ Pemakaian
                     <h4 class="m-0 text-dark">List Pemakaian</h4>
                 </div>
                 <div class="card-body m-0">
-                
-                    
                     
                     <div class="d-flex justify-content-between mt-1" style="margin-right: 7px;">
                         <a class="btn btn-primary" href="{{ route('pemakaian.create') }}">Tambah</a>
@@ -281,7 +279,7 @@ $(document).ready(function() {
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'block';
                     namaKaryawanElement.style.display = 'none';
-                } else if (this.value === 'karyawan') {
+                } else if (this.value === 'karyawan') { 
                     namaSiswaElement.style.display = 'none';
                     namaGuruElement.style.display = 'none';
                     namaKaryawanElement.style.display = 'block';

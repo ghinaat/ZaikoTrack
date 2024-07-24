@@ -52,7 +52,9 @@ class PeminjamanController extends Controller
     // Retrieve other necessary data
     $barang = Barang::where('id_jenis_barang', '!=', 3)->get();
     $detailPeminjaman = DetailPeminjaman::all();
-    $users = User::where('id_users', '!=', 1)->orderByRaw("LOWER(name)")->get();
+    $users = User::where('id_users', '!=', 1)->with('profiles') // Eager load profiles
+    ->orderByRaw("LOWER(name)")
+    ->get();
     $guru = Guru::where('id_guru', '!=', 1)->orderByRaw("LOWER(nama_guru)")->get();
     $karyawan = Karyawan::where('id_karyawan', '!=', 1)->orderByRaw("LOWER(nama_karyawan)")->get(); 
 
@@ -165,6 +167,24 @@ class PeminjamanController extends Controller
     // Redirect after processing notifications
     return response()->json(['success' => true, 'message' => 'Notifikasi telah terkirim.']);
 }   
+
+        public function getPeminjamanData($id_peminjaman)
+        {
+            
+            $getdataPeminjaman = Peminjaman::where('id_peminjaman', $id_peminjaman)->first();
+
+            // dd($getdataPeminjaman);
+
+            return response()->json([
+                'id_users' => $getdataPeminjaman->id_users,    // Ganti dengan nilai sesuai kebutuhan
+                'id_guru' => $getdataPeminjaman->id_guru,    // Ganti dengan nilai sesuai kebutuhan
+                'id_karyawan' => $getdataPeminjaman->id_karyawan, // Ganti dengan nilai sesuai kebutuhan
+                'tgl_pakai' => $getdataPeminjaman->tgl_pakai,    
+                'tgl_kembali' => $getdataPeminjaman->tgl_kembali,         // Ganti dengan nilai sesuai kebutuhan
+                'keterangan_peminjaman' => $getdataPeminjaman->keterangan_peminjaman,             // Ganti dengan nilai sesuai kebutuhan
+                'status' => $getdataPeminjaman->status,             // Ganti dengan nilai sesuai kebutuhan
+            ]);
+        }
  
 
     public function Barcode()
@@ -387,55 +407,46 @@ class PeminjamanController extends Controller
 
 
    
-    public function update(Request $request, $id_peminjaman)
-    {
-        try {
-            $request->validate([
-                'id_users' => 'nullable',
-                'id_karyawan' => 'nullable',
-                'id_guru' => 'nullable',
-                'status' => 'nullable',
-                'keterangan_peminjaman' => 'nullable',
-                'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 422);
-        }
-        
-        try {
-            $peminjaman = Peminjaman::findOrFail($id_peminjaman);
-        } catch (ModelNotFoundException $ex) {
-            return response()->json(['error' => 'Peminjaman not found'], 404);
-        }
-        $id_users = $request->filled('id_users') ? $request->id_users : 1;
-        $id_karyawan = $request->filled('id_karyawan') ? $request->id_karyawan : 1;
-        $id_guru = $request->filled('id_guru') ? $request->id_guru : 1;
-        
-        if(Auth::user()->level == 'siswa'){
-            $tgl_pinjam = $peminjaman->tgl_pinjam;
-        }else{
-            $tgl_pinjam = now();
-        }
-
-        dd($request->all());
-        // Update existing record
-        $peminjaman->update([
-            'id_users' => $id_users,
-            'id_guru' => $id_guru,
-            'id_karyawan' => $id_karyawan,
-            'status' => $request->status,
-            'tgl_pinjam' => $tgl_pinjam,
-            'tgl_kembali' => $request->tgl_kembali,
-            'keterangan_peminjaman' => $request->keterangan_peminjaman,
+public function update(Request $request, $id_peminjaman)
+{
+    try {
+        $validatedData = $request->validate([
+            'status' => 'required|string|in:siswa,guru,karyawan',
+             'id_users' => 'nullable|integer',
+            'id_guru' => 'nullable|integer',
+            'id_karyawan' => 'nullable|integer',
+            'nis' => 'nullable|string',
+            'nip' => 'nullable|string',
+            'kelas' => 'nullable|string',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
+
+        // Find the record and update
+        $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+        // \Log::info($request->all());
         
+        
+        $validatedData['id_users'] = $validatedData['id_users'] ?? 1;
+        $validatedData['id_guru'] = $validatedData['id_guru'] ?? 1;
+        $validatedData['id_karyawan'] = $validatedData['id_karyawan'] ?? 1;
+
+        $peminjaman->update($validatedData);
+
         if ($request->ajax()) {
-            return response()->json(['id_peminjaman' => $peminjaman->id_peminjaman, 'message' => 'Peminjaman berhasil disimpan']);
+            return response()->json(['message' => 'Peminjaman berhasil disimpan']);
         } else {
             return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
         }
+    } catch (ValidationException $e) {
+        return response()->json(['error' => $e->validator->errors()], 422);
+    } catch (ModelNotFoundException $ex) {
+        return response()->json(['error' => 'Peminjaman not found'], 404);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An unexpected error occurred: ' . $e->getMessage()], 500);
     }
-    
+}
+
+  
     public function fetchPeminjamanStatus($id_peminjaman)
     {
         $peminjaman = Peminjaman::findOrFail($id_peminjaman);
