@@ -214,9 +214,9 @@ Tambah Peminjaman
                                     <div id='button-new' class="d-flex justify-content-end mt-4 button-row">
                                         <button class="btn btn-secondary js-btn-prev mybtn" type="button"
                                             title="Prev">Kembali</button>
-                                        <a href="{{route('peminjaman.index')}}" class="btn btn-primary">
-                                            Simpan
-                                        </a>
+                                            <a href="#" class="btn btn-primary" id="simpanButton" href="{{ route('peminjaman.index') }}">
+                                                Simpan
+                                            </a>
                                     </div>
                                 </div>
                             </div>
@@ -323,6 +323,23 @@ $(document).ready(function() {
     });
 });
 
+document.getElementById('simpanButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        
+        // Perform your AJAX request or other logic here
+
+        // Redirect to the index page
+        window.location.href = "{{ route('peminjaman.index') }}";
+
+        // Show success message using SweetAlert2
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: 'Data Berhasil Disimpan.',
+            timer: 40000, // Set the timer to automatically close the message after 2 seconds
+            showConfirmButton: false // Hide the "OK" button
+        });
+    });
 
 $(document).ready(function() {
     var idPeminjaman;
@@ -347,7 +364,7 @@ $(document).ready(function() {
 
         // Dynamically adjust action URL and method for update operation
         if (idPeminjaman) {
-            url = '/peminjaman/create/' + idPeminjaman;
+            url = '/peminjaman/update/' + idPeminjaman;
             method = 'PUT';
         }
 
@@ -369,7 +386,7 @@ $(document).ready(function() {
 
                 // Perbarui action form dengan ID peminjaman yang baru jika sudah ada
                 if (idPeminjaman) {
-                    form.attr('action', '/peminjaman/create/' + idPeminjaman);
+                    form.attr('action', '/peminjaman/update/' + idPeminjaman);
                     form.attr('method', 'PUT'); // Set method form menjadi PUT
                 }
 

@@ -394,17 +394,10 @@ Barang
                             <input type="number" name="stok_barang" id="stok_barang" class="form-control"
                                 value="{{old('stok_barang', $br->stok_barang)}}" required>
                         </div>
-                        {{-- <div class="form-group">
-                            <label for="jenis_barang">Jenis Barang</label>
-                            <select class="form-select" name="id_jenis_barang" id="id_jenis_barang" required>
-                                @foreach($jenisBarang as $key => $jb)
-                                <option value="{{$jb->id_jenis_barang}}" @if($jb->id_jenis_barang ==
-                                    old('id_jenis_barang', $jb->id_jenis_barang) ) selected @endif>
-                                    {{$jb->nama_jenis_barang}}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
+                        <div class="form-group">
+                            <label for="jenis_barang" style="display: none;">Jenis Barang</label>
+                            <input type="hidden" name="id_jenis_barang" value="3">
+                        </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>

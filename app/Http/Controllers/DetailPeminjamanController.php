@@ -229,7 +229,7 @@ class DetailPeminjamanController extends Controller
         })
         ->first();
         if ($existingInventaris) {
-            return redirect()->back()->with(['error' => 'An invetaris item with the same Kode Barang already exists.']);
+            return redirect()->back()->with(['error' => 'Barang ini telah dipinjam.']);
         }
         
         $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;

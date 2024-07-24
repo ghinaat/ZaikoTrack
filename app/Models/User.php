@@ -57,8 +57,8 @@ class User extends Authenticatable
         return $this->hasMany(Peminjaman::class, 'id_users', 'id_users');
     }
 
-    public function profile()
+    public function profiles()
     {
-        return $this->hasOne(Profile::class, 'id_users');
+        return $this->hasMany(Profile::class, 'id_users');
     }
 }

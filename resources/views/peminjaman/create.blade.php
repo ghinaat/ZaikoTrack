@@ -542,7 +542,7 @@ $(document).ready(function() {
 
                 // Perbarui action form dengan ID peminjaman yang baru jika sudah ada
                 if (idPeminjaman) {
-                    form.attr('action', '/peminjaman/create/' + idPeminjaman);
+                    form.attr('action', '/peminjaman/update/' + idPeminjaman);
                     form.attr('method', 'PUT'); // Set method form menjadi PUT
                 }
 
