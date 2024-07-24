@@ -84,18 +84,18 @@ Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
-                                    @if($peminjaman->status == 'siswa')
-                                    <td>
-                                       @foreach($user->profiles as $profile)
-                                            {{ $profile->kelas }} {{ $profile->jurusan }}<br>
-                                        @endforeach
-                                    </td>
-                                    @else
+
+                                    @if($peminjaman->users->profile->kelas == null && $peminjaman->users->profile->jurusan == null)
+
                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
                                        
                                     </td>
+
+                                    @else
+                                    <td>{{$peminjaman->users->profile->kelas}} {{$peminjaman->users->profile->jurusan}}</td>
+
                                     @endif
                                     @endcan
                                     <td>

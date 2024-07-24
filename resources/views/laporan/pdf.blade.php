@@ -129,7 +129,7 @@
                             @if($peminjaman->id_karyawan !== 1) 
                             <td align="center">-</td>
                             @else
-                            <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
                             @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
@@ -151,7 +151,7 @@
                             @if($peminjaman->id_karyawan !== 1) 
                             <td align="center">-</td>
                             @else
-                            <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
                             @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
@@ -173,7 +173,7 @@
                             @if($peminjaman->id_karyawan !== 1) 
                             <td align="center">-</td>
                             @else
-                            <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
                             @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
@@ -203,7 +203,7 @@
                             @if($peminjaman->id_karyawan !== 1) 
                             <td align="center">-</td>
                             @else
-                            <td>{{ $peminjaman->kelas }} {{ $peminjaman->jurusan }}</td>
+                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
                             @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>

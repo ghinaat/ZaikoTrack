@@ -69,10 +69,10 @@ Pemakaian
                                     </td>
                                    
                                     <td>
-                                        @if ($pakai->kelas == null && $pakai->jurusan == null)
+                                        @if ($pakai->users->profile->kelas == null && $pakai->users->profile->jurusan == null)
                                             -
                                         @else
-                                            {{$pakai->kelas}} {{$pakai->jurusan}}
+                                            {{$pakai->users->profile->kelas}} {{$pakai->users->profile->jurusan}}
                                         @endif
                                     </td>
                                     @endcan
