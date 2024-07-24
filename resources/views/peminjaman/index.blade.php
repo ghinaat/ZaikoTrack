@@ -84,13 +84,13 @@ Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
-                                    @if($peminjaman->kelas == null && $peminjaman->jurusan == null)
+                                    @if($peminjaman->users->profile->kelas == null && $peminjaman->users->profile->jurusan == null)
                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
                                     </td>
                                     @else
-                                    <td>{{$peminjaman->kelas}} {{$peminjaman->jurusan}}</td>
+                                    <td>{{$peminjaman->users->profile->kelas}} {{$peminjaman->users->profile->jurusan}}</td>
                                     @endif
                                     @endcan
                                     <td>

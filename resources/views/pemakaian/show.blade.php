@@ -54,7 +54,7 @@ Detail Pemakaian
                   <div class="d-flex flex-column">
                     <h6 class="mt-2 text-secondary text-xs">Kelas</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
-                      {{ $pemakaian->kelas ?? '' }} {{ $pemakaian->jurusan ?? '' }}
+                      {{ $pemakaian->users->profile->kelas ?? '' }} {{ $pemakaian->users->profile->jurusan ?? '' }}
                     </div>
                   </div>
                 </div>

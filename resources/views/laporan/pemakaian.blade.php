@@ -137,7 +137,7 @@
                                         @if($pemakaian->id_karyawan !== 1) 
                                             <td align="center">-</td>
                                         @else
-                                            <td>{{ $pemakaian->kelas }} {{ $pemakaian->jurusan }}</td>
+                                            <td>{{ $pemakaian->users->profile->kelas }} {{ $pemakaian->users->profile->jurusan }}</td>
                                         @endif
                                         <td>{{ \Carbon\Carbon::parse($pemakaian->tgl_pakai)->format('d F Y') }}</td>
                                         <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
