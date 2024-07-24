@@ -69,11 +69,13 @@ Pemakaian
                                     </td>
                                    
                                     <td>
-                                        @if ($pakai->users->profile->kelas == null && $pakai->users->profile->jurusan == null)
-                                            -
-                                        @else
-                                            {{$pakai->users->profile->kelas}} {{$pakai->users->profile->jurusan}}
+                                        @if ($pakai->status == "siswa")
+                                        {{ optional($pakai->users->profile)->kelas }} {{ optional($pakai->users->profile)->jurusan }}                                  
+                                        @else    
+                                           <div style='display: flex; justify-content: center;'>-
+                                           </div>
                                         @endif
+                                        
                                     </td>
                                     @endcan
                                     @endcan

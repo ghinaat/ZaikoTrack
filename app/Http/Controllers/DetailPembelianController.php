@@ -96,6 +96,7 @@ class DetailPembelianController extends Controller
                 $inventarisData->jumlah_barang += $request->jumlah_barang;
                 $inventarisData->save();
             }
+            
 
         } else{
             $detailPembelian->id_pembelian = $request->id_pembelian;
@@ -141,9 +142,8 @@ class DetailPembelianController extends Controller
                     'qrcode_image' => $imageName,
                 ];
             }
-            
             // Simpan data barang
-            Barang::insert($barangData);
+        Barang::insert($barangData);
             foreach ($barangData as $barangItem) {
                 $inventaris = new Inventaris();
                 $inventaris->id_barang = $barangItem['id_barang'];

@@ -67,8 +67,6 @@ class PembelianController extends Controller
         $request->validate([
             'tgl_pembelian' => 'required',
             'nama_toko' => 'required',
-            'total_pembelian' => 'required',
-            'stok_barang' => 'required',
             'keterangan_anggaran' => 'required',
             'nota_pembelian' => 'mimes:jpg,jpng,png',
         ]);
@@ -77,13 +75,7 @@ class PembelianController extends Controller
        
         $pembelian->tgl_pembelian = $request->tgl_pembelian;
         $pembelian->nama_toko = $request->nama_toko;
-        $pembelian->stok_barang = $request->stok_barang;
         $pembelian->keterangan_anggaran = $request->keterangan_anggaran;
-
-        $total_pembelian = $request->total_pembelian;
-        $totalPembelian = str_replace(".", "", $total_pembelian);
-        $totalPembelians = str_replace("Rp", "", $totalPembelian);
-        $pembelian->total_pembelian = $totalPembelians;
 
         if ($request->hasFile('nota_pembelian')) {
             // Hapus gambar lama jika ada
@@ -97,8 +89,6 @@ class PembelianController extends Controller
             Storage::disk('public')->put('nota_pembelian/' . $nama_nota_pembelian, file_get_contents($nota_pembelian));
             $pembelian->nota_pembelian = $nama_nota_pembelian;
         }
-           
-        
 
         $pembelian->save();
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
