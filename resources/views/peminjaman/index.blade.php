@@ -1,5 +1,5 @@
 @extends('layouts.demo')
-@section('title', 'List Peminjaamn')
+@section('title', 'List Peminjaman')
 @section('css')
 <link rel="stylesheet" href="{{asset('dist\css\selectize.bootstrap5.css')}}">
 <style>
@@ -84,6 +84,7 @@ Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
+
                                    
                                     @if($peminjaman->status == "siswa")
                                    
@@ -94,6 +95,7 @@ Peminjaman
                                      <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
+
 
                                     </td>
                                     @endif
