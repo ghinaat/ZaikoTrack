@@ -120,13 +120,15 @@ Laporan Peminjaman
                                     @else
                                     <td>{{ $peminjaman->users ? $peminjaman->users->name : 'N/A' }}</td>
                                     @endif
-                                    @if($peminjaman->users->profile->kelas == null && $peminjaman->users->profile->jurusan == null)
+                                    @if($peminjaman->status != "siswa")
                                     <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
                                     </td>
                                     @else
-                                    <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                                    <td>
+                                        {{ optional($peminjaman->users->profile)->kelas }} {{ optional($peminjaman->users->profile)->jurusan }}                                    </td>
+                                    </td>
                                     @endif
                                     <td>
                                         <a href="{{ route('peminjaman.showDetail', $peminjaman->id_peminjaman) }}"

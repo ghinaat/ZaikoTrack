@@ -421,7 +421,7 @@ class PeminjamanController extends Controller
             $tgl_pinjam = now();
         }
 
-        dd($request->all());
+        // dd($request->all());
         // Update existing record
         $peminjaman->update([
             'id_users' => $id_users,
