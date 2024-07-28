@@ -429,6 +429,9 @@ $(document).ready(function() {
             type: 'PUT',
             url: form.attr('action'),
             data: $.param(formData),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: response => {
                 console.log('Form submitted successfully:', response);
                 Swal.fire({
@@ -443,7 +446,7 @@ $(document).ready(function() {
             error: (jqXHR, textStatus, errorThrown) => {
                 console.error('Form submission failed:', errorThrown);
             }
-        });
+         });
     });
 
     function initializeSelectize(IdPeminjaman) {

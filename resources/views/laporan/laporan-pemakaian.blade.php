@@ -120,13 +120,14 @@ Laporan Pemakaian
                                     @else
                                     <td>{{ $pemakaians->users ? $pemakaians->users->name : 'N/A' }}</td>
                                     @endif
-                                    @if($pemakaians->users->profile->kelas == null && $pemakaians->users->profile->jurusan == null)
-                                    <td>
+                                    @if ($pemakaians->status != 'siswa')                                  
+                                      <td>
                                         <div style='display: flex; justify-content: center;'>-
                                         </div>
                                     </td>
                                     @else
-                                    <td>{{ $pemakaians->users->profile->kelas }} {{ $pemakaians->users->profile->jurusan }}</td>
+                                    <td>
+                                        {{ optional($pemakaians->users->profile)->kelas }} {{ optional($pemakaians->users->profile)->jurusan }}                                    </td>
                                     @endif
                                     <td>
                                         <a href="{{ route('pemakaian.showDetail', $pemakaians->id_pemakaian) }}"

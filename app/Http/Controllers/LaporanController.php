@@ -77,7 +77,7 @@ class LaporanController extends Controller
     session()->put('selected_nama_peminjam', $selectedNamaPeminjam);
 
     // Retrieve the filtered Peminjaman records
-    $peminjaman = $peminjamanQuery->orderBy('id_peminjaman', 'desc')->get();
+    $peminjaman = $peminjamanQuery->orderBy('id_peminjaman', 'desc')->with(['users.profile'])->get();
     session()->put('selected_id_barang', $id_barang);
 
     // Retrieve other necessary data
@@ -242,7 +242,7 @@ public function exportPDFPeminjaman(Request $request)
         }
 
         // Ambil semua data peminjaman dengan waktu peminjamannya
-        $groupedPemakaians = Pemakaian::latest()->get();
+        $groupedPemakaians = Pemakaian::latest()->with(['users.profile'])->get();
 
         // Mengumpulkan semua nama peminjam dari peminjaman yang unik
         $peminjam_names = $groupedPemakaians->flatMap(function ($pemakaian) {
