@@ -159,10 +159,10 @@ Tambah Peminjaman
                                                    
 
                                                     <div class="form-group mt-2">
-                                                        <label for="keterangan_pemakaian">Keterangan
+                                                        <label for="keterangan_peminjaman">Keterangan
                                                             Peminjaman</label>
-                                                        <input type="text" name="keterangan_pemakaian"
-                                                            id="keterangan_pemakaian" class="form-control" required>
+                                                        <input type="text" name="keterangan_peminjaman"
+                                                            id="keterangan_peminjaman" class="form-control" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
