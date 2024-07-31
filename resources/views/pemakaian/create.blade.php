@@ -113,6 +113,10 @@ Tambah Pemakaian
                                                                     <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
                                                                     <input type="text"  name="keterangan_pemakaian" id="keterangan_pemakaian" class="multisteps-form__input form-control"  ></input>
                                                                 </div>
+                                                                <div class="form-group">
+                                                                    <label for="tgl_pakai" class="form-label">Tanggal Pemakaian</label>
+                                                                    <input type="date" name="tgl_pakai" id="tgl_pakai" class="form-control" required>
+                                                                </div>   
                                                             </div>
                                                             <div class="form-group text-end justify-content-end mb-0 mt-4" >
                                                                 <button class="btn btn-danger js-btn-cancel mx-2" type="click" title="Prev">Batal</button>
@@ -279,6 +283,10 @@ Tambah Pemakaian
                                                             <div class="form-group">
                                                                 <label for="keterangan_pemakaian">Keterangan Pemakaian</label>
                                                                 <input type="text" name="keterangan_pemakaian" id="keterangan_pemakaian_update" class="multisteps-form__input form-control" ></input>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="tgl_pakai" class="form-label">Tanggal Pemakaian</label>
+                                                                <input type="date" name="tgl_pakai" id="tgl_pakai_update" class="form-control" required>
                                                             </div>
                                                         </div>
                                                         <div class="form-group mt-2" style="text-align: right;">
@@ -863,6 +871,7 @@ $(document).ready(function() {
                 }
                 
                 $('#keterangan_pemakaian_update').prop('value',response.keterangan_pemakaian);
+                $('#tgl_pakai_update').prop('value',response.tgl_pakai);
                 const panelUpdate = document.getElementById('panel_update');
                 let panelUpdateIndex = Array.from(DOMstrings.stepFormPanels).indexOf(panelUpdate);
                 setActivePanel(panelUpdateIndex);
