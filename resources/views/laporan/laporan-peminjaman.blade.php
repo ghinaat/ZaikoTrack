@@ -23,6 +23,10 @@
   width: 380px; /* Sesuaikan lebar input field sesuai kebutuhan */
 }
 
+.btn-disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
 </style>
 @endsection
 @section('breadcrumb-name')
@@ -84,7 +88,10 @@ Laporan Peminjaman
                                             'tglawal' => request()->input('tglawal'),
                                             'tglakhir' => request()->input('tglakhir'),
                                             'id_barang' => request()->input('id_barang'),
-                                            'nama_peminjam' => session('selected_nama_peminjam') ]) }}" class="btn btn-danger mt-2 mt-md-4 mx-1 w-100 w-md-auto" style="width: 120px;">Unduh PDF
+                                            'nama_peminjam' => session('selected_nama_peminjam') ]) }}" 
+                                            id="download-pdf"
+                                            class="btn btn-danger mt-2 mt-md-4 mx-1 w-100 w-md-auto btn-disabled"
+                                            style="width: 120px;">Unduh PDF
                                         </a>
                                     </div>
                                 </div>
@@ -178,14 +185,25 @@ $(document).ready(function() {
         }
     });
 
-    table.on('order.dt search.dt', function() {
-        table.column(0, {
-            search: 'applied',
-            order: 'applied'
-        }).nodes().each(function(cell, i) {
-            cell.innerHTML = i + 1;
-        });
-    }).draw();
+    function updateDownloadButton() {
+        var downloadButton = $('#download-pdf');
+
+        // Periksa apakah ada data di tabel
+        var dataCount = table.rows().count();
+        if (dataCount > 0) {
+            downloadButton.removeClass('btn-disabled');
+        } else {
+            downloadButton.addClass('btn-disabled');
+        }
+    }
+
+    // Panggil fungsi saat tabel di-render ulang (draw event)
+    table.on('draw', function() {
+        updateDownloadButton();
+    });
+
+    // Panggil fungsi saat halaman dimuat
+    updateDownloadButton();
 });
 </script>
 @endpush

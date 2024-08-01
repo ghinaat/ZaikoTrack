@@ -60,6 +60,9 @@ class LaporanController extends Controller
     // Ambil semua data peminjaman dengan waktu peminjamannya
     $peminjamans = Peminjaman::latest()->get();
 
+    // Tentukan apakah ada data
+    $hasData = $peminjamans->isNotEmpty();
+
     // Mengumpulkan semua nama peminjam dari peminjaman yang unik
     $peminjam_names = $peminjamans->flatMap(function ($peminjaman) {
         return [
@@ -90,6 +93,7 @@ class LaporanController extends Controller
     return view('laporan.laporan-peminjaman', [
         'peminjaman' => $peminjaman,
         'peminjam_names' => $peminjam_names,
+        'hasData' => $hasData,
         'barang' => $barang,
         'id_barang' => $id_barang,
         'detailPeminjaman' => $detailPeminjaman,
@@ -244,6 +248,9 @@ public function exportPDFPeminjaman(Request $request)
         // Ambil semua data peminjaman dengan waktu peminjamannya
         $groupedPemakaians = Pemakaian::latest()->with(['users.profile'])->get();
 
+        // Tentukan apakah ada data
+        $hasData = $groupedPemakaians->isNotEmpty();
+
         // Mengumpulkan semua nama peminjam dari peminjaman yang unik
         $peminjam_names = $groupedPemakaians->flatMap(function ($pemakaian) {
             return [
@@ -292,6 +299,7 @@ public function exportPDFPeminjaman(Request $request)
 
         return view('laporan.laporan-pemakaian', [
            'groupedPemakaians' => $groupedPemakaians,
+           'hasData' => $hasData,
             'siswa' => $siswa,
             'guru' => $guru,
             'karyawan' => $karyawan,

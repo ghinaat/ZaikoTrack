@@ -200,10 +200,17 @@
                                     {{ $peminjaman->karyawan->nama_karyawan}}
                                 @endif
                             </td>
+                            <td>
                             @if($peminjaman->id_karyawan !== 1) 
-                            <td align="center">-</td>
+                                <span style="display: block; text-align: center;">-</span>
                             @else
-                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                                @if(!empty($peminjaman->users->profile))
+                                    {{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}
+                                @else
+                                    <span style="display: block; text-align: center;">-</span>
+                                @endif
+                            @endif
+                            </td>                                        
                             @endif
                             <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
                             <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
@@ -217,7 +224,6 @@
                                 @endif
                             </td>
                         </tr>
-                        @endif
                         @endif
                     @endif
                 @endforeach
