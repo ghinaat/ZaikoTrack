@@ -116,7 +116,7 @@ Detail Pemakaian
                                 <th>No.</th>
                                 <th>Nama Barang</th>
                                 <th>Ruangan</th>
-                                <th>Stok</th>
+                                <th>Jumlah Pemakaian</th>
                                 @can('isTeknisi')
                                 <th style="width:120px;">Opsi</th>
                                 @endcan

@@ -200,6 +200,7 @@ Tambah Peminjaman
                                                             <tr>
                                                                 <th>No.</th>
                                                                 <th>Nama Barang</th>
+                                                                <th>Kode Barang</th>
                                                                 <th>Ruangan</th>
                                                                 <th>Opsi</th>
                                                             </tr>

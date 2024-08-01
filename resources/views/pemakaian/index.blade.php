@@ -41,11 +41,9 @@ Pemakaian
                                 <tr>
                                     <th>No.</th>
                                     <th>Tanggal Pakai</th>
-                                    @can('isTeknisi', 'isKaprog', 'isKabeng')
                                     @cannot('isSiswa')
                                     <th>Nama</th>
                                     <th>Kelas</th>
-                                    @endcan
                                     @endcan
                                     <th>List Barang</th>
                                     <th style="width:189px;">Opsi</th>
@@ -56,7 +54,6 @@ Pemakaian
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pakai->tgl_pakai)->format('d F Y')}}</td>
-                                    @can('isTeknisi', 'isKaprog', 'isKabeng')
                                     @cannot('isSiswa')
                                     <td>
                                         @if($pakai->status == 'siswa')
@@ -78,8 +75,7 @@ Pemakaian
                                         
                                     </td>
                                     @endcan
-                                    @endcan
-                                    <td>
+                                     <td>
                                         <a href="{{ route('pemakaian.showDetail', $pakai->id_pemakaian) }}"
                                             class="btn btn-info btn-xs mx-1">
                                             <i class="fa fa-rectangle-list"></i>

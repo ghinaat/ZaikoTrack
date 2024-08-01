@@ -134,17 +134,23 @@
                                                 {{ $pemakaian->karyawan->nama_karyawan}}
                                             @endif
                                         </td>
+                                        <td>
                                         @if($pemakaian->id_karyawan !== 1) 
-                                            <td align="center">-</td>
+                                            <span style="display: block; text-align: center;">-</span>
                                         @else
-                                            <td>{{ $pemakaian->users->profile->kelas }} {{ $pemakaian->users->profile->jurusan }}</td>
+                                            @if(!empty($pemakaian->users->profile))
+                                                {{ $pemakaian->users->profile->kelas }} {{ $pemakaian->users->profile->jurusan }}
+                                            @else
+                                                <span style="display: block; text-align: center;">-</span>
+                                            @endif
+                                        @endif
+                                        </td>                                        
                                         @endif
                                         <td>{{ \Carbon\Carbon::parse($pemakaian->tgl_pakai)->format('d F Y') }}</td>
                                         <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
                                         <td>{{ $detail['jumlah_barang'] }}</td>
                                     </tr>
                                 @endif
-                            @endif
                         @endif
                     @endforeach
                 @endforeach
@@ -165,9 +171,3 @@
     </div>
 </body>
 </html>
-
-</html>
-                
-    
-
- 
