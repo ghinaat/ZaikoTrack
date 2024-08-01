@@ -179,10 +179,10 @@ class BarangController extends Controller
         ])->setPaper('a4', 'potrait');
         return $pdf->download('LabelQRcode.pdf');   
     } 
+    
     public function selectPrint(Request $request){
 
         $selectedData = $request->input('id_barang');
-      
         if (!$selectedData) {
             return redirect()->back()->with(['error' => 'Tidak ada data yang di pilih.']);
         }
