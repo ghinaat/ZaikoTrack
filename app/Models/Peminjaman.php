@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Peminjaman extends Model
 {
@@ -40,14 +41,12 @@ class Peminjaman extends Model
     }
 
     protected static function boot()
-    {
-        parent::boot();
+        {
+            parent::boot();
 
-        static::creating(function ($model) {
-            $model->tgl_pinjam = now();
-        });
-
-        
-    }
+            static::creating(function ($model) {
+                $model->tgl_pinjam = Carbon::now('Asia/Jakarta');
+            });
+        }
    
 }
