@@ -244,7 +244,7 @@ Barang
                     @csrf
                     <div class="form-group">
                         <label for="nama_barang">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="nama_barang" class="form-control" required>
+                        <input type="text" maxlength="35" name="nama_barang" id="nama_barang" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="merek">Merek</label>

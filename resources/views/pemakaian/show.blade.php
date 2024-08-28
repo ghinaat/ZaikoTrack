@@ -59,13 +59,13 @@ Detail Pemakaian
                   </div>
                 </div>
               </li>
-              @elseif($pemakaian->status == 'guru')
+              @else
               <li class=" d-flex justify-content-betweenborder-radius-lg mb-2 border-divider">
                 <div class="col-12">
                   <div class="d-flex flex-column">
-                    <h6 class="mt-2 text-secondary text-xs">Jurusan</h6>
+                    <h6 class="mt-2 text-secondary text-xs">Status</h6>
                     <div class="col-12 text-dark text-sm font-weight-bold mb-3">
-                      {{ $pemakaian->jurusan ?? '' }}
+                      {{ $pemakaian->status ?? '' }}
                     </div>
                   </div>
                 </div>

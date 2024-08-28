@@ -118,129 +118,128 @@
         <tbody>
             @php $nomorUrut = 1; @endphp
             @foreach($peminjamans as $key => $peminjaman)
-                @foreach($dataDetail as $detail)
-                    @if(isset($detail['id_peminjaman']) && $detail['id_peminjaman'] == $peminjaman->id_peminjaman)
-                        @if(empty($nama_barang) || $detail->inventaris->barang['nama_barang'] == $nama_barang)   
+            @foreach($dataDetail as $detail)
+                @if(isset($detail['id_peminjaman']) && $detail['id_peminjaman'] == $peminjaman->id_peminjaman)
+                    @if(empty($nama_barang) || $detail->inventaris->barang['nama_barang'] == $nama_barang)   
                         @if(session('selected_nama_peminjam'))
-                        @if($peminjaman->id_users !== 1 && $peminjaman->users->name == session('selected_nama_peminjam')) 
-                        <tr>
-                            <td>{{ $nomorUrut++ }}</td>
-                            <td>{{ $peminjaman->users->name }}</td>
-                            @if($peminjaman->id_karyawan !== 1) 
-                            <td align="center">-</td>
-                            @else
-                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                            @if($peminjaman->id_users !== 1 && $peminjaman->users->name == session('selected_nama_peminjam')) 
+                                <tr>
+                                    <td>{{ $nomorUrut++ }}</td>
+                                    <td>{{ $peminjaman->users->name }}</td>
+                                    @if($peminjaman->id_karyawan !== 1) 
+                                        <td align="center">-</td>
+                                    @else
+                                        <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                                    @endif
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
+                                    <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                                    <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
+                                    <td>
+                                        @if($detail['status'] == 'dipinjam')
+                                            Dipinjam
+                                        @else
+                                            Sudah Dikembalikan
+                                        @endif
+                                    </td>
+                                </tr>
                             @endif
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
-                            <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
-                            <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
-                            <td>
-                                @if($detail['status'] == 'dipinjam')
-                                    Dipinjam
-                                @else
-                                    Sudah Dikembalikan
-                                @endif
-                            </td>
-                        </tr>
-                        @endif
-                        @if($peminjaman->id_guru !== 1 && $peminjaman->guru->nama_guru == session('selected_nama_peminjam')) 
-                        <tr>
-                            <td>{{ $nomorUrut++ }}</td>
-                            <td>{{ $peminjaman->guru->nama_guru }}</td>
-                            @if($peminjaman->id_karyawan !== 1) 
-                            <td align="center">-</td>
-                            @else
-                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                            @if($peminjaman->id_guru !== 1 && $peminjaman->guru->nama_guru == session('selected_nama_peminjam')) 
+                                <tr>
+                                    <td>{{ $nomorUrut++ }}</td>
+                                    <td>{{ $peminjaman->guru->nama_guru }}</td>
+                                    @if($peminjaman->id_guru !== 1) 
+                                        <td align="center">-</td>
+                                    @else
+                                        <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                                    @endif
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
+                                    <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                                    <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
+                                    <td>
+                                        @if($detail['status'] == 'dipinjam')
+                                            Dipinjam
+                                        @else
+                                            Sudah Dikembalikan
+                                        @endif
+                                    </td>
+                                </tr>
                             @endif
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
-                            <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
-                            <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
-                            <td>
-                                @if($detail['status'] == 'dipinjam')
-                                    Dipinjam
-                                @else
-                                    Sudah Dikembalikan
-                                @endif
-                            </td>
-                        </tr>
-                        @endif
-                        @if($peminjaman->id_karyawan !== 1 && $peminjaman->karyawan->nama_karyawan == session('selected_nama_peminjam')) 
-                        <tr>
-                            <td>{{ $nomorUrut++ }}</td>
-                            <td>{{ $peminjaman->karyawan->nama_karyawan }}</td>
-                            @if($peminjaman->id_karyawan !== 1) 
-                            <td align="center">-</td>
-                            @else
-                            <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                            @if($peminjaman->id_karyawan !== 1 && $peminjaman->karyawan->nama_karyawan == session('selected_nama_peminjam')) 
+                                <tr>
+                                    <td>{{ $nomorUrut++ }}</td>
+                                    <td>{{ $peminjaman->karyawan->nama_karyawan }}</td>
+                                    @if($peminjaman->id_karyawan !== 1) 
+                                        <td align="center">-</td>
+                                    @else
+                                        <td>{{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}</td>
+                                    @endif
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
+                                    <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                                    <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
+                                    <td>
+                                        @if($detail['status'] == 'dipinjam')
+                                            Dipinjam
+                                        @else
+                                            Sudah Dikembalikan
+                                        @endif
+                                    </td>
+                                </tr>
                             @endif
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
-                            <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
-                            <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
-                            <td>
-                                @if($detail['status'] == 'dipinjam')
-                                    Dipinjam
-                                @else
-                                    Sudah Dikembalikan
-                                @endif
-                            </td>
-                        </tr>
-                        @endif
                         @else
-                        <tr>
-                            <td>{{ $nomorUrut++ }}</td>
-                            <td>
-                                @if($peminjaman->id_users !== 1) 
-                                    {{ $peminjaman->users->name}}
-                                @elseif($peminjaman->id_guru !== 1) 
-                                    {{ $peminjaman->guru->nama_guru}}
-                                @elseif($peminjaman->id_karyawan !== 1) 
-                                    {{ $peminjaman->karyawan->nama_karyawan}}
-                                @endif
-                            </td>
-                            <td>
-                            @if($peminjaman->id_karyawan !== 1) 
-                                <span style="display: block; text-align: center;">-</span>
-                            @else
-                                @if(!empty($peminjaman->users->profile))
-                                    {{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}
-                                @else
+                            <tr>
+                                <td>{{ $nomorUrut++ }}</td>
+                                <td>
+                                    @if($peminjaman->id_users !== 1) 
+                                        {{ $peminjaman->users->name}}
+                                    @elseif($peminjaman->id_guru !== 1) 
+                                        {{ $peminjaman->guru->nama_guru}}
+                                    @elseif($peminjaman->id_karyawan !== 1) 
+                                        {{ $peminjaman->karyawan->nama_karyawan}}
+                                    @endif
+                                </td>
+                                <td>
+                                @if($peminjaman->id_karyawan !== 1) 
                                     <span style="display: block; text-align: center;">-</span>
-                                @endif
-                            @endif
-                            </td>                                        
-                            @endif
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
-                            <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
-                            <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
-                            <td>
-                                @if($detail['status'] == 'dipinjam')
-                                    Dipinjam
                                 @else
-                                    Sudah Dikembalikan
+                                    @if(!empty($peminjaman->users->profile))
+                                        {{ $peminjaman->users->profile->kelas }} {{ $peminjaman->users->profile->jurusan }}
+                                    @else
+                                        <span style="display: block; text-align: center;">-</span>
+                                    @endif
                                 @endif
-                            </td>
-                        </tr>
+                                </td>                                        
+                                <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_pinjam)->format('d F Y') }}</td>
+                                <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                                <td>{{ $detail->inventaris->barang['kode_barang'] }}</td>
+                                <td>{{ \Carbon\Carbon::parse($peminjaman->tgl_kembali)->format('d F Y') }}</td>
+                                <td>
+                                    @if($detail['status'] == 'dipinjam')
+                                        Dipinjam
+                                    @else
+                                        Sudah Dikembalikan
+                                    @endif
+                                </td>
+                            </tr>
                         @endif
                     @endif
-                @endforeach
+                @endif
             @endforeach
-        </tbody>
-    </table>
-<div>
+        @endforeach
+    </tbody>
+</table>
 <div class="tanda-tangan">
-        <p>Cibinong, {{ date('d F Y') }} <br>
+    <p>Cibinong, {{ date('d F Y') }} <br>
         Yang Menyatakan,</p>
-            <br>
-            <br>
-            <br>
-            <br>
-            <p>(...............................................) <br>
-            {{$userName}}</p>
-        </div>
-    </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>(...............................................) <br>
+        {{$userName}}
+    </p>
+</div>
 </body>
 </html>

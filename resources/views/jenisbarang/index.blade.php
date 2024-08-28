@@ -9,8 +9,8 @@ Jenis Barang
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <div class="card mb-2">
-                <div class="card-header">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
                     <h4 class="m-0 text-dark">List Jenis Barang</h4>
                 </div>
                 <div class="card-body m-0">
@@ -46,13 +46,13 @@ Jenis Barang
         </div>
     </div>
 </div>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Tambah Jenis barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title" id="addModalLabel">Tambah Jenis barang</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -60,8 +60,11 @@ Jenis Barang
                     @csrf
                     <div class="form-group">
                         <label for="name">Jenis Barang</label>
-                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control"
-                            required>
+                        <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control" 
+                            value="{{ old('nama_jenis_barang') }}" required>
+                        @error('nama_jenis_barang')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -81,8 +84,8 @@ Jenis Barang
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Jenis barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -94,6 +97,9 @@ Jenis Barang
                         <label for="name">Jenis Barang</label>
                         <input type="text" name="nama_jenis_barang" id="nama_jenis_barang" class="form-control"
                             value="{{ old('nama_jenis_barang', $jb->nama_jenis_barang) }}" required>
+                        @error('nama_jenis_barang')
+                            <span class="text-danger">{{$message}}</span>                            
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -125,4 +131,13 @@ $(document).ready(function() {
     });
 });
 </script>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @endpush

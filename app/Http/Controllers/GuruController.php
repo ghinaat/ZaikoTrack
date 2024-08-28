@@ -34,7 +34,7 @@ class GuruController extends Controller
     {
         $request->validate([
             'nip' => 'required',
-            'nama_guru' => 'required'
+            'nama_guru' => 'required|max:30'
         ]);
         
         $guru = new Guru();
@@ -68,7 +68,7 @@ class GuruController extends Controller
     {
         $request->validate([
             'nip' => 'required',
-            'nama_guru' => 'required'
+            'nama_guru' => 'required|max:30'
         ]);
         
         $guru = Guru::find($id_guru);

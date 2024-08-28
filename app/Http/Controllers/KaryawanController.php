@@ -35,7 +35,7 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_karyawan' => 'required',
+            'nama_karyawan' => 'required|max:30',
         ]);
         $array = $request->only([
             'nama_karyawan',
@@ -70,7 +70,7 @@ class KaryawanController extends Controller
     {
 
         $request->validate([
-            'nama_karyawan' => 'required',
+            'nama_karyawan' => 'required|max:30',
         ]);
 
         $karyawan = Karyawan::find($id_karyawan);
