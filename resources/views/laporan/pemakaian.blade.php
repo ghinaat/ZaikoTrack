@@ -115,26 +115,26 @@
         </thead>
         <tbody>
             @php $nomorUrut = 1; @endphp
-                @foreach($pemakaians as $key => $pemakaian)
-                    @foreach($dataDetail as $detail)
-                        @if(isset($detail['id_pemakaian']) && $detail['id_pemakaian'] == $pemakaian->id_pemakaian)
-                            @if(empty($nama_barang) || $detail->inventaris->barang['nama_barang'] == $nama_barang)
-                                @if(($pemakaian->id_users !== 1 && $pemakaian->users->name == session('selected_nama_peminjam')) || 
-                                    ($pemakaian->id_guru !== 1 && $pemakaian->guru->nama_guru == session('selected_nama_peminjam')) || 
-                                    ($pemakaian->id_karyawan !== 1 && $pemakaian->karyawan->nama_karyawan == session('selected_nama_peminjam')) ||
-                                    (session('selected_nama_peminjam') == null))
-                                    <tr>
-                                        <td>{{ $nomorUrut++ }}</td>
-                                        <td>
-                                            @if($pemakaian->id_users !== 1) 
-                                                {{ $pemakaian->users->name}}
-                                            @elseif($pemakaian->id_guru !== 1) 
-                                                {{ $pemakaian->guru->nama_guru}}
-                                            @elseif($pemakaian->id_karyawan !== 1) 
-                                                {{ $pemakaian->karyawan->nama_karyawan}}
-                                            @endif
-                                        </td>
-                                        <td>
+            @foreach($pemakaians as $key => $pemakaian)
+                @foreach($dataDetail as $detail)
+                    @if(isset($detail['id_pemakaian']) && $detail['id_pemakaian'] == $pemakaian->id_pemakaian)
+                        @if(empty($nama_barang) || $detail->inventaris->barang['nama_barang'] == $nama_barang)
+                            @if((session('selected_nama_peminjam') == null) ||
+                                ($pemakaian->id_users !== 1 && $pemakaian->users->name == session('selected_nama_peminjam')) || 
+                                ($pemakaian->id_guru !== 1 && $pemakaian->guru->nama_guru == session('selected_nama_peminjam')) || 
+                                ($pemakaian->id_karyawan !== 1 && $pemakaian->karyawan->nama_karyawan == session('selected_nama_peminjam')))
+                                <tr>
+                                    <td>{{ $nomorUrut++ }}</td>
+                                    <td>
+                                        @if($pemakaian->id_users !== 1) 
+                                            {{ $pemakaian->users->name }}
+                                        @elseif($pemakaian->id_guru !== 1) 
+                                            {{ $pemakaian->guru->nama_guru }}
+                                        @elseif($pemakaian->id_karyawan !== 1) 
+                                            {{ $pemakaian->karyawan->nama_karyawan }}
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if($pemakaian->id_karyawan !== 1) 
                                             <span style="display: block; text-align: center;">-</span>
                                         @else
@@ -144,19 +144,18 @@
                                                 <span style="display: block; text-align: center;">-</span>
                                             @endif
                                         @endif
-                                        </td>                                        
-                                        @endif
-                                        <td>{{ \Carbon\Carbon::parse($pemakaian->tgl_pakai)->format('d F Y') }}</td>
-                                        <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
-                                        <td>{{ $detail['jumlah_barang'] }}</td>
-                                    </tr>
-                                @endif
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($pemakaian->tgl_pakai)->format('d F Y') }}</td>
+                                    <td>{{ $detail->inventaris->barang['nama_barang'] }}</td>
+                                    <td>{{ $detail['jumlah_barang'] }}</td>
+                                </tr>
+                            @endif
                         @endif
-                    @endforeach
+                    @endif
                 @endforeach
-            </tbody>
-        </table>
-    </div>
+            @endforeach
+        </tbody>        
+    </table>
 </div> 
 <div class="tanda-tangan">
     <p>Cibinong, {{ date('d F Y') }} <br>

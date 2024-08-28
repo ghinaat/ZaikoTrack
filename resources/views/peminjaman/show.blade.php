@@ -306,7 +306,7 @@ Peminjaman / List Barang
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addModalLabel">Tambah Barang Peminjaman</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-close" style="color: black;"></i>
                 </button>
             </div>
@@ -470,6 +470,7 @@ function notificationBeforeAddPeminjaman(event, el, dt) {
         text: 'Pilih cara untuk menambahkan data:',
         icon: 'info',
         showCancelButton: true,
+        showCloseButton: true, // Menambahkan tombol "X" di pojok kanan atas
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Dengan Barcode',
@@ -478,7 +479,7 @@ function notificationBeforeAddPeminjaman(event, el, dt) {
         if (result.isConfirmed) {
             // If the user chooses "Dengan Barcode"
             window.location.href = `/peminjaman/qrcode/${idPeminjaman}`; // Navigate to the URL with the id_ruangan
-        } else {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
             // If the user chooses "Tanpa Barcode", display the add modal
             showAddModal();
             $('#addModal').modal('hide')

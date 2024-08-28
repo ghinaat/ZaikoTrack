@@ -20,7 +20,7 @@ class JenisBarangController extends Controller
         
         // dd($request);
         $request->validate([
-            'nama_jenis_barang' => 'required'
+            'nama_jenis_barang' => 'required|max:20'
         ]);
 
         $jenisBarang = new JenisBarang();
@@ -35,7 +35,7 @@ class JenisBarangController extends Controller
     public function update(Request $request, $id_jenis_barang){
 
         $request->validate([
-            'nama_jenis_barang' => 'required',
+            'nama_jenis_barang' => 'required|max:20',
         ]);
 
         $jenisBarang = JenisBarang::find($id_jenis_barang);

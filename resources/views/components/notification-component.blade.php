@@ -72,6 +72,7 @@ function notificationBeforeAdd(event, el, dt) {
         text: 'Pilih cara untuk menambahkan data:',
         icon: 'info',
         showCancelButton: true,
+        showCloseButton: true, // Menambahkan tombol "X" di pojok kanan atas
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Dengan Barcode',
@@ -80,7 +81,7 @@ function notificationBeforeAdd(event, el, dt) {
         if (result.isConfirmed) {
             // If the user chooses "Dengan Barcode"
             window.location.href = `/inventaris/barcode/${idRuangan}`; // Navigate to the URL with the id_ruangan
-        } else {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
             // If the user chooses "Tanpa Barcode", display the add modal
             showAddModal();
             $('#addModal').modal('hide')
@@ -112,6 +113,7 @@ function notificationBeforeReturn(event, el, dt) {
         text: 'Pilih cara untuk pengembalian barang:',
         icon: 'info',
         showCancelButton: true,
+        showCloseButton: true, // Menambahkan tombol "X" di pojok kanan atas
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Dengan Barcode',
@@ -121,7 +123,7 @@ function notificationBeforeReturn(event, el, dt) {
         if (result.isConfirmed) {
             // If the user chooses "Dengan Barcode"
             window.location.href = `/detailPeminjaman/return/barcode/${idDetailPeminjaman}`; // Navigate to the URL with the id_ruangan
-        } else {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
             // If the user chooses "Tanpa Barcode", display the add modal
             window.location.href = `/detailPeminjaman/return/${idDetailPeminjaman}`; // Navigate to the URL with the id_ruangan
           

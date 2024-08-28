@@ -72,10 +72,11 @@ Karyawan
                                                     @method('PUT')
                                                     <div class="form-group">
                                                         <label for="nama_karyawan">Nama Karyawan</label>
-                                                        <input type="text" name="nama_karyawan" id="nama_karyawan"
-                                                            class="form-control"
-                                                            value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}"
-                                                            required>
+                                                        <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control"
+                                                            value="{{ old('nama_karyawan', $karyawan->nama_karyawan) }}" required>
+                                                        @error('nama_karyawan') 
+                                                            <span class="text-danger">{{$message}}</span>
+                                                        @enderror
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -111,6 +112,9 @@ Karyawan
                         <label for="nama_karyawan">Nama Karyawan</label>
                         <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control"
                             value="{{ old('nama_karyawan') }}" required>
+                        @error('nama_karyawan') 
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -142,4 +146,13 @@ $(document).ready(function() {
     });
 });
 </script>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @endpush
