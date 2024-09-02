@@ -357,7 +357,7 @@ class PeminjamanController extends Controller
             'id_karyawan' => 'nullable',
             'id_guru' => 'nullable',
             'status' => 'nullable',
-            'keterangan_peminjaman' => 'nullable',
+            'keterangan_peminjaman' => 'nullable|max:50',
             'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
         ]);
     } catch (ValidationException $e) {
@@ -399,7 +399,7 @@ class PeminjamanController extends Controller
                 'id_karyawan' => 'nullable',
                 'id_guru' => 'nullable',
                 'status' => 'nullable',
-                'keterangan_peminjaman' => 'nullable',
+                'keterangan_peminjaman' => 'nullable|max:50',
                 'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             ]);
         } catch (ValidationException $e) {

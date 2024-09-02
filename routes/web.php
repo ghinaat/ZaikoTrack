@@ -120,7 +120,7 @@ Route::get('/peminjaman/filter', [PeminjamanController::class, 'filter'])->name(
 Route::get('/fetch-peminjaman-status/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'getSiswaOptions'])->name('peminjaman.getSiswaOptions');
 Route::get('/fetch-peminjaman-data/{id_peminjaman}', [App\Http\Controllers\PeminjamanController::class, 'fetchPemakaianData'])->name('pemakaian.fetchPemakaianData');
 
-
+Route::put('/detailPeminjaman/approval/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'approval'])->name('detailPeminjaman.approval');
 Route::get('/detailPeminjaman/return/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'Return'])->name('detailPeminjaman.return');
 Route::get('/detailPeminjaman/return/barcode/{id_detail_peminjaman}', [DetailPeminjamanController::class, 'returnScan'])->name('detailPeminjaman.returnScan');
 Route::post('/peminjaman/detailPeminjaman', [App\Http\Controllers\DetailPeminjamanController::class, 'store'])->name('detailPeminjaman.store');

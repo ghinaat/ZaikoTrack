@@ -35,7 +35,7 @@ class InventarisController extends Controller
             'id_ruangan' => 'required',
             'jumlah_barang' => 'nullable',
             'kondisi_barang' => 'nullable',
-            'ket_barang' => 'nullable'
+            'ket_barang' => 'nullable|max:50'
         ]);
 
         $existingInventaris = Inventaris::where('id_ruangan', $request->id_ruangan)
@@ -128,7 +128,7 @@ class InventarisController extends Controller
             'id_ruangan' => 'required',
             'jumlah_barang' => 'nullable',
             'kondisi_barang' => 'nullable',
-            'ket_barang' => 'nullable'
+            'ket_barang' => 'nullable|max:50'
         ]);
 
         $inventaris = Inventaris::find($id_inventaris);
@@ -298,7 +298,7 @@ class InventarisController extends Controller
             $request->validate([
                 'kode_barang' => 'required', // Ensure kode_barang is unique in the inventaris table
                 'kondisi_barang' => 'required',
-                'ket_barang' => 'nullable',
+                'ket_barang' => 'nullable|max:50',
             ]);
             
             // Mendapatkan objek Inventaris berdasarkan id_ruangan dan id_barang

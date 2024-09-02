@@ -161,7 +161,7 @@ Tambah Peminjaman
                                                         <label for="keterangan_peminjaman">Keterangan
                                                             Peminjaman</label>
                                                         <input type="text" name="keterangan_peminjaman"
-                                                            id="keterangan_peminjaman" class="form-control" >
+                                                            id="keterangan_peminjaman" class="form-control  @error('ket_peminjaman') is-invalid @enderror" >
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -252,7 +252,7 @@ Tambah Peminjaman
                                     </div> --}}
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
-                                        <input type="text" name="ket_barang" id="ket_barang" class="form-control">
+                                        <input type="text" name="ket_barang" id="ket_barang" class="form-control  @error('ket_barang') is-invalid @enderror">
                                         <small class="form-text text-muted">*wajib diisi ketika
                                             barang tidak lengkap/rusak. </small>
                                         @error('ket_barang')
@@ -446,7 +446,7 @@ $(document).ready(function() {
                 })
                 .done(function(response) {
                     console.log('Additional form submitted!', response);
-
+                    initScanner(); 
                     // Check if the expected properties exist in the response
                     if (response.nama_barang && response.nama_ruangan) {
                         const progressButtons = document.querySelectorAll(
@@ -479,6 +479,7 @@ $(document).ready(function() {
                         form[0].reset();
                     } else {
                         let errorMessage;
+                        initScanner(); 
                         try {
                             const responseJson = JSON.parse(jqXHR.responseText);
                             errorMessage = responseJson.error || 'An error occurred.';
@@ -494,6 +495,7 @@ $(document).ready(function() {
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
                     let errorMessage;
+                    initScanner(); 
                     try {
                         const responseJson = JSON.parse(jqXHR.responseText);
                         errorMessage = responseJson.error || 'An error occurred.';
@@ -509,6 +511,7 @@ $(document).ready(function() {
         } else {
             // Handle the case where idPeminjaman is not defined or empty
             console.error('Error: idPeminjaman is not defined or empty');
+            initScanner(); 
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -852,7 +855,15 @@ $('#normalize1').on('change', function() {
 });
 
 </script>
-
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 
 
 @endpush

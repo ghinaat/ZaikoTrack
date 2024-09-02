@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('profile', function (Blueprint $table) {
             $table->increments('id_profile');
             $table->string('nis', 100)->nullable();
-            $table->string('kelas', 50)->nullable();
+            $table->enum('kelas', [10, 11, 12, 13])->nullable();
             $table->string('jurusan', 50)->nullable();
             $table->string('image', 255)->nullable();
             $table->unsignedInteger('id_users');

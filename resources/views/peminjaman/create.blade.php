@@ -161,8 +161,8 @@ Tambah Peminjaman
                                                     <div class="form-group mt-2">
                                                         <label for="keterangan_peminjaman">Keterangan
                                                             Peminjaman</label>
-                                                        <input type="text" name="keterangan_peminjaman"
-                                                            id="keterangan_peminjaman" class="form-control" required>
+                                                        <input type="text" name="keterangan_peminjaman "
+                                                            id="keterangan_peminjaman" class="form-control  @error('keterangan_peminjaman') is-invalid @enderror" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="tgl_kembali" class="form-label">Tanggal
@@ -279,7 +279,7 @@ Tambah Peminjaman
                                     
                                     <div class="form-group mt-2">
                                         <label for="ket_barang">Keterangan Barang</label>
-                                        <input type="text" name="ket_barang" id="ket_barang" class="form-control">
+                                        <input type="text" name="ket_barang" id="ket_barang" class="form-control  @error('ket_barang') is-invalid @enderror">
                                         <small class="form-text text-muted">*wajib diisi ketika
                                             barang tidak lengkap/rusak. </small>
                                         @error('ket_barang')
@@ -602,7 +602,6 @@ $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
             })
             .done(function(response) {
                 console.log('Additional form submitted!', response);
-
                 // Check if the expected properties exist in the response
                 if (response.nama_barang && response.nama_ruangan) {
                     // Check for duplicate id_barang in the table
@@ -634,7 +633,6 @@ $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
                     var existingRowCount = $('#myTable2 tbody tr').length;
                     var newRowNumber = existingRowCount + 1;
                     var formContainer = $('#button-new');
-
                     // Create the new row HTML
                     var newRow = '<tr>' +
                         '<td>' + newRowNumber + '</td>' +
@@ -644,7 +642,7 @@ $("#additionalFormContainer").on('click', '.js-btn-back', function(e) {
                         '<td><button class="btn btn-danger btn-sm removeBtn" data-id_detail_peminjaman="' +
                         response.id_detail_peminjaman + '">Hapus</button></td>' +
                         '</tr>';
-
+                    
                     // Append the new row to the table
                     $('#myTable2 tbody').append(newRow);
                     $('#myTable2').addClass('table-responsive');
@@ -884,6 +882,15 @@ document.getElementById('exampleInputstatus').addEventListener('click', function
 
 
 </script>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 
 
 

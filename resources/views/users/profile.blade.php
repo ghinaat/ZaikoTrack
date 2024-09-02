@@ -133,17 +133,31 @@ Profile
                     </div>
 
                     @can('isTeknisi')
-                    @if($user->level == "siswa")
+                    @if($user->level == "siswa") 
                     <div class="form-group">
                         <label for="nis">NIS</label>
                         <input type="text" name="nis" id="nis" class="form-control"
-                        value="{{ old('nis', $user->nis ?? '') }}" >
+                        value="{{ old('nis', $profile->nis ?? '') }}" >
                     </div>
                     <div class="row">
                         <div class="col-6 col-md-6 kelas">
                             <div class="form-group">
                                 <label for="kelas" class="mb-0">Kelas</label>
-                                <input class="multisteps-form__input form-control" type="text" name="kelas" id="kelas"  value="{{ old('kelas', $profile->kelas ?? '')}}">
+                                <select class="form-select @error('kelas') is-invalid @enderror"
+                                id="exampleInputkelas" name="kelas">
+                                <option value="10" @if($profile->kelas == '10' ||
+                                    old('kelas') =='10'
+                                    )selected @endif>10</option>
+                                 <option value="11" @if($profile->kelas == '11' ||
+                                    old('kelas') =='11'
+                                    )selected @endif>11</option>
+                                 <option value="12" @if($profile->kelas == '12' ||
+                                    old('kelas') =='12'
+                                    )selected @endif>12</option>
+                                <option value="13" @if($profile->kelas == '13' ||
+                                        old('kelas') =='13'
+                                        )selected @endif>13</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-6 col-md-6 jurusan">

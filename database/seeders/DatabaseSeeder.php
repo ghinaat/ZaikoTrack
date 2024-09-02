@@ -96,7 +96,7 @@ class DatabaseSeeder extends Seeder
         Profile::create([
             'id_profile' => '2',
             'nis' => '1234567890',
-            'kelas' => '10A',
+            'kelas' => '10',
             'jurusan' => 'SIJA',
             'id_users' => 5,
         ]);
@@ -106,7 +106,7 @@ class DatabaseSeeder extends Seeder
         Profile::create([
             'id_profile' => '3',
             'nis' => '1122334455',
-            'kelas' => '12C',
+            'kelas' => '12',
             'jurusan' => 'SIJA',
             'id_users' => 7,
         ]);
