@@ -16,10 +16,11 @@ return new class extends Migration
             $table->unsignedInteger('id_peminjaman');
             $table->unsignedInteger('id_inventaris');
             $table->date('tgl_kembali');
-            $table->enum('status', ['sudah_dikembalikan', 'dipinjam'])->nullable();
+            $table->enum('status', ['proses_pengajuan', 'sudah_dikembalikan', 'dipinjam', 'pengajuan_ditolak'])->nullable();
+            $table->string('ket_ditolak_pengajuan', 100)->nullable();
             $table->enum('kondisi_barang_akhir', ['lengkap', 'tidak_lengkap', 'rusak'])->nullable();
-            $table->string('ket_tidak_lengkap_awal')->nullable();
-            $table->string('ket_tidak_lengkap_akhir')->nullable();
+            $table->string('ket_tidak_lengkap_awal', 100)->nullable();
+            $table->string('ket_tidak_lengkap_akhir', 100)->nullable();
             $table->foreign('id_inventaris')->references('id_inventaris')->on('inventaris')->onDelete('cascade');
             $table->foreign('id_peminjaman')->references('id_peminjaman')->on('peminjaman')->onDelete('cascade');
             $table->timestamps();

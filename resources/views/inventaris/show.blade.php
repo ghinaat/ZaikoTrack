@@ -326,8 +326,7 @@ Inventaris / List Barang
 
                     <div class="form-group">
                         <label for="ket_barang">Keterangan Barang</label>
-                        <input type="text" name="ket_barang" id="ket_barang" class="form-control"
-                            value="{{old('ket_barang', $barang->ket_barang)}}">
+                        <input type="text" class="form-control @error('ket_barang') is-invalid @enderror" id="ket_barang" name="ket_barang" value="{{ old('ket_barang') }}">
                         <small class="form-text text-muted">*wajib diisi
                             ketika
                             barang tidak lengkap/rusak. </small>
@@ -584,7 +583,7 @@ Inventaris / List Barang
                    
                     <div class="form-group">
                         <label for="ket_barang">Keterangan Barang</label>
-                        <input type="text" name="ket_barang" id="ket_barang" class="form-control"
+                        <input type="text" name="ket_barang" id="ket_barang" class="form-control @error('ket_barang') is-invalid @enderror"
                             value="{{old('ket_barang', $barang->ket_barang)}}">
                         <small class="form-text text-muted">*wajib diisi
                             ketika
@@ -672,7 +671,7 @@ Inventaris / List Barang
                     </div>
                     <div class="form-group">
                         <label for="ket_barang">Keterangan Barang</label>
-                        <input type="text" name="ket_barang" id="ket_barang" class="form-control">
+                        <input type="text" name="ket_barang" id="ket_barang" class="form-control  @error('ket_barang') is-invalid @enderror">
                         <small class="form-text text-muted">*wajib diisi ketika
                             barang tidak lengkap/rusak. </small>
                         @error('ket_barang')
@@ -936,5 +935,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </script>
-
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @endpush

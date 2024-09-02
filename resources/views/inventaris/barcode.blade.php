@@ -60,7 +60,7 @@ Tambah Barang
                         </div>
                         <div class="form-group">
                             <label for="ket_barang">Ketarangan Barang</label>
-                            <input type="text" name="ket_barang" id="ket_barang" class="form-control"
+                            <input type="text" name="ket_barang" id="ket_barang" class="form-control  @error('ket_barang') is-invalid @enderror"
                                 value="{{old('ket_barang')}}">
                             <small class="form-text text-muted">*wajib diisi
                                 ketika
@@ -91,9 +91,13 @@ Tambah Barang
 
 
 @push('js')
+@if(count($errors))
 <script>
-
-
-
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
 </script>
+@endif
 @endpush

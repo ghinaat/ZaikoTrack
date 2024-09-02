@@ -230,7 +230,7 @@ Peminjaman
                                                 
                                                         <div class="form-group mt-2">
                                                             <label for="keterangan_peminjaman">Keterangan Peminjaman</label>
-                                                            <input type="text" name="keterangan_peminjaman" id="keterangan_peminjaman{{$peminjaman->id_peminjaman}}" class="form-control" value="{{ old('keterangan_peminjaman', $peminjaman->keterangan_peminjaman) }}">
+                                                            <input type="text" name="keterangan_peminjaman" id="keterangan_peminjaman{{$peminjaman->id_peminjaman}}" class="form-control  @error('keterangan_peminjaman') is-invalid @enderror" value="{{ old('keterangan_peminjaman', $peminjaman->keterangan_peminjaman) }}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="tgl_kembali{{$peminjaman->id_peminjaman}}">Tanggal Kembali</label>
@@ -504,7 +504,15 @@ $(document).ready(function() {
 
 
 </script>
-
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 
 
 

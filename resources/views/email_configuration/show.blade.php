@@ -103,4 +103,13 @@ Email Configuration
         </div>
     </div>
 </div>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @stop

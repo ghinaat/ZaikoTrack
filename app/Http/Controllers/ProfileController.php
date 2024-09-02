@@ -36,8 +36,8 @@ class ProfileController extends Controller
         $rules = [
             'name' =>  'required',
             'email' =>  'required',
-            'nis' =>  'nullable',
-            'jurusan' =>  'nullable',
+            'nis' =>  'nullable|max:50',
+            'jurusan' =>  'nullable|max:50',
             'kelas' =>  'nullable',
         ];
     

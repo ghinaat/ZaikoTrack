@@ -6,6 +6,7 @@ use App\Models\Peminjaman;
 use App\Models\Inventaris;
 use App\Models\Ruangan;
 use App\Models\Notifikasi;
+use App\Models\User;
 use App\Events\NotifPeminjaman;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -21,10 +22,10 @@ class DetailPeminjamanController extends Controller
             try {
                 $request->validate([
                 'kode_barang' => 'required',
-                'ket_tidak_lengkap_awal' => 'nullable',
+                'ket_tidak_lengkap_awal' => 'nullable|max:100',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 400);
+            return redirect()->back()->with(['error' => $e->validator->errors()], 400);
         }
     
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan kode_barang
@@ -34,16 +35,16 @@ class DetailPeminjamanController extends Controller
     
         // Pastikan Inventaris ditemukan
         if (!$inventaris) {
-            return response()->json(['error' => 'Kode Barang tidak ditemukan.'], 400);
+             return redirect()->back()->with(['error' => 'Kode Barang tidak ditemukan.']);
         }
     
         // Validasi status peminjaman inventaris
         $existingDetailPeminjaman = DetailPeminjaman::where('id_inventaris', $inventaris->id_inventaris)
-            ->where('status', 'dipinjam')
+            ->where('status', '!=', 'sudah_dikembalikan')
             ->first();
     
         if ($existingDetailPeminjaman) {
-            return response()->json(['error' => 'Barang ini sudah dipinjam oleh pengguna lain.'], 400);
+             return redirect()->back()->with(['error' => 'Barang ini sudah dipinjam oleh pengguna lain.'], 400);
         }
     
         // Mendapatkan peminjaman berdasarkan id_peminjaman
@@ -85,10 +86,10 @@ class DetailPeminjamanController extends Controller
         try {
             $request->validate([
                 'kode_barang' => 'required',
-                'ket_tidak_lengkap_awal' => 'nullable',
+                'ket_tidak_lengkap_awal' => 'nullable|max:100',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 400);
+            return redirect()->back()->with(['error' => $e->validator->errors()], 400);
         }
     
         // Mendapatkan objek Inventaris berdasarkan id_ruangan dan kode_barang
@@ -98,16 +99,16 @@ class DetailPeminjamanController extends Controller
     
         // Pastikan Inventaris ditemukan
         if (!$inventaris) {
-            return response()->json(['error' => 'Data tidak tersimpan.'], 400);
+            return redirect()->back()->with(['error' => 'Kode Barang Tidak Ditemukan']);
         }
     
         // Validasi status peminjaman inventaris
         $existingDetailPeminjaman = DetailPeminjaman::where('id_inventaris', $inventaris->id_inventaris)
-            ->where('status', 'dipinjam')
+            ->where('status', '!=', 'sudah_dikembalikan')
             ->first();
     
         if ($existingDetailPeminjaman) {
-            return response()->json(['error' => 'Barang ini sudah dipinjam oleh pengguna lain.'], 400);
+            return redirect()->back()->with(['error' => 'Barang ini sudah dipinjam oleh pengguna lain.'], 400);
         }
     
         // Mendapatkan peminjaman berdasarkan id_peminjaman
@@ -118,6 +119,7 @@ class DetailPeminjamanController extends Controller
             'id_peminjaman' => $id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
             'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
+            'kondisi_barang_akhir' => null,
             'status' => 'dipinjam',
             'tgl_kembali' => $peminjaman->tgl_kembali,
         ]);
@@ -150,10 +152,10 @@ class DetailPeminjamanController extends Controller
         try {
             $request->validate([
                 'id_barang' => 'required',
-                'ket_tidak_lengkap_awal' => 'nullable',
+                'ket_tidak_lengkap_awal' => 'nullable|max:100',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 400);
+             return redirect()->back()->with(['error' => $e->validator->errors()], 400);
         }
     
         // Check if the id_barang already exists for the given id_peminjaman
@@ -164,7 +166,7 @@ class DetailPeminjamanController extends Controller
             ->first();
     
         if ($existingDetail) {
-            return response()->json(['error' => 'Barang sudah ada di peminjaman ini.'], 400);
+             return redirect()->back()->with(['error' => 'Barang sudah ada di peminjaman ini.'], 400);
         }
     
        
@@ -174,7 +176,7 @@ class DetailPeminjamanController extends Controller
     
        
         if (!$inventaris) {
-            return response()->json(['error' => 'Data tidak tersimpan.'], 400);
+             return redirect()->back()->with(['error' => 'Data tidak tersimpan.'], 400);
         }
     
         $peminjaman = Peminjaman::findOrFail($request->id_peminjaman);
@@ -182,6 +184,7 @@ class DetailPeminjamanController extends Controller
             'id_peminjaman' => $request->id_peminjaman,
             'id_inventaris' => $inventaris->id_inventaris,
             'ket_tidak_lengkap_awal' => $request->ket_tidak_lengkap_awal,
+            'kondisi_barang_akhir' => null,
             'status' => 'dipinjam',
             'tgl_kembali' => $peminjaman->tgl_kembali,
         ]);
@@ -216,32 +219,19 @@ class DetailPeminjamanController extends Controller
     {
 
         $request->validate([
-            'id_barang' => 'required',
+            'ket_tidak_lengkap_awal' => 'nullable|max:100',
         ]);
 
         $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
-        // dd($detailPeminjaman);
-        $inventaris = Inventaris::where('id_barang', $request->id_barang) 
-        ->first();
-        $existingInventaris = DetailPeminjaman::where('id_detail_peminjaman', '!=', $id_detail_peminjaman)
-        ->whereHas('inventaris', function($query) use ($inventaris) {
-            $query->where('id_inventaris', $inventaris->id_inventaris);
-        })
-        ->first();
-        if ($existingInventaris) {
-            return redirect()->back()->with(['error' => 'Barang ini telah dipinjam.']);
-        }
-        
-        $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
-        $detailPeminjaman-> status = "dipinjam";
-     
-        $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
+      
+        $detailPeminjaman->ket_tidak_lengkap_awal = $request->ket_tidak_lengkap_awal;
 
         $detailPeminjaman ->save();
        
 
         return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
     }
+    
 
     public function Return($id_detail_peminjaman)
     {
@@ -286,11 +276,11 @@ class DetailPeminjamanController extends Controller
             $request->validate([
                 'kode_barang' => 'required',
                 'kondisi_barang_akhir' => 'required',
-                'ket_tidak_lengkap_akhir' => 'nullable',
+                'ket_tidak_lengkap_akhir' => 'nullable|max:100',
                
             ]);
             } catch (ValidationException $e) {
-                return response()->json(['error' => $e->validator->errors()], 400);
+                return redirect()->back()->withErrors($e->validator)->withInput();
             }
             $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
 
@@ -320,10 +310,39 @@ class DetailPeminjamanController extends Controller
 
             
             $detailPeminjaman-> id_inventaris = $inventaris->id_inventaris;
-            $detailPeminjaman-> status = 'sudah_dikembalikan';
             $detailPeminjaman->kondisi_barang_akhir = $request->kondisi_barang_akhir;
             $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
             $detailPeminjaman-> tgl_kembali = Carbon::now(); 
+
+            if (auth()->user()->level === 'siswa') {
+                $detailPeminjaman->status = 'proses_pengajuan';
+
+                $pengguna = User::where('id_users', $peminjaman->id_users)->first();
+                $notifikasi = new Notifikasi();
+                $notifikasi->judul = 'Pengembalian Barang ';
+                $notifikasi->pesan = 'Pengajuan Pengembalian Barang Peminjaman anda telah dikirmkan kepada teknisi. Dimohon untuk menunnggu konfirmasi lebih lanjut.';
+                $notifikasi->is_dibaca = 'tidak_dibaca';
+                $notifikasi->label = 'info';
+                $notifikasi->send_email = 'yes';
+                $notifikasi->id_users = $peminjaman->id_users; 
+                $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
+                $notifikasi->save();
+
+                $notifikasiTeknisi = User::where('level', 'teknisi')->get();
+            
+                foreach ($notifikasiTeknisi as $na) {
+                    $notifikasi = new Notifikasi();
+                    $notifikasi->judul = 'Pengembalian Barang ';
+                    $notifikasi->pesan =  'Pengajuan pengembalian baranng peminjaman oleh '.$pengguna->name.' telah diterima. Diharapkan untuk segera mengkonfirmasi pengajuan secepatnya.'; 
+                    $notifikasi->is_dibaca = 'tidak_dibaca';
+                    $notifikasi->label = 'info';
+                    $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
+                    $notifikasi->id_users = $na->id_users;
+                    $notifikasi->save();
+                }
+            } else {
+                $detailPeminjaman->status = 'sudah_dikembalikan';
+            }
 
             $detailPeminjaman ->save();
 
@@ -338,7 +357,83 @@ class DetailPeminjamanController extends Controller
     
     }
 
+    public function approval(Request $request, $id_detail_peminjaman)
+    {
 
+        $request->validate([
+            'kondisi_barang_akhir' => 'required',
+            'status' => 'required',
+            'ket_ditolak_pengajuan' => 'nullable|max:100',
+            'ket_tidak_lengkap_akhir' => 'nullable|max:100',
+        ]);
+
+        $detailPeminjaman = DetailPeminjaman::find($id_detail_peminjaman);
+        $detailPeminjaman->kondisi_barang_akhir = $request->kondisi_barang_akhir;
+        $detailPeminjaman->status = $request->status;
+        $detailPeminjaman->ket_ditolak_pengajuan = $request->ket_ditolak_pengajuan;
+        $detailPeminjaman->ket_tidak_lengkap_akhir = $request->ket_tidak_lengkap_akhir;
+
+        $detailPeminjaman ->save();
+        $peminjaman = Peminjaman::findOrFail($detailPeminjaman->id_peminjaman);
+
+        if ($detailPeminjaman->status == 'pengajuan_ditolak') {
+            $detailPeminjaman->kondisi_barang_akhir = null;
+            $detailPeminjaman ->save();
+            $pengguna = User::where('id_users', $peminjaman->id_users)->first();
+            $notifikasi = new Notifikasi();
+            $notifikasi->judul = 'Pengajuan Pengembalian Ditolak';
+            $notifikasi->pesan = 'Pengajuan pengembalian barang pinjaman Anda telah ditolak oleh teknisi. Silakan hubungi teknisi untuk informasi lebih lanjut atau untuk mengajukan permohonan baru.';            
+            $notifikasi->is_dibaca = 'tidak_dibaca';
+            $notifikasi->label = 'info';
+            $notifikasi->send_email = 'yes';
+            $notifikasi->link = '/peminjaman/detailPeminjaman/' . $detailPeminjaman->id_detail_peminjaman;
+            $notifikasi->id_users = $pengguna->id_users;  // Include ID in the link            $notifikasi->id_users = $pengguna->id_users;
+            $notifikasi->save();
+
+            $notifikasiTeknisi = User::where('level', 'teknisi')->get();
+        
+            foreach ($notifikasiTeknisi as $na) {
+                $notifikasi = new Notifikasi();
+                $notifikasi->judul = 'Penolakan Pengembalian Barang';
+                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' telah ditolak telah dikirimkan. Silakan periksa dan tindak lanjuti sesuai prosedur yang berlaku.';                
+                $notifikasi->is_dibaca = 'tidak_dibaca';
+                $notifikasi->label = 'info';
+                $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
+                $notifikasi->id_users = $na->id_users;
+                $notifikasi->save();
+            }
+        }
+        if ($detailPeminjaman->status == 'sudah_dikembalikan') {
+            $detailPeminjaman->kondisi_barang_akhir = null;
+            $detailPeminjaman ->save();
+            $pengguna = User::where('id_users', $peminjaman->id_users)->first();
+            $notifikasi = new Notifikasi();
+            $notifikasi->judul = 'Pengajuan Pengembalian diterima';
+            $notifikasi->pesan = 'Pengajuan pengembalian barang pinjaman Anda telah diterima oleh teknisi.';            
+            $notifikasi->is_dibaca = 'tidak_dibaca';
+            $notifikasi->label = 'info';
+            $notifikasi->send_email = 'yes';
+            $notifikasi->link = '/peminjaman/detailPeminjaman/' . $detailPeminjaman->id_detail_peminjaman;
+            $notifikasi->id_users = $pengguna->id_users;  // Include ID in the link            $notifikasi->id_users = $pengguna->id_users;
+            $notifikasi->save();
+
+            $notifikasiTeknisi = User::where('level', 'teknisi')->get();
+        
+            foreach ($notifikasiTeknisi as $na) {
+                $notifikasi = new Notifikasi();
+                $notifikasi->judul = 'Penolakan Pengembalian Barang';
+                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' telah diterima telah dikirimkan.';                
+                $notifikasi->is_dibaca = 'tidak_dibaca';
+                $notifikasi->label = 'info';
+                $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
+                $notifikasi->id_users = $na->id_users;
+                $notifikasi->save();
+            }
+        }
+        
+        return redirect()->back()->with(['success_message' => 'Data telah tersimpan.']);
+    }
+    
  
     Public function destroy($id_detail_peminjaman)
     {

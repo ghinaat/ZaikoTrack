@@ -90,7 +90,7 @@ Pengembalian Barang
                             <label for="ket_tidak_lengkap_akhir">Keterangan
                                 Barang</label>
                             <input type="text" name="ket_tidak_lengkap_akhir"
-                                id="ket_tidak_lengkap_akhir" class="form-control"
+                                id="ket_tidak_lengkap_akhir" class="form-control  @error('ket_tidak_lengkap_akhir') is-invalid @enderror"
                                 value="{{old('ket_tidak_lengkap_akhir')}}">
                             <small class="form-text text-muted">*wajib diisi
                                 ketika
@@ -120,7 +120,13 @@ Pengembalian Barang
 
 
 @push('js')
+@if(count($errors))
 <script>
-
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
 </script>
+@endif
 @endpush

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('id_users');
             $table->unsignedInteger('id_guru');
             $table->unsignedInteger('id_karyawan');
-            $table->string('keterangan_peminjaman')->nullable();
+            $table->string('keterangan_peminjaman', 50)->nullable();
             $table->enum('status', ['siswa', 'guru', 'karyawan']);
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');

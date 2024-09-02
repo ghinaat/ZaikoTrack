@@ -41,7 +41,7 @@
                        
                         <div class="form-group mt-2">
                             <label for="ket_barang">Keterangan Barang</label>
-                            <input type="text" name="ket_barang" id="ket_barang" class="form-control">
+                            <input type="text" name="ket_barang" id="ket_barang" class="form-control  @error('ket_barang') is-invalid @enderror">
                             <small class="form-text text-muted">*wajib diisi ketika
                                 barang tidak lengkap/rusak. </small>
                             @error('ket_barang')
@@ -74,7 +74,13 @@
 
 
 @push('js')
+@if(count($errors))
 <script>
-
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
 </script>
+@endif
 @endpush
