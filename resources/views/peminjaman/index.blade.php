@@ -298,21 +298,20 @@ function notificationBeforeAdds(event, el, dt) {
         title: 'Pilihan Tambah Data',
         text: 'Pilih cara untuk menambahkan data:',
         icon: 'info',
+        showCloseButton: true, // Menambahkan tombol "X" di pojok kanan atas
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Dengan Barcode',
-        cancelButtonText: 'Tanpa Barcode'
-
+        cancelButtonText: 'Tanpa Barcode',
     }).then((result) => {
         if (result.isConfirmed) {
             // Jika pengguna memilih "Dengan Barcode"
             window.location.href = '/peminjaman/barcode'; // Ganti dengan URL halaman yang sesuai
-        } else {
-            // Jika pengguna memilih "Tanpa Barcode", tampilkan add modal
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Jika pengguna memilih "Tanpa Barcode"
             window.location.href = '/peminjaman/create'; // Ganti dengan URL halaman yang sesuai
-        }
-
+        } 
     });
 }
 

@@ -18,7 +18,7 @@ class RuanganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_ruangan' => 'required',
+            'nama_ruangan' => 'required|max:20',
         ]);
         $array = $request->only([
             'nama_ruangan',
@@ -34,7 +34,7 @@ class RuanganController extends Controller
     {
 
         $request->validate([
-            'nama_ruangan' => 'required',
+            'nama_ruangan' => 'required|max:20',
         ]);
 
         $ruangan = Ruangan::find($id_ruangan);

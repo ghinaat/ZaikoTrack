@@ -56,10 +56,11 @@ Ruangan
                                                     @method('PUT')
                                                     <div class="form-group">
                                                         <label for="nama_ruangan">Nama Ruangan</label>
-                                                        <input type="text" name="nama_ruangan" id="nama_ruangan"
-                                                            class="form-control"
-                                                            value="{{ old('nama_ruangan', $ruangan->nama_ruangan) }}"
-                                                            required>
+                                                        <input type="text" name="nama_ruangan" id="nama_ruangan" class="form-control"
+                                                            value="{{ old('nama_ruangan', $ruangan->nama_ruangan) }}" required>
+                                                        @error('nama_ruangan') 
+                                                            <span class="text-danger">{{$message}}</span>
+                                                        @enderror
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -95,6 +96,9 @@ Ruangan
                         <label for="nama_ruangan">Nama Ruangan</label>
                         <input type="text" name="nama_ruangan" id="nama_ruangan" class="form-control"
                             value="{{ old('nama_ruangan') }}" required>
+                        @error('nama_ruangan') 
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -126,4 +130,13 @@ $(document).ready(function() {
     });
 });
 </script>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @endpush

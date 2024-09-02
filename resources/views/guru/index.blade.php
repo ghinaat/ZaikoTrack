@@ -26,7 +26,7 @@ Guru
                                         <input type="file" name="file" id="file" class="form-control" accept=".xls, .xlsxs">
                                     </div>
                                     <div>
-                                        <button type="submit" class="btn btn-danger">Import</button>
+                                        <button type="submit" class="btn btn-success">Import</button>
                                     </div>
                                 </div>
                             
@@ -77,11 +77,12 @@ Guru
                                                             value="{{ old('nis', $guru->nip) }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="nama_guru">Nama GUru</label>
-                                                        <input type="text" name="nama_guru" id="nama_guru"
-                                                            class="form-control"
-                                                            value="{{ old('nama_guru', $guru->nama_guru) }}"
-                                                            required>
+                                                        <label for="nama_guru">Nama Guru</label>
+                                                        <input type="text" name="nama_guru" id="nama_guru" class="form-control"
+                                                            value="{{ old('nama_guru', $guru->nama_guru) }}" required>
+                                                        @error('nama_guru')
+                                                            <span class="text-danger">{{$message}}</span>
+                                                        @enderror
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -116,12 +117,15 @@ Guru
                     <div class="form-group">
                         <label for="nip">NIP</label>
                         <input type="number" name="nip" id="nip" class="form-control"
-                            required>
+                            value="{{ old('nip') }}" required>
                     </div>
                     <div class="form-group">
                         <label for="nama_guru">Nama Guru</label>
-                        <input type="text" name="nama_guru" id="nama_guru"
-                            class="form-control" required>
+                        <input type="text" name="nama_guru" id="nama_guru" class="form-control" 
+                            value="{{ old('nama_guru') }}" required>
+                        @error('nama_guru')
+                            <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -153,4 +157,13 @@ $(document).ready(function() {
     });
 });
 </script>
+@if(count($errors))
+<script>
+Swal.fire({
+    title: 'Input tidak sesuai!',
+    text: 'Pastikan inputan sudah sesuai',
+    icon: 'error',
+});
+</script>
+@endif
 @endpush

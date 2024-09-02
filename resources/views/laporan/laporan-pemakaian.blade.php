@@ -115,7 +115,7 @@ Laporan Pemakaian
                             <tbody>
                                 @foreach($groupedPemakaians as $key => $pemakaians)
                                 <tr>
-                                    <td></td>
+                                    <td>{{$key+1}}</td>
                                     <td>{{\Carbon\Carbon::parse($pemakaians->tgl_pakai)->format('d F Y')}}</td>
                                     @if ($pemakaians->status == 'guru')
                                     <td>{{ $pemakaians->guru ? $pemakaians->guru->nama_guru : 'N/A' }}</td>
@@ -125,9 +125,8 @@ Laporan Pemakaian
                                     <td>{{ $pemakaians->users ? $pemakaians->users->name : 'N/A' }}</td>
                                     @endif
                                     @if ($pemakaians->status != 'siswa')                                  
-                                      <td>
-                                        <div style='display: flex; justify-content: center;'>-
-                                        </div>
+                                    <td>
+                                        <div style='display: flex; justify-content: center;'>-</div>
                                     </td>
                                     @else
                                     <td>
@@ -170,35 +169,45 @@ $(document).ready(function() {
     var table = $('#myTable').DataTable({
         "responsive": true,
         "order": [
-            [0, 'desc']
+            [0, 'asc']
         ],
         "language": {
             "paginate": {
                 "previous": "<",
                 "next": ">"
-            }
+            } 
         }
     });
 
     function updateDownloadButton() {
-        var downloadButton = $('#download-pdf');
+            var downloadButton = $('#download-pdf');
 
-        // Periksa apakah ada data di tabel
-        var dataCount = table.rows().count();
-        if (dataCount > 0) {
-            downloadButton.removeClass('btn-disabled');
-        } else {
-            downloadButton.addClass('btn-disabled');
+            // Periksa apakah ada data di tabel
+            var dataCount = table.rows().count();
+            if (dataCount > 0) {
+                downloadButton.removeClass('btn-disabled');
+            } else {
+                downloadButton.addClass('btn-disabled');
+            }
         }
-    }
 
-    // Panggil fungsi saat tabel di-render ulang (draw event)
-    table.on('draw', function() {
+        // Panggil fungsi saat tabel di-render ulang (draw event)
+        table.on('draw', function () {
+            updateDownloadButton();
+        });
+
+        // Panggil fungsi saat halaman dimuat
         updateDownloadButton();
-    });
 
-    // Panggil fungsi saat halaman dimuat
-    updateDownloadButton();
-});
+        // Nonaktifkan tombol "Unduh PDF" saat filter diubah
+        $('#id_barang, #nama_peminjam, #start_date, #end_date').on('change', function () {
+            $('#download-pdf').addClass('btn-disabled');
+        });
+
+        // Aktifkan tombol "Unduh PDF" saat tombol "Tampilkan" diklik
+        $('button[type="submit"]').on('click', function () {
+            updateDownloadButton();
+        });
+    });
 </script>
 @endpush
