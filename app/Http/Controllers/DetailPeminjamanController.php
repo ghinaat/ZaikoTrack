@@ -386,7 +386,7 @@ class DetailPeminjamanController extends Controller
             $notifikasi->is_dibaca = 'tidak_dibaca';
             $notifikasi->label = 'info';
             $notifikasi->send_email = 'yes';
-            $notifikasi->link = '/peminjaman/detailPeminjaman/' . $detailPeminjaman->id_detail_peminjaman;
+            $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
             $notifikasi->id_users = $pengguna->id_users;  // Include ID in the link            $notifikasi->id_users = $pengguna->id_users;
             $notifikasi->save();
 
@@ -395,7 +395,7 @@ class DetailPeminjamanController extends Controller
             foreach ($notifikasiTeknisi as $na) {
                 $notifikasi = new Notifikasi();
                 $notifikasi->judul = 'Penolakan Pengembalian Barang';
-                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' telah ditolak telah dikirimkan. Silakan periksa dan tindak lanjuti sesuai prosedur yang berlaku.';                
+                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' ditolak telah dikirimkan. Silakan periksa dan tindak lanjuti sesuai prosedur yang berlaku.';                
                 $notifikasi->is_dibaca = 'tidak_dibaca';
                 $notifikasi->label = 'info';
                 $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
@@ -408,12 +408,12 @@ class DetailPeminjamanController extends Controller
             $detailPeminjaman ->save();
             $pengguna = User::where('id_users', $peminjaman->id_users)->first();
             $notifikasi = new Notifikasi();
-            $notifikasi->judul = 'Pengajuan Pengembalian diterima';
+            $notifikasi->judul = 'Pengajuan Pengembalian Diterima';
             $notifikasi->pesan = 'Pengajuan pengembalian barang pinjaman Anda telah diterima oleh teknisi.';            
             $notifikasi->is_dibaca = 'tidak_dibaca';
             $notifikasi->label = 'info';
             $notifikasi->send_email = 'yes';
-            $notifikasi->link = '/peminjaman/detailPeminjaman/' . $detailPeminjaman->id_detail_peminjaman;
+            $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
             $notifikasi->id_users = $pengguna->id_users;  // Include ID in the link            $notifikasi->id_users = $pengguna->id_users;
             $notifikasi->save();
 
@@ -421,8 +421,8 @@ class DetailPeminjamanController extends Controller
         
             foreach ($notifikasiTeknisi as $na) {
                 $notifikasi = new Notifikasi();
-                $notifikasi->judul = 'Penolakan Pengembalian Barang';
-                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' telah diterima telah dikirimkan.';                
+                $notifikasi->judul = 'Pengajuan Pengembalian Diterima';
+                $notifikasi->pesan = 'Pesan pengembalian barang pinjaman oleh '.$pengguna->name.' diterima telah dikirimkan.';                
                 $notifikasi->is_dibaca = 'tidak_dibaca';
                 $notifikasi->label = 'info';
                 $notifikasi->link = '/peminjaman/' . $detailPeminjaman->id_peminjaman;
