@@ -899,6 +899,14 @@ Home
                                                 @elseif($detailPeminjaman->status == 'dipinjam' && strtotime($jadwal->tgl_pinjam) > strtotime($jadwal->tgl_kembali))
                                                 <div class="icon-history text-lg justify-content-center" style="background-color: #f5365c">
                                                     <i class="fa-solid fa-triangle-exclamation" style="color: #ffffff"></i>
+                                                </div> 
+                                                @elseif($detailPeminjaman->status == 'proses_pengajuan')
+                                                <div class="icon-history text-lg justify-content-center" style="background-color: #5e72e4;">
+                                                    <i class="fa-solid fa-rotate-left" style="color: #ffffff"></i>
+                                                </div>    
+                                                @elseif($detailPeminjaman->status == 'pengajuan_ditolak')
+                                                <div class="icon-history text-lg justify-content-center" style="background-color: #ff0000;">
+                                                    <i class="fa-solid fa-xmark" style="color: #ffffff"></i>
                                                 </div>    
                                                 @endif                                      
                                                 <div class="ms-4">
