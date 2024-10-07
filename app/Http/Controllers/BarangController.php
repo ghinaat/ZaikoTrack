@@ -177,7 +177,7 @@ class BarangController extends Controller
             'barang' => $barang,
             'tahunPembelian' => $tahunPembelian,
         ])->setPaper('a4', 'potrait');
-        return $pdf->stream('LabelQRcode.pdf');   
+        return $pdf->download('LabelQRcode.pdf');   
     } 
     
     public function selectPrint(Request $request){
@@ -192,7 +192,7 @@ class BarangController extends Controller
             'barang' => $barang,
             // 'tahunPembelian' => $tahunPembelian,
         ])->setPaper('a4', 'potrait');
-        return $pdf->stream('LabelQRcode.pdf');   
+        return $pdf->download('LabelQRcode.pdf');   
         // dd($selectedData);
     } 
 }
