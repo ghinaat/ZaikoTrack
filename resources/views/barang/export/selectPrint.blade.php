@@ -17,9 +17,9 @@
             <div class="label">
                 <div class="label-content">
                     <div class="qr">
-                        <img src="{{ public_path('/storage/qrcode/' . $br->qrcode_image) }}" style="width: 1.0cm;">
+                        <img src="{{ public_path('/storage/qrcode/' . $br->qrcode_image) }}" style="width: 1.7cm;">
                     </div>
-                    <div class="kodeTahun" style="font-size: 10px;">
+                    <div class="kodeTahun" style="font-size: 13px;">
                         <p>{{ $br->kode_barang }}</p>
                         <p>{{ $br->nama_barang }}</p>   
                 </div>
