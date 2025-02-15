@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+use App\Http\Controllers\API\{
+    BarangApiController,
+    JenisBarangApiController,
+    InventarisApiController
+};
+
+Route::get('/inventaris', [InventarisApiController::class, 'index']);
+Route::put('/inventaris/{id}/kondisi', [InventarisApiController::class, 'updateKondisi']);
+Route::get('/barang', [BarangApiController::class, 'index']);
+Route::get('/jenis-barang', [JenisBarangApiController::class, 'index']);
+
